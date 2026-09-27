@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AuthCat from '../components/AuthCat';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, text: '', color: '' });
+  const [catMoving, setCatMoving] = useState(false);
 
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -176,15 +178,15 @@ const Register = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="magical-cat">
-          <svg viewBox="0 0 512 512" fill="#a890fe" opacity="0.8" width="60" height="60">
-            <path d="M226.5 92.9c14.3 7.3 22.8 23 22.8 39.1V160h64v-28c0-16.1 8.5-31.8 22.8-39.1 18.1-9.2 39.8-5.3 53.7 9.7L420.5 137c15.8-9.1 33.5-13.8 51.5-13.8h24c8.8 0 16 7.2 16 16v50.2c0 24.3-11.4 47.1-30.8 61.4L441 280.9V416c0 53-43 96-96 96H167c-53 0-96-43-96-96V280.9l-40.2-30.1C11.4 236.5 0 213.7 0 189.4V139.2c0-8.8 7.2-16 16-16h24c18 0 35.7 4.7 51.5 13.8l30.7-34.4c13.9-15 35.6-18.9 53.7-9.7z" />
-          </svg>
-        </div>
         <h1>Luminar</h1>
         <p>Join the magical arena</p>
 
-        <div className="auth-switcher">
+        <div
+          className="auth-switcher"
+          onPointerDown={() => setCatMoving(true)}
+          onFocusCapture={() => setCatMoving(true)}
+        >
+          <AuthCat moving={catMoving} onMoveEnd={() => setCatMoving(false)} />
           <Link to="/login" className="auth-switcher-btn">Login</Link>
           <Link to="/register" className="auth-switcher-btn active">Sign Up</Link>
         </div>

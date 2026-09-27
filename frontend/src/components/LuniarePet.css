@@ -1,0 +1,172 @@
+.luniare-pet-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.pet-cat {
+  width: 120px;
+  height: 120px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+  animation: breathe 4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.cat-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Breathing animation - subtle scale and vertical movement */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    transform: scale(1.03) translateY(-2px);
+  }
+}
+
+/* Body breathing animation */
+.cat-body {
+  animation: bodyBreathe 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes bodyBreathe {
+  0%, 100% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.04, 1.06);
+  }
+}
+
+/* Gentle ear movement */
+.cat-ear {
+  animation: earTwitch 6s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes earTwitch {
+  0%, 95%, 100% {
+    transform: rotate(0deg);
+  }
+  97% {
+    transform: rotate(2deg);
+  }
+}
+
+/* Blinking animation */
+.cat-eye {
+  animation: blink 5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 48%, 52%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* Tail sway */
+.cat-tail {
+  animation: tailSway 3s ease-in-out infinite;
+  transform-origin: left center;
+}
+
+@keyframes tailSway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+}
+
+/* Status indicator */
+.pet-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(248, 250, 252, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  border: 1px solid rgba(30, 41, 59, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pet-status:hover {
+  background: rgba(248, 250, 252, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: #4FD1C5;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+.status-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0B0E14;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .luniare-pet-container {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .pet-cat {
+    width: 90px;
+    height: 90px;
+  }
+
+  .status-text {
+    font-size: 12px;
+  }
+}
+
+/* Hover interaction */
+.pet-cat:hover {
+  animation: breathe 2s ease-in-out infinite, bounce 0.6s ease;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
+import LuniarePet from '../components/LuniarePet';
 import { postService } from '../services/api';
 import '../Dashboard.css';
+import catVideo from '../cat.mp4';
 
 const Home = () => {
   const { user } = useAuth();
@@ -54,8 +56,8 @@ const Home = () => {
         </nav>
 
         <div className="companion-widget">
+          <video src={catVideo} autoPlay loop muted playsInline className="companion-video-bg" />
           <div className="companion-text">Your companion<br/>is nearby...</div>
-          <div style={{fontSize: '40px', position: 'absolute', right: '10px', bottom: '10px'}}>⚸</div>
         </div>
       </aside>
 
@@ -188,7 +190,9 @@ const Home = () => {
           </div>
           
           <div className="companion-box">
-             <div className="companion-avatar">⚸</div>
+             <div className="companion-avatar">
+               <video src={catVideo} autoPlay loop muted playsInline className="companion-video-avatar" />
+             </div>
              <div className="companion-details">
                 <p>Your companion</p>
                 <h4>Mooncat</h4>
@@ -209,6 +213,9 @@ const Home = () => {
         </div>
 
       </aside>
+
+      {/* Luniare Pet Companion */}
+      <LuniarePet />
     </div>
   );
 };
