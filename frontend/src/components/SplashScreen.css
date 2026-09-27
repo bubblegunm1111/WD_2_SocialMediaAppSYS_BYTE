@@ -8,7 +8,7 @@
   top: 0; left: 0; right: 0; bottom: 0;
   z-index: 9999;
   overflow: hidden;
-  transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease-in-out;
+  transition: transform 1.5s cubic-bezier(0.65, 0, 0.15, 1), opacity 1s ease-in-out, filter 1s ease;
   cursor: grab;
 }
 
@@ -19,6 +19,7 @@
 .splash-container.swiped-up {
   transform: translateY(-100vh);
   opacity: 0;
+  filter: blur(15px);
 }
 
 .splash-overlay {

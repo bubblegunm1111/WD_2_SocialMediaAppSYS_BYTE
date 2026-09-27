@@ -77,15 +77,25 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
-  background: url('./bg-lunar.png') center/cover fixed;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
 }
+
+.auth-container::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: url('./bg-lunar.png') center/cover no-repeat;
+  z-index: -2;
+}
+
 .auth-container::before {
   content: '';
-  position: absolute;
-  top:0; left:0; right:0; bottom:0;
-  background: linear-gradient(135deg, rgba(15, 10, 28, 0.85) 0%, rgba(30, 21, 58, 0.75) 100%);
-  z-index: 0;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: linear-gradient(135deg, rgba(15, 10, 28, 0.85) 0%, rgba(30, 21, 58, 0.65) 100%);
+  z-index: -1;
 }
 
 /* Pill Switcher */
@@ -106,28 +116,73 @@
   font-weight: 600;
   font-size: 14px;
   color: var(--text-muted);
-  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s;
 }
 
 .auth-switcher-btn.active {
-  background: linear-gradient(135deg, #6c4ab6, #8e6cff);
   color: #fff;
+}
+
+.auth-switcher-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #6c4ab6, #8e6cff);
+  border-radius: 26px;
+  z-index: -1;
+  animation: bubblePop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.4) forwards;
   box-shadow: 0 4px 15px rgba(108, 74, 182, 0.4);
+}
+
+@keyframes bubblePop {
+  0% { transform: scale(0.6); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .auth-card {
   position: relative;
   z-index: 1;
-  background: rgba(20, 15, 40, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(15, 10, 30, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 50px 40px;
-  border-radius: 24px;
-  border: 1px solid rgba(180, 160, 255, 0.15);
-  box-shadow: 0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(142, 108, 255, 0.05);
+  border-radius: 32px;
+  border: 1px solid rgba(180, 160, 255, 0.2);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 40px rgba(142, 108, 255, 0.1);
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   text-align: center;
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Magical Cat Silhouette Animation */
+.magical-cat {
+  position: absolute;
+  bottom: -10px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  pointer-events: none;
+  animation: catRub 8s infinite cubic-bezier(0.45, 0, 0.55, 1);
+  filter: drop-shadow(0 0 10px rgba(142, 108, 255, 0.5));
+}
+
+@keyframes catRub {
+  0% { transform: translateX(100px) rotate(0deg); opacity: 0; }
+  20% { transform: translateX(20px) rotate(0deg); opacity: 1; }
+  30% { transform: translateX(15px) rotate(-15deg); } /* Rubbing head */
+  40% { transform: translateX(10px) rotate(5deg); }
+  50% { transform: translateX(15px) rotate(-10deg); }
+  80% { transform: translateX(-50px) rotate(0deg); opacity: 1; }
+  100% { transform: translateX(-100px) rotate(0deg); opacity: 0; }
 }
 
 .auth-card h1 {

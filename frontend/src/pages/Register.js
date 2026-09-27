@@ -176,6 +176,11 @@ const Register = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
+        <div className="magical-cat">
+          <svg viewBox="0 0 24 24" fill="#a890fe" opacity="0.8" width="60" height="60">
+            <path d="M12,8L10.6,6L9.2,8H12M14,10A2,2 0 0,1 12,12A2,2 0 0,1 10,10A2,2 0 0,1 12,8A2,2 0 0,1 14,10M2,20V14H4V20H2M16,20H22V18H16V20M14,16C14,17.1 13.1,18 12,18C10.9,18 10,17.1 10,16C10,14.9 10.9,14 12,14C13.1,14 14,14.9 14,16Z" />
+          </svg>
+        </div>
         <h1>Luminar</h1>
         <p>Join the magical arena</p>
 
