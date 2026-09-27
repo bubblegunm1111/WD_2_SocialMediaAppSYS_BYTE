@@ -87,12 +87,11 @@
 .companion-cat-top {
   position: absolute;
   bottom: -5px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: -5px;
   width: 140px;
   height: auto;
   object-fit: contain;
-  z-index: 1;
+  z-index: 2;
   filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
   pointer-events: none;
 }
@@ -114,9 +113,9 @@
   color: #fff;
   line-height: 1.5;
   position: relative;
-  z-index: 2;
+  z-index: 1;
   text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5);
-  width: auto;
+  width: 65%;
   text-align: left;
 }
 
@@ -124,8 +123,9 @@
   font-size: 20px;
   color: rgba(220, 200, 150, 0.8);
   position: relative;
-  z-index: 2;
+  z-index: 1;
   text-shadow: 0 0 10px rgba(220, 200, 150, 0.4);
+  margin-right: 20px;
 }
 
 /* Main Feed */
