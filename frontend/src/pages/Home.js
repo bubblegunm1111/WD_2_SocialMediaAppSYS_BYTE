@@ -17,6 +17,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -41,6 +42,9 @@ const Home = () => {
 
   const handlePostDeleted = (postId) => {
     setPosts(posts.filter(post => post._id !== postId));
+    if (selectedPost && selectedPost._id === postId) {
+      setSelectedPost(null);
+    }
   };
 
   return (
@@ -115,7 +119,7 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <TarotCarousel posts={posts} />
+              <TarotCarousel posts={posts} onPostClick={(post) => setSelectedPost(post)} />
             )}
           </div>
         </div>
@@ -203,6 +207,16 @@ const Home = () => {
 
       {/* Messages Modal */}
       {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
+      
+      {/* Post Modal */}
+      {selectedPost && (
+        <div className="post-modal-overlay" onClick={() => setSelectedPost(null)}>
+          <div className="post-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="close-btn" onClick={() => setSelectedPost(null)} style={{ position: 'absolute', right: '20px', top: '20px', zIndex: 10 }}>✕</button>
+            <Post post={selectedPost} onDelete={handlePostDeleted} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

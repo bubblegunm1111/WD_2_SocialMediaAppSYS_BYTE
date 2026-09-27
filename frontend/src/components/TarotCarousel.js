@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './TarotCarousel.css';
 
-const TarotCarousel = ({ posts }) => {
+const TarotCarousel = ({ posts, onPostClick }) => {
   const [activeIndex, setActiveIndex] = useState(Math.floor(posts.length / 2) || 0);
 
   const handleNext = () => {
@@ -30,19 +30,32 @@ const TarotCarousel = ({ posts }) => {
           else if (offset < 0) className += " left";
           else className += " right";
 
-          // Calculate transforms for 3D effect
-          const translateX = offset * 140; // Spacing between cards
-          const scale = offset === 0 ? 1 : Math.max(0.7, 1 - (absOffset * 0.15));
-          const rotateY = offset === 0 ? 0 : offset < 0 ? 25 : -25;
+          // Calculate transforms for 3D effect without heavy overlap
+          const translateX = offset * 280; // 280px spacing prevents overlap
+          const scale = offset === 0 ? 1 : Math.max(0.85, 1 - (absOffset * 0.05));
+          const rotateY = offset === 0 ? 0 : offset < 0 ? 12 : -12;
           const zIndex = 100 - absOffset;
 
           const style = {
-            transform: `translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg)`,
+            transform: `translateX(${translateX}px) scale(${scale}) perspective(1200px) rotateY(${rotateY}deg)`,
             zIndex: zIndex,
           };
 
+          const userObj = post.user || {};
+
           return (
-            <div key={post._id || index} className={className} style={style} onClick={() => setActiveIndex(index)}>
+            <div 
+              key={post._id || index} 
+              className={className} 
+              style={style} 
+              onClick={() => {
+                if (offset === 0 && onPostClick) {
+                  onPostClick(post);
+                } else {
+                  setActiveIndex(index);
+                }
+              }}
+            >
               <div className="card-inner">
                 {/* Image Background */}
                 <div 
@@ -54,13 +67,17 @@ const TarotCarousel = ({ posts }) => {
                 
                 {/* Content Overlay */}
                 <div className="card-content">
+                  <div className="card-author">
+                    <img src={userObj.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${userObj.username}&backgroundColor=19142d&textColor=f7e8d5`} alt={userObj.username} />
+                    <span>{userObj.displayName || userObj.username}</span>
+                  </div>
                   <h3 className="card-title">
-                    {post.title || post.content.substring(0, 30) + (post.content.length > 30 ? '...' : '')}
+                    {post.title || post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')}
                   </h3>
                   <div className="card-meta">
                     <span className="card-icon">☾</span>
                     <span className="card-time">
-                      {Math.floor(Math.random() * 12) + 1}h ago
+                      {new Date(post.createdAt || Date.now()).toLocaleDateString()}
                     </span>
                   </div>
                 </div>

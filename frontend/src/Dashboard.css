@@ -470,3 +470,36 @@
 .pill-corner.tr { top: -2px; right: 20px; border-bottom: none; border-left: none; }
 .pill-corner.bl { bottom: -2px; left: 20px; border-top: none; border-right: none; }
 .pill-corner.br { bottom: -2px; right: 20px; border-top: none; border-left: none; }
+
+/* Post Modal Overlay */
+.post-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 5, 25, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.post-modal-content {
+  position: relative;
+  width: 650px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(25, 20, 45, 0.95);
+  border: 1px solid rgba(220, 200, 150, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 20px rgba(220, 200, 150, 0.05);
+}
+
+.post-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+.post-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(220, 200, 150, 0.3);
+  border-radius: 10px;
+}
