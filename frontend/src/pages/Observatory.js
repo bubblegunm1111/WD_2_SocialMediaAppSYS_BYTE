@@ -1,23 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LuniarePet from '../components/LuniarePet';
 import catGif from '../cat.gif';
 import '../Dashboard.css';
 import './Observatory.css';
+import { postService } from '../services/api';
 
 const Observatory = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [hoveredConstellation, setHoveredConstellation] = useState(null);
+  const [discoveries, setDiscoveries] = useState([]);
+
+  useEffect(() => {
+    const fetchDiscoveries = async () => {
+      try {
+        const res = await postService.getPosts();
+        if (res.data) setDiscoveries(res.data.slice(0, 3));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDiscoveries();
+  }, []);
+
+  const handleWander = () => {
+    alert("Wandering into the unknown... ✦\n(Imagine transitioning to a random user's page)");
+  };
+
+  const handleConstellationClick = (name) => {
+    alert(`Entering the ${name} constellation... ✦`);
+  };
 
   const constellations = [
-    { id: 'art', name: 'ART', x: 20, y: 30, pages: '14.2K', creators: '4.1K', active: '84' },
-    { id: 'books', name: 'BOOKS', x: 10, y: 60, pages: '9.8K', creators: '2.3K', active: '112' },
-    { id: 'film', name: 'FILM', x: 30, y: 80, pages: '11.4K', creators: '3.5K', active: '45' },
-    { id: 'music', name: 'MUSIC', x: 70, y: 40, pages: '22.1K', creators: '7.8K', active: '230' },
-    { id: 'photography', name: 'PHOTOGRAPHY', x: 80, y: 70, pages: '24.8K', creators: '8.2K', active: '143' },
+    { id: 'art', name: 'ART', x: 20, y: 25, pages: '14.2K', creators: '4.1K', active: '84' },
+    { id: 'books', name: 'BOOKS', x: 10, y: 55, pages: '9.8K', creators: '2.3K', active: '112' },
+    { id: 'film', name: 'FILM', x: 30, y: 75, pages: '11.4K', creators: '3.5K', active: '45' },
     { id: 'writing', name: 'WRITING', x: 50, y: 85, pages: '31.2K', creators: '12K', active: '400' },
+    { id: 'photography', name: 'PHOTOGRAPHY', x: 85, y: 65, pages: '24.8K', creators: '8.2K', active: '143' },
+    { id: 'music', name: 'MUSIC', x: 75, y: 35, pages: '22.1K', creators: '7.8K', active: '230' },
   ];
 
   return (
@@ -77,13 +99,12 @@ const Observatory = () => {
 
         <div className="obs-map-container">
           <svg className="obs-lines" width="100%" height="100%">
-            {/* Draw lines between a few constellations */}
-            <line x1="20%" y1="30%" x2="10%" y2="60%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-            <line x1="20%" y1="30%" x2="70%" y2="40%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-            <line x1="70%" y1="40%" x2="80%" y2="70%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-            <line x1="10%" y1="60%" x2="30%" y2="80%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-            <line x1="30%" y1="80%" x2="50%" y2="85%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-            <line x1="50%" y1="85%" x2="80%" y2="70%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <line x1="20%" y1="25%" x2="10%" y2="55%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <line x1="20%" y1="25%" x2="75%" y2="35%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <line x1="10%" y1="55%" x2="30%" y2="75%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <line x1="30%" y1="75%" x2="50%" y2="85%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <line x1="50%" y1="85%" x2="85%" y2="65%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+            <line x1="85%" y1="65%" x2="75%" y2="35%" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
           </svg>
 
           {constellations.map((c) => (
@@ -93,8 +114,11 @@ const Observatory = () => {
               style={{ left: `${c.x}%`, top: `${c.y}%` }}
               onMouseEnter={() => setHoveredConstellation(c.id)}
               onMouseLeave={() => setHoveredConstellation(null)}
+              onClick={() => handleConstellationClick(c.name)}
             >
-              <div className="obs-node-star">✦</div>
+              <div className="obs-node-star">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg>
+              </div>
               <div className="obs-node-label">{c.name}</div>
               
               {hoveredConstellation === c.id && (
@@ -109,8 +133,10 @@ const Observatory = () => {
           ))}
 
           <div className="obs-wander-container">
-            <button className="obs-wander-btn">
-              <span className="wander-icon">✦</span> WANDER
+            <button className="obs-wander-btn" onClick={handleWander}>
+              <span className="wander-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg>
+              </span> WANDER
             </button>
             <p>"Take me somewhere unexpected."</p>
           </div>
@@ -120,30 +146,17 @@ const Observatory = () => {
           <div className="obs-tonight">
             <h3>───── Tonight's Discoveries ─────</h3>
             <div className="obs-tonight-cards">
-              <div className="discovery-card">
-                <div className="disc-image bg-photo"></div>
-                <div className="disc-info">
-                  <h4>@lunar.muse</h4>
-                  <p>"Rain against the window"</p>
-                  <span>✦ 128 Mesmerized</span>
+              {discoveries.map((post, index) => (
+                <div className="discovery-card" key={post._id || index}>
+                  <div className={`disc-image ${index % 2 === 0 ? 'bg-photo' : 'bg-art'}`} style={{backgroundImage: post.image ? `url(${post.image})` : undefined}}></div>
+                  <div className="disc-info">
+                    <h4>@{post.user?.username || 'wanderer'}</h4>
+                    <p>"{post.content?.substring(0, 40)}{post.content?.length > 40 ? '...' : ''}"</p>
+                    <span>✦ {Math.floor(Math.random() * 200) + 50} Mesmerized</span>
+                  </div>
                 </div>
-              </div>
-              <div className="discovery-card">
-                <div className="disc-image bg-art"></div>
-                <div className="disc-info">
-                  <h4>@violetink</h4>
-                  <p>"Moon Garden"</p>
-                  <span>✦ 94 Enchanting</span>
-                </div>
-              </div>
-              <div className="discovery-card">
-                <div className="disc-image bg-books"></div>
-                <div className="disc-info">
-                  <h4>@nocturne</h4>
-                  <p>"Midnight poetry"</p>
-                  <span>✦ 210 Inspired</span>
-                </div>
-              </div>
+              ))}
+              {discoveries.length === 0 && <p style={{color: '#ccc', fontStyle: 'italic'}}>No discoveries tonight...</p>}
             </div>
           </div>
         </div>
