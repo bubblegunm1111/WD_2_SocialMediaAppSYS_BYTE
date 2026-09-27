@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Observatory from './pages/Observatory';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -21,6 +22,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/observatory"
+              element={
+                <PrivateRoute>
+                  <Observatory />
                 </PrivateRoute>
               }
             />

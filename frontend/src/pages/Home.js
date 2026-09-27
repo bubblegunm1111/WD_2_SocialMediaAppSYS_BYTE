@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
@@ -9,6 +10,7 @@ import catGif from '../cat.gif';
 
 const Home = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -52,12 +54,12 @@ const Home = () => {
         </div>
         
         <nav className="side-nav">
-          <a href="#" className="nav-item active">
+          <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
             <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z"/></svg></span> Home
-          </a>
-          <a href="#" className="nav-item">
+          </Link>
+          <Link to="/observatory" className={`nav-item ${location.pathname === '/observatory' ? 'active' : ''}`}>
             <span className="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M4 20L20 4"/></svg></span> Observatory
-          </a>
+          </Link>
           <a href="#" className="nav-item">
             <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 4C20 4 18 2 14 4C10 6 6 12 4 18L2 22L6 20C12 18 18 14 20 10C22 6 20 4 20 4Z M14 4C14 4 16 10 10 16"/></svg></span> Pages
           </a>

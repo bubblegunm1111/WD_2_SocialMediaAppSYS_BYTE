@@ -1,0 +1,336 @@
+.observatory-layout {
+  background: url('../bg-lunar.png') center/cover fixed;
+}
+.observatory-layout::before {
+  content: '';
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  /* Darker background for observatory to make stars pop */
+  background: rgba(10, 5, 25, 0.85); 
+  z-index: 0;
+  pointer-events: none;
+}
+
+.obs-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.obs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px;
+}
+
+.obs-title-area h1 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 32px;
+  font-weight: normal;
+  color: #f7e8d5;
+  letter-spacing: 4px;
+  margin-bottom: 5px;
+}
+
+.obs-title-area p {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.obs-search-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(220, 200, 150, 0.3);
+  border-radius: 20px;
+  padding: 10px 20px;
+  width: 300px;
+}
+
+.obs-search-icon {
+  color: rgba(220, 200, 150, 0.6);
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.obs-search-bar input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+}
+.obs-search-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.obs-map-container {
+  flex: 1;
+  position: relative;
+  min-height: 500px;
+  margin: 20px 40px;
+}
+
+.obs-lines {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+.obs-node {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.obs-node-star {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s;
+  text-shadow: 0 0 15px rgba(220, 200, 150, 0.2);
+}
+
+.obs-node-label {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+
+.obs-node:hover .obs-node-star {
+  color: #f7e8d5;
+  text-shadow: 0 0 20px rgba(220, 200, 150, 0.8);
+  transform: scale(1.2);
+}
+
+.obs-node:hover .obs-node-label {
+  color: #f7e8d5;
+}
+
+.obs-node-tooltip {
+  position: absolute;
+  top: 100%;
+  margin-top: 15px;
+  background: rgba(25, 20, 45, 0.9);
+  border: 1px solid rgba(220, 200, 150, 0.3);
+  border-radius: 12px;
+  padding: 15px;
+  width: 160px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.obs-node-tooltip h4 {
+  font-family: 'Times New Roman', Times, serif;
+  color: #f7e8d5;
+  margin-bottom: 10px;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.obs-node-tooltip p {
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 4px;
+}
+
+.obs-node-tooltip .active-stat {
+  color: #f7e8d5;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.obs-wander-container {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.obs-wander-btn {
+  background: rgba(25, 20, 45, 0.8);
+  border: 1px solid rgba(220, 200, 150, 0.6);
+  color: #f7e8d5;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+  padding: 15px 40px;
+  border-radius: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+  box-shadow: inset 0 0 15px rgba(220, 200, 150, 0.1), 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.obs-wander-btn:hover {
+  background: rgba(220, 200, 150, 0.15);
+  box-shadow: inset 0 0 20px rgba(220, 200, 150, 0.3), 0 10px 25px rgba(0,0,0,0.6);
+  transform: translateY(-2px);
+}
+
+.wander-icon {
+  font-size: 20px;
+}
+
+.obs-wander-container p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 15px;
+  font-style: italic;
+}
+
+.obs-bottom-sections {
+  padding: 0 40px 40px;
+}
+
+.obs-tonight {
+  text-align: center;
+}
+
+.obs-tonight h3 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 16px;
+  color: rgba(220, 200, 150, 0.8);
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+.obs-tonight-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.discovery-card {
+  width: 200px;
+  background: rgba(25, 20, 45, 0.6);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.disc-image {
+  height: 100px;
+  background-size: cover;
+  background-position: center;
+}
+
+.disc-info {
+  padding: 15px;
+}
+
+.disc-info h4 {
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 5px;
+}
+
+.disc-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.disc-info span {
+  font-size: 12px;
+  color: rgba(220, 200, 150, 0.8);
+}
+
+.obs-sidebar-right {
+  width: 320px;
+  border-left: 1px solid rgba(255,255,255,0.05);
+  background: rgba(10, 5, 25, 0.4);
+}
+
+.obs-widget .widget-header h3 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: rgba(220, 200, 150, 0.9);
+}
+
+.obs-list h4 {
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.obs-list p {
+  font-size: 12px;
+}
+
+.obs-people {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.obs-person {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.obs-person img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(220, 200, 150, 0.4);
+}
+
+.obs-person h4 {
+  font-size: 14px;
+  color: #fff;
+}
+.obs-person p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.orbit-widget {
+  background: rgba(142, 108, 255, 0.05);
+  border: 1px solid rgba(142, 108, 255, 0.2);
+}
+
+.orbit-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+
+.orbit-overlap {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.orbit-overlap span {
+  background: rgba(255,255,255,0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #e2d8ff;
+}
+
+.overlap-stat {
+  color: rgba(220, 200, 150, 0.9) !important;
+  font-weight: 500;
+}
