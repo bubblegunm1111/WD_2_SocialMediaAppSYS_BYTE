@@ -30,29 +30,16 @@ const TarotCarousel = ({ posts, onPostClick }) => {
           else if (offset < 0) className += " left";
           else className += " right";
 
-          // Calculate transforms for 3D effect without heavy overlap
-          
-          let scale = 1.08;
-          let opacity = 1;
-          
-          if (absOffset === 1) {
-            scale = 0.9;
-            opacity = 0.7;
-          } else if (absOffset >= 2) {
-            scale = 0.75;
-            opacity = 0.4;
-          }
-
-          const translateX = offset * 240; // Clean horizontal spacing
+          // Calculate transforms for 3D effect
+          const translateX = offset * 260; // Spread cards out
+          const scale = offset === 0 ? 1.15 : Math.max(0.7, 0.95 - (absOffset * 0.10));
+          const rotateY = offset === 0 ? 0 : offset < 0 ? 25 : -25;
           const zIndex = 100 - absOffset;
 
           const style = {
-            transform: `translateX(${translateX}px) scale(${scale})`,
-            opacity: opacity,
+            transform: `translateX(${translateX}px) scale(${scale}) perspective(1000px) rotateY(${rotateY}deg)`,
             zIndex: zIndex,
           };
-
-          const userObj = post.user || {};
 
           return (
             <div 
@@ -78,10 +65,6 @@ const TarotCarousel = ({ posts, onPostClick }) => {
                 
                 {/* Content Overlay */}
                 <div className="card-content">
-                  <div className="card-author">
-                    <img src={userObj.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${userObj.username}&backgroundColor=19142d&textColor=f7e8d5`} alt={userObj.username} />
-                    <span>{userObj.displayName || userObj.username}</span>
-                  </div>
                   <h3 className="card-title">
                     {post.title || post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')}
                   </h3>
@@ -93,9 +76,18 @@ const TarotCarousel = ({ posts, onPostClick }) => {
                   </div>
                 </div>
 
-                {/* Subtle corner detail */}
-                <div className="subtle-celestial-corner top-right">✦</div>
-                <div className="subtle-celestial-corner bottom-left">✦</div>
+                {/* Ornate border decorations */}
+                <div className="ornate-corner top-left"></div>
+                <div className="ornate-corner top-right"></div>
+                <div className="ornate-corner bottom-left"></div>
+                <div className="ornate-corner bottom-right"></div>
+                
+                {offset === 0 && (
+                  <>
+                    <div className="active-star top-star">✧</div>
+                    <div className="active-star bottom-star">✧</div>
+                  </>
+                )}
               </div>
             </div>
           );

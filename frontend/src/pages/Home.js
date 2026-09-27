@@ -5,7 +5,7 @@ import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
-import FlexCarousel from '../components/FlexCarousel';
+import TarotCarousel from '../components/TarotCarousel';
 import { postService } from '../services/api';
 import '../Dashboard.css';
 import catGif from '../cat.gif';
@@ -17,7 +17,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -42,9 +41,6 @@ const Home = () => {
 
   const handlePostDeleted = (postId) => {
     setPosts(posts.filter(post => post._id !== postId));
-    if (selectedPost && selectedPost._id === postId) {
-      setSelectedPost(null);
-    }
   };
 
   return (
@@ -119,30 +115,7 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <div style={{ width: '100%', height: '400px', position: 'relative' }}>
-                <FlexCarousel 
-                  items={posts.map(post => ({
-                    src: post.mediaUrl || post.image || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop',
-                    title: post.user?.displayName || post.user?.username || 'Unknown',
-                    subtitle: post.title || (post.content && post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')),
-                    alt: 'Post image',
-                    _original: post
-                  }))}
-                  onSelect={(idx, item) => setSelectedPost(item._original)}
-                  preset="liquid"
-                  intro="rise"
-                  cardHeight={0.65}
-                  gap={24}
-                  squeeze={0.15}
-                  bend={0}
-                  tilt={0}
-                  liquid={0}
-                  curl={0}
-                  dispersion={0}
-                  focusOnClick
-                  captions
-                />
-              </div>
+              <TarotCarousel posts={posts} />
             )}
           </div>
         </div>
@@ -230,16 +203,6 @@ const Home = () => {
 
       {/* Messages Modal */}
       {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
-      
-      {/* Post Modal */}
-      {selectedPost && (
-        <div className="post-modal-overlay" onClick={() => setSelectedPost(null)}>
-          <div className="post-modal-content" onClick={e => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setSelectedPost(null)} style={{ position: 'absolute', right: '20px', top: '20px', zIndex: 10 }}>✕</button>
-            <Post post={selectedPost} onDelete={handlePostDeleted} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
