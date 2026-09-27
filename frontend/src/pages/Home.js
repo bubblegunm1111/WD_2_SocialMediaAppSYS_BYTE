@@ -5,7 +5,7 @@ import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
-import TarotCarousel from '../components/TarotCarousel';
+import FlexCarousel from '../components/FlexCarousel';
 import { postService } from '../services/api';
 import '../Dashboard.css';
 import catGif from '../cat.gif';
@@ -119,7 +119,30 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <TarotCarousel posts={posts} onPostClick={(post) => setSelectedPost(post)} />
+              <div style={{ width: '100%', height: '400px', position: 'relative' }}>
+                <FlexCarousel 
+                  items={posts.map(post => ({
+                    src: post.mediaUrl || post.image || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop',
+                    title: post.user?.displayName || post.user?.username || 'Unknown',
+                    subtitle: post.title || (post.content && post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')),
+                    alt: 'Post image',
+                    _original: post
+                  }))}
+                  onSelect={(idx, item) => setSelectedPost(item._original)}
+                  preset="liquid"
+                  intro="rise"
+                  cardHeight={0.65}
+                  gap={24}
+                  squeeze={0.15}
+                  bend={0}
+                  tilt={0}
+                  liquid={0}
+                  curl={0}
+                  dispersion={0}
+                  focusOnClick
+                  captions
+                />
+              </div>
             )}
           </div>
         </div>
