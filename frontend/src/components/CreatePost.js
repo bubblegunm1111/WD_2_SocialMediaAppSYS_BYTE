@@ -47,7 +47,6 @@ const CreatePost = ({ onPostCreated }) => {
           </div>
         </div>
         
-        {/* Optional Media Input if they want to add one (hidden unless they click photo, but we'll show it for functionality) */}
         {content.length > 0 && (
           <input
             type="url"
@@ -69,10 +68,10 @@ const CreatePost = ({ onPostCreated }) => {
 
         <div className="create-post-actions">
           <div className="post-options">
-            <span>📷 Photo</span>
-            <span>📹 Video</span>
-            <span>🎵 Music</span>
-            <span>📄 Page</span>
+            <span>⌕ Photo</span>
+            <span>⧉ Video</span>
+            <span>♪ Music</span>
+            <span>▤ Page</span>
           </div>
           <button
             type="submit"

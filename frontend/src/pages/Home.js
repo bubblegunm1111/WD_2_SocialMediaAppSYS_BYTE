@@ -41,21 +41,21 @@ const Home = () => {
       {/* Left Sidebar */}
       <aside className="sidebar-left">
         <div className="brand-logo">
-          🌙 LUMINARIA
+          ☾ LUMINARIA
         </div>
         
         <nav className="side-nav">
-          <a href="#" className="nav-item active"><span>✨</span> Home</a>
-          <a href="#" className="nav-item"><span>🔭</span> Observatory</a>
-          <a href="#" className="nav-item"><span>📜</span> Pages</a>
-          <a href="#" className="nav-item"><span>✉️</span> Letters</a>
-          <a href="#" className="nav-item"><span>🌟</span> Reflections</a>
-          <a href="#" className="nav-item"><span>🌙</span> My Room</a>
+          <a href="#" className="nav-item active"><span>✧</span> Home</a>
+          <a href="#" className="nav-item"><span>⌖</span> Observatory</a>
+          <a href="#" className="nav-item"><span>☙</span> Pages</a>
+          <a href="#" className="nav-item"><span>✉</span> Letters</a>
+          <a href="#" className="nav-item"><span>✦</span> Reflections</a>
+          <a href="#" className="nav-item"><span>☾</span> My Room</a>
         </nav>
 
         <div className="companion-widget">
           <div className="companion-text">Your companion<br/>is nearby...</div>
-          <div style={{fontSize: '40px', position: 'absolute', right: '10px', bottom: '10px'}}>🐱</div>
+          <div style={{fontSize: '40px', position: 'absolute', right: '10px', bottom: '10px'}}>⚸</div>
         </div>
       </aside>
 
@@ -63,13 +63,13 @@ const Home = () => {
       <main className="main-feed">
         <header className="main-header">
           <div>
-            <h1 className="greeting">Good evening, {user?.displayName || user?.username?.split('_')[0] || 'Magician'} ✨</h1>
+            <h1 className="greeting">Good evening, {user?.displayName || user?.username?.split('_')[0] || 'Magician'} ✧</h1>
             <p className="greeting-sub">The night is young, and there are so many stories waiting to be found.</p>
           </div>
           <div className="top-nav-icons">
-            <span className="icon-btn">🔔</span>
-            <span className="icon-btn">✉️</span>
-            <span className="icon-btn">✨</span>
+            <span className="icon-btn">⍾</span>
+            <span className="icon-btn">✉</span>
+            <span className="icon-btn">✧</span>
             <img src={user?.profilePicture || 'https://i.pravatar.cc/150?img=5'} alt="Profile" className="nav-avatar" />
           </div>
         </header>
@@ -79,7 +79,7 @@ const Home = () => {
 
           {/* Dummy sections matching the UI */}
           <div className="section-title">
-            <span>🌙 Recent from Your Constellations</span>
+            <span>☾ Recent from Your Constellations</span>
             <a href="#" className="view-all">View all</a>
           </div>
           <div className="constellations-grid">
@@ -110,7 +110,7 @@ const Home = () => {
           </div>
 
           <div className="section-title" style={{marginTop: '30px'}}>
-            <span>🌟 Moments from People You Might Like</span>
+            <span>✦ Moments from People You Might Like</span>
             <a href="#" className="view-all">View all</a>
           </div>
           
@@ -142,28 +142,28 @@ const Home = () => {
         
         <div className="widget">
           <div className="widget-header">
-            <h3>🌙 Tonight</h3>
+            <h3>☾ Tonight</h3>
             <a href="#">View all</a>
           </div>
           <ul className="notification-list">
             <li>
-              <div className="notif-icon">✉️</div>
+              <div className="notif-icon">✉</div>
               <p>A letter from someone in Paris</p>
             </li>
             <li>
-              <div className="notif-icon">🖼️</div>
+              <div className="notif-icon">⧉</div>
               <p>Three beautiful illustrations</p>
             </li>
             <li>
-              <div className="notif-icon">📷</div>
+              <div className="notif-icon">⌕</div>
               <p>A midnight photography collection</p>
             </li>
             <li>
-              <div className="notif-icon">✨</div>
+              <div className="notif-icon">✧</div>
               <p>Someone just created a new constellation</p>
             </li>
             <li>
-              <div className="notif-icon">📖</div>
+              <div className="notif-icon">▤</div>
               <p>12 people are journaling</p>
             </li>
           </ul>
@@ -188,7 +188,7 @@ const Home = () => {
           </div>
           
           <div className="companion-box">
-             <div className="companion-avatar">🐱</div>
+             <div className="companion-avatar">⚸</div>
              <div className="companion-details">
                 <p>Your companion</p>
                 <h4>Mooncat</h4>
@@ -198,13 +198,13 @@ const Home = () => {
         </div>
 
         <div className="widget">
-          <h3>✨ Quick Actions</h3>
+          <h3>✧ Quick Actions</h3>
           <br/>
           <div className="quick-actions-grid">
-            <button>✒️ Write a Page</button>
-            <button>🔭 Explore Observatory</button>
-            <button>✉️ Check Letters</button>
-            <button>🏰 Visit Memory House</button>
+            <button>✎ Write a Page</button>
+            <button>⌖ Explore Observatory</button>
+            <button>✉ Check Letters</button>
+            <button>⌂ Visit Memory House</button>
           </div>
         </div>
 
