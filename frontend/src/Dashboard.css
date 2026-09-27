@@ -2,9 +2,18 @@
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background: url('./dash.png') center/cover fixed;
+  background: url('./bg-lunar.png') center/cover fixed;
   color: var(--text-main);
   overflow: hidden;
+}
+
+.dashboard-layout::before {
+  content: '';
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(10, 5, 25, 0.6);
+  z-index: 0;
+  pointer-events: none;
 }
 
 
@@ -17,12 +26,14 @@
 /* Sidebar Left */
 .sidebar-left {
   width: 260px;
-  border-right: 1px solid var(--glass-border);
+  margin: 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  background: rgba(15, 10, 30, 0.4);
-  backdrop-filter: blur(15px);
+  background: url('./dash.png') center/cover no-repeat;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 .brand-logo {
