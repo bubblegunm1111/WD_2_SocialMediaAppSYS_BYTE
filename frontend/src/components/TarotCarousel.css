@@ -7,30 +7,31 @@
   justify-content: center;
   margin: 30px 0;
   overflow: hidden;
+  perspective: 1500px;
 }
 
-.tarot-carousel {
-  position: relative;
-  width: 100%;
-  height: 380px;
+.tarot-carousel-track {
   display: flex;
   align-items: center;
-  justify-content: center;
-  perspective: 1200px;
+  gap: 20px;
+  width: max-content;
+  cursor: grab;
   transform-style: preserve-3d;
+  padding: 0 40vw; /* Padding so we can drag the first/last items to center */
+}
+
+.tarot-carousel-track:active {
+  cursor: grabbing;
 }
 
 .tarot-card {
-  position: absolute;
+  position: relative;
   width: 240px;
   height: 360px;
-  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
   cursor: pointer;
   border-radius: 12px;
-}
-
-.tarot-card.active {
-  cursor: default;
+  transform-style: preserve-3d;
 }
 
 .card-inner {
@@ -39,13 +40,8 @@
   height: 100%;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(220, 200, 150, 0.3);
-  background: #110e1b;
-}
-
-/* For the active card, make the border brighter */
-.tarot-card.active .card-inner {
-  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(220, 200, 150, 0.2), inset 0 0 0 2px rgba(220, 200, 150, 0.8);
+  box-shadow: 0 25px 45px rgba(0,0,0,0.7);
+  background: #090710;
 }
 
 .card-bg {
@@ -53,12 +49,6 @@
   top: 0; left: 0; right: 0; bottom: 0;
   background-size: cover;
   background-position: center;
-  filter: brightness(0.8) contrast(1.1);
-  transition: filter 0.3s;
-}
-
-.tarot-card.active .card-bg {
-  filter: brightness(1) contrast(1.05);
 }
 
 .card-content {
@@ -66,100 +56,103 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 50px 20px 20px;
-  background: linear-gradient(to top, rgba(10,5,20,0.95) 0%, rgba(10,5,20,0.7) 60%, transparent 100%);
+  padding: 60px 20px 20px;
+  background: linear-gradient(to top, rgba(10,5,20,0.98) 0%, rgba(10,5,20,0.8) 50%, transparent 100%);
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 10;
 }
 
 .card-title {
   color: #f7e8d5;
   font-family: 'Times New Roman', Times, serif;
-  font-size: 18px;
-  line-height: 1.3;
+  font-size: 19px;
+  line-height: 1.35;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9);
 }
 
 .card-meta {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(220, 200, 150, 0.7);
+  color: rgba(220, 200, 150, 0.8);
   font-size: 12px;
 }
 
-.card-icon {
-  font-size: 14px;
-}
-
-/* Ornate corner styling */
-.ornate-corner {
+/* Highly Magical Borders */
+.magical-border-frame {
   position: absolute;
-  width: 15px;
-  height: 15px;
-  border: 1px solid rgba(220, 200, 150, 0.6);
-  opacity: 0.5;
-  transition: opacity 0.3s;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  pointer-events: none;
+  z-index: 20;
+  border-radius: 8px;
 }
 
-.tarot-card.active .ornate-corner {
-  opacity: 1;
-  border-width: 2px;
-}
-
-.top-left { top: 6px; left: 6px; border-right: none; border-bottom: none; }
-.top-right { top: 6px; right: 6px; border-left: none; border-bottom: none; }
-.bottom-left { bottom: 6px; left: 6px; border-right: none; border-top: none; }
-.bottom-right { bottom: 6px; right: 6px; border-left: none; border-top: none; }
-
-.active-star {
+.border-line {
   position: absolute;
+  background: linear-gradient(90deg, transparent, rgba(230, 210, 160, 0.8), transparent);
+}
+
+.top-line { top: 0; left: 10%; right: 10%; height: 1px; }
+.bottom-line { bottom: 0; left: 10%; right: 10%; height: 1px; }
+.left-line { left: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, rgba(230, 210, 160, 0.8), transparent); }
+.right-line { right: 0; top: 10%; bottom: 10%; width: 1px; background: linear-gradient(180deg, transparent, rgba(230, 210, 160, 0.8), transparent); }
+
+.corner-dec {
+  position: absolute;
+  color: rgba(230, 210, 160, 0.9);
+  font-size: 10px;
+  line-height: 1;
+  text-shadow: 0 0 5px rgba(230, 210, 160, 0.5);
+}
+
+.top-left { top: -4px; left: -4px; }
+.top-right { top: -4px; right: -4px; }
+.bottom-left { bottom: -4px; left: -4px; }
+.bottom-right { bottom: -4px; right: -4px; }
+
+.center-star-top {
+  position: absolute;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  color: #f7e8d5;
-  font-size: 14px;
-  text-shadow: 0 0 10px rgba(220, 200, 150, 0.8);
+  color: #fff;
+  font-size: 18px;
+  text-shadow: 0 0 12px rgba(255, 230, 180, 1), 0 0 24px rgba(255, 230, 180, 0.8);
+  animation: pulse-star 2s infinite ease-in-out;
 }
 
-.top-star { top: -2px; }
-.bottom-star { bottom: -2px; }
-
-/* Navigation buttons */
-.nav-btn {
+.center-star-bottom {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(10, 5, 20, 0.6);
-  border: 1px solid rgba(220, 200, 150, 0.4);
-  color: #f7e8d5;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-  transition: all 0.2s;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 18px;
+  text-shadow: 0 0 12px rgba(255, 230, 180, 1), 0 0 24px rgba(255, 230, 180, 0.8);
+  animation: pulse-star 2s infinite ease-in-out reverse;
 }
 
-.nav-btn:hover:not(:disabled) {
-  background: rgba(220, 200, 150, 0.2);
-  border-color: rgba(220, 200, 150, 0.8);
+.magical-glow-overlay {
+  position: absolute;
+  top: -10px; left: -10px; right: -10px; bottom: -10px;
+  border-radius: 15px;
+  box-shadow: inset 0 0 20px rgba(230, 210, 160, 0.4), 0 0 30px rgba(230, 210, 160, 0.2);
+  pointer-events: none;
 }
 
-.nav-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
+@keyframes pulse-star {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  50% { transform: translateX(-50%) scale(1.2); opacity: 1; text-shadow: 0 0 15px rgba(255, 230, 180, 1), 0 0 30px rgba(255, 230, 180, 0.8); }
+  100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
 }
 
-.prev-btn { left: 10px; }
-.next-btn { right: 10px; }
-
+/* Dots Indicator */
 .carousel-dots-wrapper {
   position: absolute;
   bottom: -30px;
