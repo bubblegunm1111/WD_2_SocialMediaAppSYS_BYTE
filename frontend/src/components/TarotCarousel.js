@@ -32,18 +32,18 @@ const TarotCarousel = ({ posts, onPostClick }) => {
 
           // Calculate transforms for 3D effect without heavy overlap
           
-          let scale = 1;
+          let scale = 1.08;
           let opacity = 1;
           
           if (absOffset === 1) {
-            scale = 0.96;
-            opacity = 0.85;
+            scale = 0.9;
+            opacity = 0.7;
           } else if (absOffset >= 2) {
-            scale = 0.90;
-            opacity = 0.5;
+            scale = 0.75;
+            opacity = 0.4;
           }
 
-          const translateX = offset * 260; // Clean horizontal spacing
+          const translateX = offset * 240; // Clean horizontal spacing
           const zIndex = 100 - absOffset;
 
           const style = {
