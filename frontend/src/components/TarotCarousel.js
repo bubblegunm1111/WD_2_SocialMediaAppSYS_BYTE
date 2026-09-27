@@ -31,7 +31,6 @@ const TarotCarousel = ({ posts, onPostClick }) => {
           else className += " right";
 
           // Calculate transforms for 3D effect without heavy overlap
-          const absOffset = Math.abs(offset);
           
           let scale = 1;
           let opacity = 1;
