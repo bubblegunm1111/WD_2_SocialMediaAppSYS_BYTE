@@ -1,0 +1,357 @@
+const express = require('express');
+const router = express.Router();
+const { body, validationResult } = require('express-validator');
+const auth = require('../middleware/auth');
+const Post = require('../models/Post');
+const Like = require('../models/Like');
+const Comment = require('../models/Comment');
+
+// @route   GET /api/posts
+// @desc    Get all posts (feed)
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('userId', 'username displayName profilePicture');
+
+    const total = await Post.countDocuments();
+
+    res.json({
+      success: true,
+      count: posts.length,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+      data: posts
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   GET /api/posts/:id
+// @desc    Get single post by ID
+// @access  Public
+router.get('/:id', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate('userId', 'username displayName profilePicture');
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: post
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   POST /api/posts
+// @desc    Create new post
+// @access  Private
+router.post('/', auth, [
+  body('content').trim().notEmpty().isLength({ max: 5000 })
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const { content, mediaUrl } = req.body;
+
+    const post = new Post({
+      userId: req.user._id,
+      content,
+      mediaUrl: mediaUrl || ''
+    });
+
+    await post.save();
+    await post.populate('userId', 'username displayName profilePicture');
+
+    res.status(201).json({
+      success: true,
+      data: post
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   PUT /api/posts/:id
+// @desc    Update post
+// @access  Private (owner only)
+router.put('/:id', auth, [
+  body('content').optional().trim().notEmpty().isLength({ max: 5000 })
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    // Check ownership
+    if (post.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this post'
+      });
+    }
+
+    const { content, mediaUrl } = req.body;
+
+    if (content !== undefined) post.content = content;
+    if (mediaUrl !== undefined) post.mediaUrl = mediaUrl;
+
+    await post.save();
+    await post.populate('userId', 'username displayName profilePicture');
+
+    res.json({
+      success: true,
+      data: post
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/posts/:id
+// @desc    Delete post
+// @access  Private (owner only)
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    // Check ownership
+    if (post.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to delete this post'
+      });
+    }
+
+    await post.deleteOne();
+
+    // Delete associated likes and comments
+    await Like.deleteMany({ postId: req.params.id });
+    await Comment.deleteMany({ postId: req.params.id });
+
+    res.json({
+      success: true,
+      message: 'Post deleted successfully'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   POST /api/posts/:id/like
+// @desc    Like a post
+// @access  Private
+router.post('/:id/like', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    // Check if already liked
+    const existingLike = await Like.findOne({
+      postId: req.params.id,
+      userId: req.user._id
+    });
+
+    if (existingLike) {
+      return res.status(400).json({
+        success: false,
+        message: 'Post already liked'
+      });
+    }
+
+    const like = new Like({
+      postId: req.params.id,
+      userId: req.user._id
+    });
+
+    await like.save();
+
+    // Update likes count
+    post.likesCount += 1;
+    await post.save();
+
+    res.json({
+      success: true,
+      message: 'Post liked successfully',
+      data: { likesCount: post.likesCount }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/posts/:id/like
+// @desc    Unlike a post
+// @access  Private
+router.delete('/:id/like', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    const like = await Like.findOneAndDelete({
+      postId: req.params.id,
+      userId: req.user._id
+    });
+
+    if (!like) {
+      return res.status(400).json({
+        success: false,
+        message: 'Post not liked yet'
+      });
+    }
+
+    // Update likes count
+    post.likesCount = Math.max(0, post.likesCount - 1);
+    await post.save();
+
+    res.json({
+      success: true,
+      message: 'Post unliked successfully',
+      data: { likesCount: post.likesCount }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   GET /api/posts/:id/likes
+// @desc    Get all likes for a post
+// @access  Public
+router.get('/:id/likes', async (req, res) => {
+  try {
+    const likes = await Like.find({ postId: req.params.id })
+      .populate('userId', 'username displayName profilePicture')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: likes.length,
+      data: likes
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   GET /api/posts/:id/comments
+// @desc    Get all comments for a post
+// @access  Public
+router.get('/:id/comments', async (req, res) => {
+  try {
+    const comments = await Comment.find({ postId: req.params.id })
+      .populate('userId', 'username displayName profilePicture')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: comments.length,
+      data: comments
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   POST /api/posts/:id/comments
+// @desc    Add comment to post
+// @access  Private
+router.post('/:id/comments', auth, [
+  body('content').trim().notEmpty().isLength({ max: 1000 })
+], async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: 'Post not found'
+      });
+    }
+
+    const comment = new Comment({
+      postId: req.params.id,
+      userId: req.user._id,
+      content: req.body.content
+    });
+
+    await comment.save();
+    await comment.populate('userId', 'username displayName profilePicture');
+
+    // Update comments count
+    post.commentsCount += 1;
+    await post.save();
+
+    res.status(201).json({
+      success: true,
+      data: comment
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+module.exports = router;
