@@ -5,7 +5,7 @@ import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
 import { postService } from '../services/api';
 import '../Dashboard.css';
-import catVideo from '../cat.mp4';
+import catGif from '../cat.gif';
 
 const Home = () => {
   const { user } = useAuth();
@@ -56,7 +56,7 @@ const Home = () => {
         </nav>
 
         <div className="companion-widget">
-          <video src={catVideo} autoPlay loop muted playsInline className="companion-video-bg" />
+          <img src={catGif} className="companion-video-bg" alt="Companion Cat" />
           <div className="companion-text">Your companion<br/>is nearby...</div>
         </div>
       </aside>
@@ -191,7 +191,7 @@ const Home = () => {
           
           <div className="companion-box">
              <div className="companion-avatar">
-               <video src={catVideo} autoPlay loop muted playsInline className="companion-video-avatar" />
+               <img src={catGif} className="companion-video-avatar" alt="Mooncat" />
              </div>
              <div className="companion-details">
                 <p>Your companion</p>
