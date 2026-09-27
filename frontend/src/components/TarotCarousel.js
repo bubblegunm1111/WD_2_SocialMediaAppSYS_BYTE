@@ -31,13 +31,25 @@ const TarotCarousel = ({ posts, onPostClick }) => {
           else className += " right";
 
           // Calculate transforms for 3D effect without heavy overlap
-          const translateX = offset * 280; // 280px spacing prevents overlap
-          const scale = offset === 0 ? 1 : Math.max(0.85, 1 - (absOffset * 0.05));
-          const rotateY = offset === 0 ? 0 : offset < 0 ? 12 : -12;
+          const absOffset = Math.abs(offset);
+          
+          let scale = 1;
+          let opacity = 1;
+          
+          if (absOffset === 1) {
+            scale = 0.96;
+            opacity = 0.85;
+          } else if (absOffset >= 2) {
+            scale = 0.90;
+            opacity = 0.5;
+          }
+
+          const translateX = offset * 260; // Clean horizontal spacing
           const zIndex = 100 - absOffset;
 
           const style = {
-            transform: `translateX(${translateX}px) scale(${scale}) perspective(1200px) rotateY(${rotateY}deg)`,
+            transform: `translateX(${translateX}px) scale(${scale})`,
+            opacity: opacity,
             zIndex: zIndex,
           };
 
@@ -82,18 +94,9 @@ const TarotCarousel = ({ posts, onPostClick }) => {
                   </div>
                 </div>
 
-                {/* Ornate border decorations */}
-                <div className="ornate-corner top-left"></div>
-                <div className="ornate-corner top-right"></div>
-                <div className="ornate-corner bottom-left"></div>
-                <div className="ornate-corner bottom-right"></div>
-                
-                {offset === 0 && (
-                  <>
-                    <div className="active-star top-star">✧</div>
-                    <div className="active-star bottom-star">✧</div>
-                  </>
-                )}
+                {/* Subtle corner detail */}
+                <div className="subtle-celestial-corner top-right">✦</div>
+                <div className="subtle-celestial-corner bottom-left">✦</div>
               </div>
             </div>
           );
@@ -102,17 +105,20 @@ const TarotCarousel = ({ posts, onPostClick }) => {
 
       <button className="nav-btn next-btn" onClick={handleNext} disabled={activeIndex === posts.length - 1}>›</button>
       
-      {/* Dots indicator */}
-      <div className="carousel-dots">
-        {posts.map((_, i) => (
-          <span 
-            key={i} 
-            className={`dot ${i === activeIndex ? 'active' : ''}`}
-            onClick={() => setActiveIndex(i)}
-          >
-            {i === activeIndex ? '✦' : '•'}
-          </span>
-        ))}
+      {/* Dots indicator with thin line */}
+      <div className="carousel-dots-wrapper">
+        <div className="carousel-dots-line"></div>
+        <div className="carousel-dots">
+          {posts.map((_, i) => (
+            <span 
+              key={i} 
+              className={`dot ${i === activeIndex ? 'active' : ''}`}
+              onClick={() => setActiveIndex(i)}
+            >
+              {i === activeIndex ? '✦' : '•'}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
