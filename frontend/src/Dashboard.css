@@ -70,37 +70,31 @@
   text-shadow: none;
 }
 
-.companion-widget-container {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  padding-top: 80px;
-}
-
-.companion-cat-top {
-  position: absolute;
-  top: 0;
-  width: 110px;
-  height: auto;
-  object-fit: contain;
-  z-index: 2;
-  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
-}
-
 .companion-ornate-card {
-  background: rgba(20, 15, 35, 0.85);
+  margin-top: auto;
+  background: rgba(25, 20, 45, 0.85);
   border: 1px solid rgba(220, 200, 150, 0.3);
-  border-radius: 12px;
-  padding: 15px 20px;
+  border-radius: 16px;
+  padding: 30px 20px 20px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(220, 200, 150, 0.05);
   position: relative;
+}
+
+.companion-cat-top {
+  position: absolute;
+  top: -110px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: auto;
+  object-fit: contain;
   z-index: 1;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+  pointer-events: none;
 }
 
 .companion-ornate-card::before,
@@ -109,17 +103,19 @@
   position: absolute;
   font-size: 10px;
   color: rgba(220, 200, 150, 0.4);
+  z-index: 1;
 }
-.companion-ornate-card::before { top: 5px; left: 5px; }
-.companion-ornate-card::after { bottom: 5px; right: 5px; }
+.companion-ornate-card::before { top: 8px; left: 8px; }
+.companion-ornate-card::after { bottom: 8px; right: 8px; }
 
 .companion-text {
   font-family: var(--font-body);
-  font-size: 13px;
-  color: #e2d8ff;
+  font-size: 14px;
+  color: #fff;
   line-height: 1.5;
-  text-shadow: none;
-  position: static;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5);
   width: auto;
   text-align: left;
 }
@@ -127,6 +123,8 @@
 .companion-symbol {
   font-size: 20px;
   color: rgba(220, 200, 150, 0.8);
+  position: relative;
+  z-index: 2;
   text-shadow: 0 0 10px rgba(220, 200, 150, 0.4);
 }
 
