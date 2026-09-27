@@ -2,7 +2,7 @@
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background: url('./bg-lunar.png') center/cover fixed;
+  background: url('./dash.png') center/cover fixed;
   color: var(--text-main);
   overflow: hidden;
 }
