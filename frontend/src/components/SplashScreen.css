@@ -9,6 +9,11 @@
   z-index: 9999;
   overflow: hidden;
   transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s ease-in-out;
+  cursor: grab;
+}
+
+.splash-container:active {
+  cursor: grabbing;
 }
 
 .splash-container.swiped-up {
@@ -19,8 +24,16 @@
 .splash-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at center, rgba(15, 10, 28, 0.4) 0%, rgba(10, 5, 20, 0.95) 100%);
+  background: radial-gradient(circle at 30% 40%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
+              radial-gradient(circle at 70% 60%, rgba(142, 108, 255, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at center, rgba(15, 10, 28, 0.3) 0%, rgba(10, 5, 20, 0.95) 100%);
   z-index: 1;
+  animation: overlayPulse 8s ease-in-out infinite;
+}
+
+@keyframes overlayPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
 }
 
 .splash-content {
@@ -30,39 +43,74 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+.cursor-glow {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(142, 108, 255, 0.18) 30%, rgba(34, 211, 238, 0.12) 50%, transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  transition: opacity 0.2s ease;
+  animation: cursorPulse 2.5s ease-in-out infinite;
+  mix-blend-mode: screen;
+  filter: blur(50px);
+}
+
+@keyframes cursorPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+    filter: blur(50px);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.9;
+    filter: blur(60px);
+  }
 }
 
 .splash-logo {
   font-family: var(--font-heading);
-  font-size: 5rem;
+  font-size: 5.5rem;
   font-weight: 700;
   color: transparent;
-  background: linear-gradient(to right, #ffffff, #a890fe, #ffffff);
+  background: linear-gradient(135deg, #38bdf8 0%, #a890fe 50%, #38bdf8 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: shine 3s linear infinite, float 4s ease-in-out infinite, fadeIn 2s ease-out forwards;
+  animation: shine 4s linear infinite, float 4s ease-in-out infinite, fadeIn 2s ease-out forwards;
   opacity: 0;
-  text-shadow: 0 0 40px rgba(168, 144, 254, 0.5);
-  letter-spacing: 4px;
+  text-shadow: 0 0 60px rgba(56, 189, 248, 0.4), 0 0 100px rgba(168, 144, 254, 0.3);
+  letter-spacing: 8px;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
 }
 
 .splash-tagline {
   font-family: var(--font-body);
-  color: var(--text-muted);
-  font-size: 1.2rem;
-  margin-top: 10px;
+  color: #94a3b8;
+  font-size: 1.3rem;
+  margin-top: 15px;
   opacity: 0;
   animation: slideUpFade 1.5s ease-out 1s forwards;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
+  font-weight: 300;
 }
 
 .splash-moon {
-  font-size: 4rem;
-  margin-bottom: 20px;
+  font-size: 5rem;
+  margin-bottom: 30px;
   opacity: 0;
   animation: pulseGlow 3s ease-in-out infinite, dropIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  filter: drop-shadow(0 0 20px rgba(168, 144, 254, 0.8));
+  filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.8)) drop-shadow(0 0 50px rgba(168, 144, 254, 0.6));
+  transition: transform 0.3s ease-out;
+  will-change: transform;
 }
 
 .particles {
@@ -75,30 +123,110 @@
 
 .particle {
   position: absolute;
-  background: #fff;
+  background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(56, 189, 248, 0.8) 50%, transparent 100%);
   border-radius: 50%;
-  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
-  animation: floatParticle 4s infinite linear;
+  box-shadow: 0 0 15px 3px rgba(56, 189, 248, 0.6), 0 0 25px 5px rgba(142, 108, 255, 0.4);
+  animation: floatParticle 6s infinite ease-in-out;
   opacity: 0;
+  will-change: transform, opacity;
+}
+
+.splash-orbs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.3;
+  animation: orbFloat 8s ease-in-out infinite;
+  transition: transform 0.3s ease-out;
+  will-change: transform;
+}
+
+.orb-1 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent);
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(142, 108, 255, 0.3), transparent);
+  bottom: -150px;
+  right: -150px;
+  animation-delay: 2s;
+}
+
+.orb-3 {
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(79, 209, 197, 0.25), transparent);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 4s;
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(20px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
 .swipe-hint {
   position: absolute;
-  bottom: 40px;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--text-muted);
+  color: #94a3b8;
   font-family: var(--font-body);
   font-size: 1rem;
   letter-spacing: 2px;
   animation: bounceHint 2s infinite ease-in-out;
   cursor: pointer;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.swipe-hint:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.hint-icon {
+  font-size: 1.2rem;
+  animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-3px); }
 }
 
 @keyframes bounceHint {
   0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -10px); }
+  50% { transform: translate(-50%, -12px); }
 }
 
 @keyframes shine {
@@ -106,32 +234,60 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-15px) scale(1.02); }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; filter: blur(10px); transform: scale(0.9); }
+  from { opacity: 0; filter: blur(15px); transform: scale(0.85); }
   to { opacity: 1; filter: blur(0); transform: scale(1); }
 }
 
 @keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes dropIn {
-  0% { opacity: 0; transform: translateY(-50px) scale(0.5); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% { opacity: 0; transform: translateY(-80px) scale(0.3) rotate(-10deg); }
+  60% { transform: translateY(10px) scale(1.05) rotate(2deg); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
 }
 
 @keyframes pulseGlow {
-  0%, 100% { filter: drop-shadow(0 0 20px rgba(168, 144, 254, 0.6)); }
-  50% { filter: drop-shadow(0 0 40px rgba(200, 180, 255, 1)); }
+  0%, 100% {
+    filter: drop-shadow(0 0 30px rgba(56, 189, 248, 0.6))
+            drop-shadow(0 0 50px rgba(168, 144, 254, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 50px rgba(56, 189, 248, 1))
+            drop-shadow(0 0 80px rgba(200, 180, 255, 1));
+  }
 }
 
 @keyframes floatParticle {
-  0% { transform: translateY(100vh) scale(0); opacity: 0; }
-  50% { opacity: 0.8; }
-  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+  0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  50% { opacity: 1; transform: translateY(50vh) translateX(30px) scale(1); }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(-10vh) translateX(-20px) scale(1.8); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .splash-logo {
+    font-size: 3.5rem;
+    letter-spacing: 4px;
+  }
+
+  .splash-moon {
+    font-size: 3.5rem;
+  }
+
+  .splash-tagline {
+    font-size: 1rem;
+  }
+
+  .cursor-glow {
+    display: none;
+  }
 }

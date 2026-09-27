@@ -4,18 +4,46 @@ import './SplashScreen.css';
 const SplashScreen = ({ onComplete }) => {
   const [particles, setParticles] = useState([]);
   const [isSwiped, setIsSwiped] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMouseMoving, setIsMouseMoving] = useState(false);
   const touchStartY = useRef(0);
+  const mouseMoveTimeout = useRef(null);
 
   useEffect(() => {
-    // Generate random particles
-    const newParticles = Array.from({ length: 25 }).map((_, i) => ({
+    // Generate random particles with enhanced properties
+    const newParticles = Array.from({ length: 40 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      animationDuration: `${Math.random() * 3 + 2}s`,
-      animationDelay: `${Math.random() * 2}s`,
-      size: `${Math.random() * 4 + 1}px`
+      top: `${Math.random() * 100}%`,
+      animationDuration: `${Math.random() * 4 + 3}s`,
+      animationDelay: `${Math.random() * 3}s`,
+      size: `${Math.random() * 5 + 2}px`,
+      opacity: Math.random() * 0.6 + 0.2
     }));
     setParticles(newParticles);
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+      setIsMouseMoving(true);
+
+      if (mouseMoveTimeout.current) {
+        clearTimeout(mouseMoveTimeout.current);
+      }
+
+      mouseMoveTimeout.current = setTimeout(() => {
+        setIsMouseMoving(false);
+      }, 150);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (mouseMoveTimeout.current) {
+        clearTimeout(mouseMoveTimeout.current);
+      }
+    };
   }, []);
 
   const handleSwipeUp = () => {
@@ -23,7 +51,7 @@ const SplashScreen = ({ onComplete }) => {
     setIsSwiped(true);
     setTimeout(() => {
       onComplete();
-    }, 1000); // Wait for CSS transition to finish
+    }, 1000);
   };
 
   const handleWheel = (e) => {
@@ -41,19 +69,28 @@ const SplashScreen = ({ onComplete }) => {
     }
   };
 
-  // For mouse drag
   const handleMouseDown = (e) => {
     touchStartY.current = e.clientY;
   };
-  
+
   const handleMouseUp = (e) => {
     if (touchStartY.current - e.clientY > 50) {
       handleSwipeUp();
     }
   };
 
+  const calculateParallax = (baseX, baseY, depth) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const moveX = (mousePosition.x - centerX) * depth;
+    const moveY = (mousePosition.y - centerY) * depth;
+    return {
+      transform: `translate(calc(${baseX} + ${moveX}px), calc(${baseY} + ${moveY}px))`
+    };
+  };
+
   return (
-    <div 
+    <div
       className={`splash-container ${isSwiped ? 'swiped-up' : ''}`}
       onWheel={handleWheel}
       onTouchStart={handleTouchStart}
@@ -62,16 +99,29 @@ const SplashScreen = ({ onComplete }) => {
       onMouseUp={handleMouseUp}
     >
       <div className="splash-overlay"></div>
-      
+
+      {/* Mouse cursor effect */}
+      {isMouseMoving && (
+        <div
+          className="cursor-glow"
+          style={{
+            left: `${mousePosition.x}px`,
+            top: `${mousePosition.y}px`
+          }}
+        />
+      )}
+
       <div className="particles">
         {particles.map(p => (
-          <div 
-            key={p.id} 
+          <div
+            key={p.id}
             className="particle"
             style={{
               left: p.left,
+              top: p.top,
               width: p.size,
               height: p.size,
+              opacity: p.opacity,
               animationDuration: p.animationDuration,
               animationDelay: p.animationDelay
             }}
@@ -79,14 +129,21 @@ const SplashScreen = ({ onComplete }) => {
         ))}
       </div>
 
-      <div className="splash-content">
-        <div className="splash-moon">☾</div>
+      <div className="splash-content" style={calculateParallax('0px', '0px', 0.02)}>
+        <div className="splash-moon" style={calculateParallax('0px', '0px', 0.05)}>☾</div>
         <h1 className="splash-logo">LUMINAR</h1>
         <p className="splash-tagline">Enter the magical arena...</p>
+        <div className="splash-orbs">
+          <div className="orb orb-1" style={calculateParallax('0px', '0px', 0.08)}></div>
+          <div className="orb orb-2" style={calculateParallax('0px', '0px', 0.06)}></div>
+          <div className="orb orb-3" style={calculateParallax('0px', '0px', 0.04)}></div>
+        </div>
       </div>
 
       <div className="swipe-hint" onClick={handleSwipeUp}>
-        ⌃ Swipe up to enter ⌃
+        <span className="hint-icon">⌃</span>
+        <span>Swipe up to enter</span>
+        <span className="hint-icon">⌃</span>
       </div>
     </div>
   );
