@@ -92,7 +92,9 @@ const Home = () => {
             <span className="icon-btn">⍾</span>
             <span className="icon-btn">✉</span>
             <span className="icon-btn">✧</span>
-            <img src={user?.profilePicture || 'https://i.pravatar.cc/150?img=5'} alt="Profile" className="nav-avatar" />
+            <Link to={`/profile/${user?._id || user?.id}`}>
+              <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="Profile" className="nav-avatar" />
+            </Link>
           </div>
         </header>
 
@@ -197,7 +199,9 @@ const Home = () => {
             <a href="#">View Room</a>
           </div>
           <div className="room-user">
-            <img src={user?.profilePicture || 'https://i.pravatar.cc/150?img=5'} alt="User" />
+            <Link to={`/profile/${user?._id || user?.id}`}>
+              <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="User" />
+            </Link>
             <div>
               <h4>{user?.displayName || user?.username || 'You'}</h4>
               <p>Collecting little beautiful things.</p>

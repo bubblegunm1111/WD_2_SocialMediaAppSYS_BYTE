@@ -95,7 +95,7 @@ const Profile = () => {
         <div className="post-card" style={{ marginBottom: '20px' }}>
           <div style={{ padding: '30px', textAlign: 'center' }}>
             <img
-              src={user.profilePicture || 'https://via.placeholder.com/150'}
+              src={user.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`}
               alt={user.username}
               style={{
                 width: '150px',

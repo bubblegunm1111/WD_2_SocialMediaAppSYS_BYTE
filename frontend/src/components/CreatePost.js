@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
 
@@ -35,7 +36,9 @@ const CreatePost = ({ onPostCreated }) => {
     <div className="create-post">
       <form onSubmit={handleSubmit}>
         <div className="create-post-header">
-          <img src={user?.profilePicture || 'https://i.pravatar.cc/150?img=5'} alt="Profile" />
+          <Link to={`/profile/${user?._id || user?.id}`}>
+            <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="Profile" />
+          </Link>
           <div className="create-post-input-area">
             <input
               type="text"
