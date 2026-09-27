@@ -43,16 +43,33 @@ const Home = () => {
       {/* Left Sidebar */}
       <aside className="sidebar-left">
         <div className="brand-logo">
-          ☾ LUMINARIA
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+            <circle cx="12" cy="12" r="10" strokeDasharray="1 3"/>
+            <path d="M14 6C10 6 7 9 7 13C7 16.5 9.5 19.5 13 20C9.5 19 7.5 16 7.5 12C7.5 8.5 10 6.5 14 6Z" fill="currentColor"/>
+            <path d="M12 2V4M12 20V22M2 12H4M20 12H22"/>
+          </svg>
+          LUNARIA
         </div>
         
         <nav className="side-nav">
-          <a href="#" className="nav-item active"><span>✧</span> Home</a>
-          <a href="#" className="nav-item"><span>⌖</span> Observatory</a>
-          <a href="#" className="nav-item"><span>☙</span> Pages</a>
-          <a href="#" className="nav-item"><span>✉</span> Letters</a>
-          <a href="#" className="nav-item"><span>✦</span> Reflections</a>
-          <a href="#" className="nav-item"><span>☾</span> My Room</a>
+          <a href="#" className="nav-item active">
+            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z"/></svg></span> Home
+          </a>
+          <a href="#" className="nav-item">
+            <span className="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M4 20L20 4"/></svg></span> Observatory
+          </a>
+          <a href="#" className="nav-item">
+            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 4C20 4 18 2 14 4C10 6 6 12 4 18L2 22L6 20C12 18 18 14 20 10C22 6 20 4 20 4Z M14 4C14 4 16 10 10 16"/></svg></span> Pages
+          </a>
+          <a href="#" className="nav-item">
+            <span className="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 6L12 13L21 6"/></svg></span> Letters
+          </a>
+          <a href="#" className="nav-item">
+            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.9 4.9L7.7 7.7M16.3 16.3L19.1 19.1M4.9 19.1L7.7 16.3M16.3 4.9L19.1 7.7"/><circle cx="12" cy="12" r="3"/></svg></span> Reflections
+          </a>
+          <a href="#" className="nav-item">
+            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none"/></svg></span> My Room
+          </a>
         </nav>
 
         <div className="companion-ornate-card">
