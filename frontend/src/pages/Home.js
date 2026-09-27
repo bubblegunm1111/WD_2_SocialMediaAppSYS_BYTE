@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
+import MessagesModal from '../components/MessagesModal';
 import { postService } from '../services/api';
 import '../Dashboard.css';
 import catGif from '../cat.gif';
@@ -14,6 +15,7 @@ const Home = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -63,7 +65,7 @@ const Home = () => {
           <a href="#" className="nav-item">
             <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 4C20 4 18 2 14 4C10 6 6 12 4 18L2 22L6 20C12 18 18 14 20 10C22 6 20 4 20 4Z M14 4C14 4 16 10 10 16"/></svg></span> Pages
           </a>
-          <a href="#" className="nav-item">
+          <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); setIsMessagesOpen(true); }}>
             <span className="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 6L12 13L21 6"/></svg></span> Letters
           </a>
           <a href="#" className="nav-item">
@@ -240,6 +242,9 @@ const Home = () => {
 
       {/* Luniare Pet Companion */}
       <LuniarePet />
+
+      {/* Messages Modal */}
+      {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
     </div>
   );
 };

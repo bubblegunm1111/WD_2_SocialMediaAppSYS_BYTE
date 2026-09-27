@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LuniarePet from '../components/LuniarePet';
+import MessagesModal from '../components/MessagesModal';
 import catGif from '../cat.gif';
 import '../Dashboard.css';
 import './Observatory.css';
@@ -12,6 +13,7 @@ const Observatory = () => {
   const location = useLocation();
   const [hoveredConstellation, setHoveredConstellation] = useState(null);
   const [discoveries, setDiscoveries] = useState([]);
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
 
   useEffect(() => {
     const fetchDiscoveries = async () => {
@@ -249,7 +251,11 @@ const Observatory = () => {
 
       </aside>
 
+      {/* Luniare Pet Companion */}
       <LuniarePet />
+
+      {/* Messages Modal */}
+      {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
     </div>
   );
 };

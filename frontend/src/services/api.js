@@ -120,4 +120,24 @@ export const userService = {
   }
 };
 
+// Message services
+export const messageService = {
+  getConversations: async () => {
+    const response = await api.get('/messages/conversations');
+    return response.data;
+  },
+  getMessages: async (userId) => {
+    const response = await api.get(`/messages/${userId}`);
+    return response.data;
+  },
+  sendMessage: async (userId, content) => {
+    const response = await api.post(`/messages/${userId}`, { content });
+    return response.data;
+  },
+  searchUsers: async (query) => {
+    const response = await api.get(`/messages/users/search?q=${query}`);
+    return response.data;
+  }
+};
+
 export default api;
