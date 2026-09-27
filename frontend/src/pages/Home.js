@@ -55,9 +55,12 @@ const Home = () => {
           <a href="#" className="nav-item"><span>☾</span> My Room</a>
         </nav>
 
-        <div className="companion-widget">
-          <img src={catGif} className="companion-video-bg" alt="Companion Cat" />
-          <div className="companion-text">Your companion<br/>is nearby...</div>
+        <div className="companion-widget-container">
+          <img src={catGif} className="companion-cat-top" alt="Companion Cat" />
+          <div className="companion-ornate-card">
+            <div className="companion-text">Your little companion<br/>is nearby...</div>
+            <div className="companion-symbol">✧</div>
+          </div>
         </div>
       </aside>
 

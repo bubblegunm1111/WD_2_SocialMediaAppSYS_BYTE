@@ -70,34 +70,64 @@
   text-shadow: none;
 }
 
-.companion-widget {
+.companion-widget-container {
   margin-top: auto;
-  position: relative;
-  height: 180px;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding-top: 80px;
 }
-.companion-video-bg {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: auto;
-  max-height: 160px;
-  object-fit: contain;
-  z-index: 0;
-  opacity: 0.9;
-  border-radius: 0;
-}
-.companion-text {
+
+.companion-cat-top {
   position: absolute;
   top: 0;
+  width: 110px;
+  height: auto;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+}
+
+.companion-ornate-card {
+  background: rgba(20, 15, 35, 0.85);
+  border: 1px solid rgba(220, 200, 150, 0.3);
+  border-radius: 12px;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  text-align: center;
-  font-size: 13px;
-  color: var(--text-muted);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 0 15px rgba(220, 200, 150, 0.05);
+  position: relative;
   z-index: 1;
-  text-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+.companion-ornate-card::before,
+.companion-ornate-card::after {
+  content: '✧';
+  position: absolute;
+  font-size: 10px;
+  color: rgba(220, 200, 150, 0.4);
+}
+.companion-ornate-card::before { top: 5px; left: 5px; }
+.companion-ornate-card::after { bottom: 5px; right: 5px; }
+
+.companion-text {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: #e2d8ff;
+  line-height: 1.5;
+  text-shadow: none;
+  position: static;
+  width: auto;
+  text-align: left;
+}
+
+.companion-symbol {
+  font-size: 20px;
+  color: rgba(220, 200, 150, 0.8);
+  text-shadow: 0 0 10px rgba(220, 200, 150, 0.4);
 }
 
 /* Main Feed */
