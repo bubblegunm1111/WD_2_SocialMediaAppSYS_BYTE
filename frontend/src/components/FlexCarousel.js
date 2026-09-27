@@ -862,6 +862,11 @@ const FlexCarousel = ({
             const fx = effects.card ? effects.card(rel) : null;
             let x = homeX + rel + (fx ? fx.x : 0);
             let scale = shrink * (fx ? fx.scale : 1);
+            
+            // Make the middle card pop off more
+            const popAmount = Math.max(0, 1 - Math.abs(rel) / (w * 1.5));
+            scale *= 1 + 0.20 * popAmount;
+            
             let alpha = fx ? fx.alpha : 1;
             if (focusAmount > 0) {
               if (i === focus.index && Math.abs(rel) < w) {
