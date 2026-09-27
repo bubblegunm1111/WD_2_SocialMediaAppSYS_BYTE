@@ -1,198 +1,187 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform, animate } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import { motion, useSpring, useTransform } from 'framer-motion';
 import './TarotCarousel.css';
 
-const DRAG_BUFFER = 50;
-const SWIPE_VELOCITY = 500;
-const CARD_WIDTH = 260; // Card width + gap
+const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
+  // `currentIndex` is a continuous spring value (e.g., 0.0, 0.5, 1.0)
+  
+  // Calculate relative offset from this card to the current view center
+  const offset = useTransform(currentIndex, (current) => index - current);
+  
+  // Map offset to absolute offset for scaling/z-index
+  const absOffset = useTransform(offset, (val) => Math.abs(val));
+  
+  // Spacing between cards
+  const x = useTransform(offset, (val) => val * 260);
+  
+  // Scale: 1.15 at center, shrinking to 0.8 as it moves away
+  const scale = useTransform(absOffset, [0, 1, 2], [1.15, 0.95, 0.85], { clamp: false });
+  
+  // Rotate: 0 at center, -25 if right, 25 if left
+  // We want a smooth transition of rotation as it passes the center
+  const rotateY = useTransform(offset, [-2, -1, 0, 1, 2], [25, 25, 0, -25, -25]);
+  
+  // Z-index calculation (Framer Motion supports numbers for zIndex)
+  const zIndex = useTransform(absOffset, (val) => Math.round(100 - val * 10));
+
+  // Opacity: center 1, edge 0.95 to keep them visible
+  const opacity = useTransform(absOffset, [0, 1, 2], [1, 0.98, 0.95]);
+
+  // Active state boolean (discrete) based on closest index
+  const isActive = useTransform(absOffset, (val) => val < 0.5);
+
+  return (
+    <motion.div 
+      className={`tarot-card ${isClosest ? 'active' : ''}`}
+      style={{
+        position: 'absolute',
+        x,
+        scale,
+        rotateY,
+        zIndex,
+        opacity,
+        left: 'calc(50% - 120px)', // Center card horizontally (240px / 2 = 120px)
+        top: '40px'
+      }}
+      onClick={() => {
+        if (onPostClick) onPostClick(post, index);
+      }}
+    >
+      <div className="card-inner">
+        <div 
+          className="card-bg" 
+          style={{ 
+            backgroundImage: `url(${post.mediaUrl || post.image || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop'})`
+          }}
+        ></div>
+        
+        <div className="card-content">
+          <h3 className="card-title">
+            {post.title || post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')}
+          </h3>
+          <div className="card-meta">
+            <span className="card-icon">☾</span>
+            <span className="card-time">
+              {new Date(post.createdAt || Date.now()).toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+
+        {/* Ornate border decorations */}
+        <div className="ornate-corner top-left"></div>
+        <div className="ornate-corner top-right"></div>
+        <div className="ornate-corner bottom-left"></div>
+        <div className="ornate-corner bottom-right"></div>
+        
+        <motion.div style={{ opacity: useTransform(absOffset, [0, 0.2, 0.5], [1, 0, 0]) }}>
+          <div className="active-star top-star">✧</div>
+          <div className="active-star bottom-star">✧</div>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
 
 const TarotCarousel = ({ posts, onPostClick }) => {
-  const [activeIndex, setActiveIndex] = useState(Math.floor(posts.length / 2) || 0);
   const containerRef = useRef(null);
   
-  // Motion values
-  const x = useMotionValue(0);
-  const springX = useSpring(x, {
-    stiffness: 250,
-    damping: 35,
+  // We use a spring to hold the current continuous index.
+  // It starts at the middle item.
+  const targetIndex = useRef(Math.floor((posts?.length || 0) / 2));
+  
+  const currentIndex = useSpring(targetIndex.current, {
+    stiffness: 150,
+    damping: 25,
     mass: 1
   });
 
+  // Native trackpad smooth scrolling handler
   useEffect(() => {
-    // Snap to the active index when it changes (if changed via dots or click)
-    const targetX = -activeIndex * CARD_WIDTH;
-    if (x.get() !== targetX) {
-      animate(x, targetX, { type: 'spring', stiffness: 250, damping: 35 });
-    }
-  }, [activeIndex]);
+    const container = containerRef.current;
+    if (!container) return;
 
-  const handleDragEnd = (e, { offset, velocity }) => {
-    const swipePower = Math.abs(velocity.x) * offset.x;
-    
-    let newIndex = activeIndex;
-    
-    if (swipePower > SWIPE_VELOCITY * DRAG_BUFFER) {
-      // Swiped right
-      newIndex = Math.max(0, activeIndex - 1);
-    } else if (swipePower < -SWIPE_VELOCITY * DRAG_BUFFER) {
-      // Swiped left
-      newIndex = Math.min(posts.length - 1, activeIndex + 1);
-    } else if (offset.x > DRAG_BUFFER) {
-      newIndex = Math.max(0, activeIndex - 1);
-    } else if (offset.x < -DRAG_BUFFER) {
-      newIndex = Math.min(posts.length - 1, activeIndex + 1);
-    }
-    
-    setActiveIndex(newIndex);
-  };
+    let accumulatedDelta = 0;
 
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaX !== 0 ? e.deltaX : e.deltaY;
-    
-    if (Math.abs(delta) > 20) {
-      if (delta > 0 && activeIndex < posts.length - 1) {
-        setActiveIndex(activeIndex + 1);
-      } else if (delta < 0 && activeIndex > 0) {
-        setActiveIndex(activeIndex - 1);
-      }
-    }
-  };
-
-  // Add event listener for wheel to prevent default page scrolling while hovering
-  useEffect(() => {
-    const current = containerRef.current;
-    if (current) {
-      let isThrottled = false;
-      const onWheel = (e) => {
-        e.preventDefault();
-        if (isThrottled) return;
-        isThrottled = true;
-        
-        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-        
-        if (delta > 30) {
-          setActiveIndex(prev => Math.min(posts.length - 1, prev + 1));
-        } else if (delta < -30) {
-          setActiveIndex(prev => Math.max(0, prev - 1));
-        }
-        
-        setTimeout(() => { isThrottled = false; }, 300); // 300ms throttle for smooth scrolling
-      };
+    const handleWheel = (e) => {
+      e.preventDefault();
       
-      current.addEventListener('wheel', onWheel, { passive: false });
-      return () => current.removeEventListener('wheel', onWheel);
+      // Trackpad events send many small deltas. We accumulate them.
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      
+      // Very gentle sensitivity for trackpads
+      accumulatedDelta += delta * 0.0015; 
+      
+      let nextTarget = targetIndex.current + accumulatedDelta;
+      
+      // Clamp to bounds
+      if (nextTarget < 0) nextTarget = 0;
+      if (nextTarget > posts.length - 1) nextTarget = posts.length - 1;
+
+      // Update the spring target continuously
+      currentIndex.set(nextTarget);
+      
+      // Reset accumulated delta slightly faster for snappy stops
+      accumulatedDelta *= 0.85;
+      targetIndex.current = nextTarget;
+    };
+
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [currentIndex, posts.length]);
+
+  const handlePostClick = (post, index) => {
+    // If clicking the focused card, open it.
+    if (Math.abs(targetIndex.current - index) < 0.5) {
+      if (onPostClick) onPostClick(post);
+    } else {
+      // Otherwise scroll to it
+      targetIndex.current = index;
+      currentIndex.set(index);
     }
-  }, [posts.length]);
+  };
 
   if (!posts || posts.length === 0) {
     return <div className="empty-state">No stories found.</div>;
   }
 
+  // Calculate discrete active index for dots
+  const [activeDot, setActiveDot] = React.useState(Math.round(targetIndex.current));
+  
+  useEffect(() => {
+    const unsubscribe = currentIndex.on('change', (val) => {
+      setActiveDot(Math.round(val));
+    });
+    return () => unsubscribe();
+  }, [currentIndex]);
+
   return (
     <div className="tarot-carousel-container" ref={containerRef}>
-      <motion.div 
-        className="tarot-carousel-track"
-        drag="x"
-        dragConstraints={{
-          left: -((posts.length - 1) * CARD_WIDTH),
-          right: 0
-        }}
-        dragElastic={0.1}
-        onDragEnd={handleDragEnd}
-        style={{ x: springX }}
-      >
-        {posts.map((post, index) => {
-          // Calculate motion values for 3D transforms based on x position
-          const input = [
-            -(index + 1) * CARD_WIDTH,
-            -index * CARD_WIDTH,
-            -(index - 1) * CARD_WIDTH
-          ];
-          
-          const scale = useTransform(springX, input, [0.85, 1.15, 0.85]);
-          const rotateY = useTransform(springX, input, [-20, 0, 20]);
-          const zIndex = useTransform(springX, input, [1, 10, 1]);
-          const opacity = useTransform(springX, input, [0.6, 1, 0.6]);
-          const filter = useTransform(springX, input, ['brightness(0.5)', 'brightness(1)', 'brightness(0.5)']);
+      <div className="tarot-carousel" style={{ position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d' }}>
+        {posts.map((post, index) => (
+          <TarotCard 
+            key={post._id || index}
+            post={post}
+            index={index}
+            currentIndex={currentIndex}
+            isClosest={index === activeDot}
+            onPostClick={handlePostClick}
+          />
+        ))}
+      </div>
 
-          return (
-            <motion.div 
-              key={post._id || index} 
-              className="tarot-card"
-              style={{
-                scale,
-                rotateY,
-                zIndex,
-                opacity
-              }}
-              onClick={() => {
-                if (activeIndex === index && onPostClick) {
-                  onPostClick(post);
-                } else {
-                  setActiveIndex(index);
-                }
-              }}
-            >
-              <div className="card-inner">
-                {/* Image Background */}
-                <motion.div 
-                  className="card-bg" 
-                  style={{ 
-                    backgroundImage: `url(${post.mediaUrl || post.image || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop'})`,
-                    filter
-                  }}
-                ></motion.div>
-                
-                {/* Content Overlay */}
-                <div className="card-content">
-                  <h3 className="card-title">
-                    {post.title || post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')}
-                  </h3>
-                  <div className="card-meta">
-                    <span className="card-icon">☾</span>
-                    <span className="card-time">
-                      {new Date(post.createdAt || Date.now()).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Highly Magical Ornate Borders */}
-                <div className="magical-border-frame">
-                  <div className="corner-dec top-left">✧</div>
-                  <div className="corner-dec top-right">✧</div>
-                  <div className="corner-dec bottom-left">✧</div>
-                  <div className="corner-dec bottom-right">✧</div>
-                  <div className="border-line top-line"></div>
-                  <div className="border-line bottom-line"></div>
-                  <div className="border-line left-line"></div>
-                  <div className="border-line right-line"></div>
-                  
-                  {activeIndex === index && (
-                    <>
-                      <div className="center-star-top">✨</div>
-                      <div className="center-star-bottom">✨</div>
-                      <div className="magical-glow-overlay"></div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </motion.div>
-
-      {/* Dots indicator with thin line */}
       <div className="carousel-dots-wrapper">
         <div className="carousel-dots-line"></div>
         <div className="carousel-dots">
           {posts.map((_, i) => (
             <span 
               key={i} 
-              className={`dot ${i === activeIndex ? 'active' : ''}`}
-              onClick={() => setActiveIndex(i)}
+              className={`dot ${i === activeDot ? 'active' : ''}`}
+              onClick={() => {
+                targetIndex.current = i;
+                currentIndex.set(i);
+              }}
             >
-              {i === activeIndex ? '✦' : '•'}
+              {i === activeDot ? '✦' : '•'}
             </span>
           ))}
         </div>
