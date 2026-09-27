@@ -14,7 +14,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-brand">
-        Social Media
+        Luminar
       </Link>
       <div className="navbar-user">
         <Link to={`/profile/${user.id}`}>

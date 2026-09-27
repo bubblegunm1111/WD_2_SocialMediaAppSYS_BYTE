@@ -40,8 +40,13 @@ const Register = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Social Media</h1>
-        <p>Create an account to get started</p>
+        <h1>Luminar</h1>
+        <p>Join the magical arena</p>
+
+        <div className="auth-switcher">
+          <Link to="/login" className="auth-switcher-btn">Login</Link>
+          <Link to="/register" className="auth-switcher-btn active">Sign Up</Link>
+        </div>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -98,13 +103,9 @@ const Register = () => {
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Register'}
+            {loading ? 'Creating Account...' : 'Join Arena'}
           </button>
         </form>
-
-        <div className="auth-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </div>
       </div>
     </div>
   );

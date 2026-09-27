@@ -1,0 +1,112 @@
+.splash-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('../bg-lunar.png') center/cover fixed;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.splash-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at center, rgba(15, 10, 28, 0.4) 0%, rgba(10, 5, 20, 0.95) 100%);
+  z-index: 1;
+}
+
+.splash-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.splash-logo {
+  font-family: var(--font-heading);
+  font-size: 5rem;
+  font-weight: 700;
+  color: transparent;
+  background: linear-gradient(to right, #ffffff, #a890fe, #ffffff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shine 3s linear infinite, float 4s ease-in-out infinite, fadeIn 2s ease-out forwards;
+  opacity: 0;
+  text-shadow: 0 0 40px rgba(168, 144, 254, 0.5);
+  letter-spacing: 4px;
+}
+
+.splash-tagline {
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  margin-top: 10px;
+  opacity: 0;
+  animation: slideUpFade 1.5s ease-out 1s forwards;
+  letter-spacing: 2px;
+}
+
+.splash-moon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: pulseGlow 3s ease-in-out infinite, dropIn 1.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  filter: drop-shadow(0 0 20px rgba(168, 144, 254, 0.8));
+}
+
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+  animation: floatParticle 4s infinite linear;
+  opacity: 0;
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; filter: blur(10px); transform: scale(0.9); }
+  to { opacity: 1; filter: blur(0); transform: scale(1); }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dropIn {
+  0% { opacity: 0; transform: translateY(-50px) scale(0.5); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(168, 144, 254, 0.6)); }
+  50% { filter: drop-shadow(0 0 40px rgba(200, 180, 255, 1)); }
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  50% { opacity: 0.8; }
+  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+}

@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import SplashScreen from '../components/SplashScreen';
 
 const Login = () => {
+  const [showSplash, setShowSplash] = useState(() => {
+    // Only show splash once per session
+    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash');
+    return !hasSeenSplash;
+  });
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -12,6 +19,11 @@ const Login = () => {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const handleSplashComplete = () => {
+    sessionStorage.setItem('hasSeenSplash', 'true');
+    setShowSplash(false);
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -35,11 +47,20 @@ const Login = () => {
     }
   };
 
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Social Media</h1>
-        <p>Login to connect with friends and family</p>
+        <h1>Luminar</h1>
+        <p>Enter the magical arena</p>
+
+        <div className="auth-switcher">
+          <Link to="/login" className="auth-switcher-btn active">Login</Link>
+          <Link to="/register" className="auth-switcher-btn">Sign Up</Link>
+        </div>
 
         {error && <div className="error-message">{error}</div>}
 
@@ -69,13 +90,9 @@ const Login = () => {
           </div>
 
           <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'Entering...' : 'Enter Arena'}
           </button>
         </form>
-
-        <div className="auth-link">
-          Don't have an account? <Link to="/register">Register</Link>
-        </div>
       </div>
     </div>
   );
