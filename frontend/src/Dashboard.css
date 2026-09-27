@@ -388,42 +388,85 @@
   color: #fff;
 }
 
-.create-post-header {
+.create-post-pill {
+  position: relative;
+  background: rgba(10, 5, 20, 0.6);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(220, 200, 150, 0.3);
+  border-radius: 40px;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 0 10px rgba(220, 200, 150, 0.05);
+}
+
+.create-post-form {
   display: flex;
-  gap: 15px;
   align-items: center;
-  margin-bottom: 15px;
+  gap: 15px;
 }
-.create-post-header img {
-  width: 40px; height: 40px; border-radius: 50%;
+
+.cp-avatar-link img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(220, 200, 150, 0.4);
 }
-.create-post-input-area {
+
+.cp-input {
   flex: 1;
-}
-.create-post-input-area input {
-  width: 100%;
   background: transparent;
   border: none;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
   color: #fff;
   outline: none;
 }
-.create-post-actions {
+
+.cp-input::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
+.cp-options {
   display: flex;
-  justify-content: space-between;
+  gap: 20px;
+  color: rgba(220, 200, 150, 0.7);
+  font-size: 13px;
   align-items: center;
-  border-top: 1px solid rgba(255,255,255,0.05);
-  padding-top: 15px;
-  margin-top: 10px;
 }
-.create-post-actions .post-options {
+
+.cp-submit-btn {
+  background: transparent;
+  border: 1px solid rgba(220, 200, 150, 0.5);
+  color: #f7e8d5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   display: flex;
-  gap: 15px;
-  color: var(--text-muted);
-  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.create-post-actions .btn-post {
-  width: auto;
-  padding: 8px 24px;
-  border-radius: 20px;
+
+.cp-submit-btn:hover:not(:disabled) {
+  background: rgba(220, 200, 150, 0.2);
 }
+
+.cp-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Ornate corners for pill */
+.pill-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 1px solid rgba(220, 200, 150, 0.6);
+  opacity: 0.5;
+}
+.pill-corner.tl { top: -2px; left: 20px; border-bottom: none; border-right: none; }
+.pill-corner.tr { top: -2px; right: 20px; border-bottom: none; border-left: none; }
+.pill-corner.bl { bottom: -2px; left: 20px; border-top: none; border-right: none; }
+.pill-corner.br { bottom: -2px; right: 20px; border-top: none; border-left: none; }

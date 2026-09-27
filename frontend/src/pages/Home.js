@@ -5,6 +5,7 @@ import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
+import TarotCarousel from '../components/TarotCarousel';
 import { postService } from '../services/api';
 import '../Dashboard.css';
 import catGif from '../cat.gif';
@@ -103,61 +104,18 @@ const Home = () => {
         <div className="feed-scrollable">
           <CreatePost onPostCreated={handlePostCreated} />
 
-          {/* Dummy sections matching the UI */}
-          <div className="section-title">
-            <span>☾ Recent from Your Constellations</span>
-            <a href="#" className="view-all">View all</a>
-          </div>
-          <div className="constellations-grid">
-            <div className="constellation-card bg-art">
-              <div className="card-info">
-                <h4>Art & Creators</h4>
-                <p>1.2k members</p>
-              </div>
-            </div>
-            <div className="constellation-card bg-photo">
-              <div className="card-info">
-                <h4>Photography</h4>
-                <p>856 members</p>
-              </div>
-            </div>
-            <div className="constellation-card bg-music">
-              <div className="card-info">
-                <h4>Music</h4>
-                <p>942 members</p>
-              </div>
-            </div>
-            <div className="constellation-card bg-books">
-              <div className="card-info">
-                <h4>Books</h4>
-                <p>623 members</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="section-title" style={{marginTop: '30px'}}>
-            <span>✦ Moments from People You Might Like</span>
+          <div className="section-title" style={{marginTop: '30px', marginBottom: '10px'}}>
+            <span>☾ Recent from Your Constellations ✧</span>
             <a href="#" className="view-all">View all</a>
           </div>
           
-          <div className="feed-posts">
+          <div className="feed-posts" style={{ marginTop: '0' }}>
             {loading ? (
               <div className="loading">Gathering stories...</div>
             ) : error ? (
               <div className="error-message">{error}</div>
-            ) : posts.length === 0 ? (
-              <div className="empty-state">
-                <h3>No stories yet</h3>
-                <p>Be the first to share something magical!</p>
-              </div>
             ) : (
-              posts.map((post) => (
-                <Post
-                  key={post._id}
-                  post={post}
-                  onDelete={handlePostDeleted}
-                />
-              ))
+              <TarotCarousel posts={posts} />
             )}
           </div>
         </div>

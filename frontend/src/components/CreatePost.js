@@ -33,58 +33,42 @@ const CreatePost = ({ onPostCreated }) => {
   };
 
   return (
-    <div className="create-post">
-      <form onSubmit={handleSubmit}>
-        <div className="create-post-header">
-          <Link to={`/profile/${user?._id || user?.id}`}>
-            <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="Profile" />
-          </Link>
-          <div className="create-post-input-area">
-            <input
-              type="text"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder={`What's on your mind, ${user?.displayName?.split(' ')[0] || user?.username}?`}
-              required
-            />
-          </div>
-        </div>
+    <div className="create-post-pill">
+      <form onSubmit={handleSubmit} className="create-post-form">
+        <Link to={`/profile/${user?._id || user?.id}`} className="cp-avatar-link">
+          <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="Profile" />
+        </Link>
         
-        {content.length > 0 && (
-          <input
-            type="url"
-            value={mediaUrl}
-            onChange={(e) => setMediaUrl(e.target.value)}
-            placeholder="Image URL (optional)"
-            style={{
-              width: '100%',
-              padding: '10px',
-              background: 'rgba(0,0,0,0.2)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: '#fff',
-              borderRadius: '6px',
-              marginBottom: '10px',
-              fontSize: '14px'
-            }}
-          />
-        )}
-
-        <div className="create-post-actions">
-          <div className="post-options">
-            <span>⌕ Photo</span>
-            <span>⧉ Video</span>
-            <span>♪ Music</span>
-            <span>▤ Page</span>
-          </div>
-          <button
-            type="submit"
-            className="btn-post"
-            disabled={loading || !content.trim()}
-          >
-            {loading ? 'Posting...' : 'Post'}
-          </button>
+        <input
+          type="text"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          placeholder={`What's on your mind, ${user?.displayName?.split(' ')[0] || user?.username}?`}
+          className="cp-input"
+          required
+        />
+        
+        <div className="cp-options">
+          <span>⌕ Photo</span>
+          <span>⧉ Video</span>
+          <span>♪ Music</span>
+          <span>▤ Page</span>
         </div>
+
+        <button
+          type="submit"
+          className="cp-submit-btn"
+          disabled={loading || !content.trim()}
+        >
+          {loading ? '...' : '→'}
+        </button>
       </form>
+
+      {/* Ornate corners */}
+      <div className="pill-corner tl"></div>
+      <div className="pill-corner tr"></div>
+      <div className="pill-corner bl"></div>
+      <div className="pill-corner br"></div>
     </div>
   );
 };
