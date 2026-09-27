@@ -94,18 +94,21 @@ const MessagesModal = ({ onClose }) => {
     <div className="messages-modal-overlay" onClick={onClose}>
       <div className="messages-modal-card" onClick={e => e.stopPropagation()}>
         <div className="messages-sidebar">
-          <div className="messages-header">
-            <h3>Messages</h3>
+          <div className="messages-header ornate-border-bottom">
+            <h3>✧ Messages ✧</h3>
             <button className="close-btn" onClick={onClose}>✕</button>
           </div>
           
           <div className="messages-search">
-            <input 
-              type="text" 
-              placeholder="Search users..." 
-              value={searchQuery}
-              onChange={handleSearch}
-            />
+            <div className="search-input-wrapper">
+              <span className="search-icon">⌕</span>
+              <input 
+                type="text" 
+                placeholder="Search users..." 
+                value={searchQuery}
+                onChange={handleSearch}
+              />
+            </div>
           </div>
 
           <div className="conversations-list">
@@ -121,18 +124,24 @@ const MessagesModal = ({ onClose }) => {
             ) : (
               conversations.map(conv => {
                 const isUnread = !conv.latestMessage?.read && conv.latestMessage?.receiver === (user.id || user._id);
+                const isActive = activeChat?._id === conv.user._id;
                 return (
                   <div 
                     key={conv.user._id} 
-                    className={`conversation-item ${activeChat?._id === conv.user._id ? 'active' : ''} ${isUnread ? 'unread' : ''}`}
+                    className={`conversation-item ${isActive ? 'active ornate-card-border' : ''} ${isUnread ? 'unread' : ''}`}
                     onClick={() => startChat(conv.user)}
                   >
                     <img src={conv.user.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${conv.user.username}&backgroundColor=19142d&textColor=f7e8d5`} alt={conv.user.username} />
                     <div className="conv-details">
-                      <h4>{conv.user.displayName || conv.user.username}</h4>
+                      <h4>{conv.user.displayName || conv.user.username} <span>✧</span></h4>
                       <p className="latest-message">{conv.latestMessage?.content}</p>
                     </div>
-                    {isUnread && <div className="unread-dot"></div>}
+                    <div className="conv-meta">
+                      <span className="conv-time">
+                        {conv.latestMessage ? new Date(conv.latestMessage.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}
+                      </span>
+                      {isUnread && <div className="unread-dot"></div>}
+                    </div>
                   </div>
                 );
               })
@@ -181,9 +190,13 @@ const MessagesModal = ({ onClose }) => {
             </>
           ) : (
             <div className="no-chat-selected">
-              <div className="moon-icon">☾</div>
-              <h3>Your Messages</h3>
+              <h3 className="ornate-title">Your Messages</h3>
               <p>Select a conversation or search for someone.</p>
+              <div className="ornate-divider">
+                <span className="line"></span>
+                <span className="star">✧</span>
+                <span className="line"></span>
+              </div>
             </div>
           )}
         </div>
