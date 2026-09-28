@@ -289,8 +289,8 @@
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(15, 10, 25, 0.85); /* Dark overlay */
-  backdrop-filter: blur(10px);
+  background: rgba(15, 10, 25, 0.4); /* Lighter overlay so image is visible */
+  backdrop-filter: blur(4px);
   z-index: 0;
 }
 
