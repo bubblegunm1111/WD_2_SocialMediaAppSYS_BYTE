@@ -16,6 +16,10 @@ const postSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  isNote: {
+    type: Boolean,
+    default: false
+  },
   isArchived: {
     type: Boolean,
     default: false

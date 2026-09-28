@@ -58,8 +58,8 @@ const Home = () => {
     setPosts(posts.filter(post => post._id !== postId));
   };
 
-  const feedPosts = posts.filter(p => !p.isStory);
-  const storyPosts = posts.filter(p => p.isStory);
+  const feedPosts = posts.filter(p => !p.isStory && !p.isNote);
+  const storyPosts = posts.filter(p => p.isStory && !p.isNote);
 
   return (
     <div className="dashboard-layout">

@@ -247,6 +247,7 @@ const Observatory = () => {
       const res = await postService.createPost({
         content: promptText.trim(),
         mediaUrl: promptMedia || undefined,
+        isNote: true,
       });
       setPosts([res.data, ...posts]);
       setPromptModal(false);

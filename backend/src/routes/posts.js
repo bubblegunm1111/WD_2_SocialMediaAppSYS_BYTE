@@ -25,6 +25,13 @@ router.get('/', async (req, res) => {
       query.isArchived = false;
     }
 
+    // Notes are Observatory-only — exclude from main feed unless explicitly requested
+    if (req.query.isNote !== undefined) {
+      query.isNote = req.query.isNote === 'true';
+    } else {
+      query.isNote = { $ne: true };
+    }
+
     const posts = await Post.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -84,13 +91,14 @@ router.post('/', auth, [
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
-    const { content, mediaUrl, isStory } = req.body;
+    const { content, mediaUrl, isStory, isNote } = req.body;
 
     const post = new Post({
       userId: req.user._id,
       content: content || '',
       mediaUrl: mediaUrl || '',
-      isStory: !!isStory
+      isStory: !!isStory,
+      isNote: !!isNote
     });
 
     await post.save();
