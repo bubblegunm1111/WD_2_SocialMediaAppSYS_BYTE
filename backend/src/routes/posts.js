@@ -66,7 +66,7 @@ router.get('/:id', async (req, res) => {
 // @desc    Create new post
 // @access  Private
 router.post('/', auth, [
-  body('content').trim().notEmpty().isLength({ max: 5000 })
+  body('content').optional({ checkFalsy: true }).trim().isLength({ max: 5000 })
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

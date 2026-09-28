@@ -9,9 +9,15 @@ const getCroppedImg = (imageSrc, pixelCrop) => {
     const image = new Image();
     image.src = imageSrc;
     image.onload = () => {
+      const MAX_WIDTH = 1080;
+      let scale = 1;
+      if (pixelCrop.width > MAX_WIDTH) {
+        scale = MAX_WIDTH / pixelCrop.width;
+      }
+      
       const canvas = document.createElement('canvas');
-      canvas.width = pixelCrop.width;
-      canvas.height = pixelCrop.height;
+      canvas.width = pixelCrop.width * scale;
+      canvas.height = pixelCrop.height * scale;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(
         image,
@@ -21,10 +27,10 @@ const getCroppedImg = (imageSrc, pixelCrop) => {
         pixelCrop.height,
         0,
         0,
-        pixelCrop.width,
-        pixelCrop.height
+        canvas.width,
+        canvas.height
       );
-      resolve(canvas.toDataURL('image/jpeg', 0.9));
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
     };
     image.onerror = (error) => reject(error);
   });
