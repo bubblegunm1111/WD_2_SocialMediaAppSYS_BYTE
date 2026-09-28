@@ -88,7 +88,9 @@ const CreatePost = ({ onPostCreated }) => {
 
   return (
     <div className="create-post-card" style={{
-      background: 'rgba(15, 10, 30, 0.4)',
+      background: 'linear-gradient(rgba(10, 5, 20, 0.8), rgba(10, 5, 20, 0.8)), url("./bg-lunar.png")',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
       backdropFilter: 'blur(20px)',
       border: '1px solid rgba(220, 200, 150, 0.25)',
       borderRadius: '16px',
