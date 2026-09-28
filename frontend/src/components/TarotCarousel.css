@@ -1,7 +1,7 @@
 .tarot-carousel-container {
   position: relative;
   width: 100%;
-  height: 450px;
+  height: 600px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,7 +14,7 @@
 .tarot-carousel {
   position: relative;
   width: 100%;
-  height: 380px;
+  height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,6 +146,7 @@
 }
 
 .card-title {
+  display: none; /* Hidden on the card, visible in the modal */
   color: #f7e8d5;
   font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
   font-size: 18px;
