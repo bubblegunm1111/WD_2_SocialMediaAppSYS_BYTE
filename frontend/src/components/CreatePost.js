@@ -88,16 +88,13 @@ const CreatePost = ({ onPostCreated }) => {
 
   return (
     <div className="create-post-card" style={{
-      background: 'rgba(10, 5, 20, 0.95)',
-      backgroundImage: 'url("./bg-lunar.png")',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backdropFilter: 'blur(12px)',
-      border: '1px solid rgba(220, 200, 150, 0.3)',
+      background: 'rgba(15, 10, 30, 0.4)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(220, 200, 150, 0.25)',
       borderRadius: '16px',
       padding: '20px',
       marginBottom: '25px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(220, 200, 150, 0.05)'
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(220, 200, 150, 0.05)'
     }}>
       <form onSubmit={handleSubmit}>
         <div style={{ display: 'flex', gap: '15px', alignItems: 'flex-start' }}>

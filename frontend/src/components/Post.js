@@ -86,8 +86,8 @@ const Post = ({ post, onDelete }) => {
       <div className="post-header">
         <Link to={`/profile/${post.userId._id}`}>
           <img
-            src={post.userId.profilePicture || 'https://via.placeholder.com/40'}
-            alt={post.userId.username}
+            src={post.userId?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${post.userId?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`}
+            alt={post.userId?.username || 'User'}
             className="post-avatar"
           />
         </Link>
