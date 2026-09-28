@@ -194,7 +194,7 @@ const Post = ({ post, onDelete }) => {
 
       {post.mediaUrl && (
         <div style={{ marginBottom: '12px', borderRadius: '12px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '280px', objectFit: 'cover' }} />
+          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '320px', objectFit: 'cover' }} />
         </div>
       )}
 
