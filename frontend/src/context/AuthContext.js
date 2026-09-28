@@ -45,8 +45,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUserContext = (newUser) => {
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
+    const standardizedUser = { ...newUser, id: newUser._id || newUser.id };
+    setUser(standardizedUser);
+    try {
+      localStorage.setItem('user', JSON.stringify(standardizedUser));
+    } catch (e) {
+      console.error('Failed to save user to localStorage:', e);
+    }
   };
 
   const value = {

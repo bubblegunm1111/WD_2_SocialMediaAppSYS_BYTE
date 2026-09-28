@@ -81,10 +81,32 @@ const Profile = () => {
 
   const handleAvatarChange = async (event) => {
     const file = event.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    try {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        const base64String = reader.result;
+        let base64String = reader.result;
+        
+        if (file.type.startsWith('image/')) {
+          const img = new Image();
+          img.src = base64String;
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const MAX_WIDTH = 400;
+              let scale = 1;
+              if (img.width > MAX_WIDTH) scale = MAX_WIDTH / img.width;
+              canvas.width = img.width * scale;
+              canvas.height = img.height * scale;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              base64String = canvas.toDataURL('image/jpeg', 0.85);
+              resolve();
+            };
+          });
+        }
+
         try {
           const response = await userService.updateUser(userId, { profilePicture: base64String });
           setUser(response.data);
@@ -94,6 +116,8 @@ const Profile = () => {
         }
       };
       reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
     }
   };
 

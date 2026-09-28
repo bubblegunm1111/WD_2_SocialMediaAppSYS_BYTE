@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 import { postService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import './TarotCarousel.css';
 
-const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryCreated }) => {
+const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryCreated, onStoryDeleted, currentUser }) => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [likePending, setLikePending] = useState(false);
@@ -247,8 +248,9 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryC
   );
 };
 
-const TarotCarousel = ({ posts, onPostClick, onStoryCreated }) => {
+const TarotCarousel = ({ posts, onPostClick, onStoryCreated, onStoryDeleted }) => {
   const containerRef = useRef(null);
+  const { user: currentUser } = useAuth();
   
   const carouselItems = [{ isAddStory: true, _id: 'add-story' }, ...(posts || [])];
 
@@ -333,6 +335,8 @@ const TarotCarousel = ({ posts, onPostClick, onStoryCreated }) => {
             isClosest={index === activeDot}
             onPostClick={handlePostClick}
             onStoryCreated={onStoryCreated}
+            onStoryDeleted={onStoryDeleted}
+            currentUser={currentUser}
           />
         ))}
       </div>
