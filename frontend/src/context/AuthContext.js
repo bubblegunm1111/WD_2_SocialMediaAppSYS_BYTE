@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { authService } from '../services/api';
+import { authService, userService } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -16,15 +16,27 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on mount
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
 
-    if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-
-    setLoading(false);
+      if (token && savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        
+        // Fetch latest user data in background to sync profile picture, etc.
+        try {
+          const response = await userService.getUser(parsedUser.id || parsedUser._id);
+          const freshUser = { ...response.data, id: response.data._id || response.data.id };
+          setUser(freshUser);
+          localStorage.setItem('user', JSON.stringify(freshUser));
+        } catch (err) {
+          console.error('Failed to sync latest user data', err);
+        }
+      }
+      setLoading(false);
+    };
+    initAuth();
   }, []);
 
   const login = async (credentials) => {
