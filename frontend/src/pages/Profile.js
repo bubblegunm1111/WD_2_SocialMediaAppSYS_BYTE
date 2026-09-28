@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import Post from '../components/Post';
 import { userService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './Profile.css';
@@ -57,11 +56,6 @@ const Profile = () => {
     };
   }, [userId]);
 
-  const postImages = useMemo(
-    () => posts.filter((post) => post.mediaUrl).slice(0, 6),
-    [posts]
-  );
-
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -77,16 +71,12 @@ const Profile = () => {
     }
   };
 
-  const handlePostDeleted = (postId) => {
-    setPosts((currentPosts) => currentPosts.filter((post) => post._id !== postId));
-  };
-
   if (loading) {
     return (
       <>
         <Navbar />
-        <main className="profile-room-page">
-          <div className="profile-loading">Opening the mystical room...</div>
+        <main className="profile-page">
+          <div style={{textAlign: 'center', paddingTop: '100px', color: '#eee5dc'}}>Opening the mystical room...</div>
         </main>
       </>
     );
@@ -96,8 +86,8 @@ const Profile = () => {
     return (
       <>
         <Navbar />
-        <main className="profile-room-page">
-          <div className="profile-error">{error || 'Profile not found'}</div>
+        <main className="profile-page">
+          <div style={{textAlign: 'center', paddingTop: '100px', color: '#eee5dc'}}>{error || 'Profile not found'}</div>
         </main>
       </>
     );
@@ -106,220 +96,90 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <main className="profile-room-page">
-        <div className="profile-room-shell">
-          {/* Header */}
-          <div className="profile-header">
-            <Link to="/" className="room-back-link">
-              ← Back
-            </Link>
-            <div className="profile-header-title">
-              {isOwnProfile ? "Your Room" : `${displayName}'s Room`}
-            </div>
-            {isOwnProfile && !isEditing && (
-              <button
-                type="button"
-                className="room-back-link"
-                onClick={() => setIsEditing(true)}
-                style={{ cursor: 'pointer', background: 'none', border: 'none' }}
-              >
-                ⚙ Edit Room
-              </button>
+      <div className="profile-page">
+        <header className="profile-header">
+          <Link to="/" style={{textDecoration: 'none'}}><button className="back-btn">← Back</button></Link>
+          <h1>{isOwnProfile ? "Your Room ✦" : `${displayName}'s Room ✦`}</h1>
+          {isOwnProfile && (
+            <button className="edit-btn" onClick={() => setIsEditing(!isEditing)}>
+              ⚙ {isEditing ? 'Cancel Edit' : 'Edit Profile'}
+            </button>
+          )}
+          {!isOwnProfile && <button className="edit-btn" style={{opacity: 0, pointerEvents: 'none'}}>⚙ Edit Profile</button>}
+        </header>
+
+        <section className="profile-hero">
+          <div className="profile-info">
+            {isEditing ? (
+              <form className="room-edit-form" onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+                <label style={{display: 'flex', flexDirection: 'column', gap: '5px', color: '#d8ccd1'}}>
+                  Display Name
+                  <input
+                    type="text"
+                    name="displayName"
+                    value={formData.displayName}
+                    onChange={handleChange}
+                    style={{padding: '10px', background: 'transparent', border: '1px solid #caa77d', color: '#eee5dc', borderRadius: '5px'}}
+                  />
+                </label>
+                <label style={{display: 'flex', flexDirection: 'column', gap: '5px', color: '#d8ccd1'}}>
+                  Bio
+                  <textarea
+                    name="bio"
+                    value={formData.bio}
+                    onChange={handleChange}
+                    rows="4"
+                    style={{padding: '10px', background: 'transparent', border: '1px solid #caa77d', color: '#eee5dc', borderRadius: '5px', resize: 'none'}}
+                  />
+                </label>
+                <button type="submit" style={{padding: '10px', background: '#caa77d', border: 'none', color: '#070a1d', fontWeight: 'bold', borderRadius: '5px', cursor: 'pointer'}}>
+                  Save Changes
+                </button>
+              </form>
+            ) : (
+              <>
+                <div 
+                  className="avatar"
+                  style={{ backgroundImage: `url(${user.profilePicture || fallbackAvatar(user.username)})` }}
+                ></div>
+
+                <h2>{displayName}</h2>
+                <p>"{user.bio || 'Collecting little beautiful things.'}"</p>
+
+                <div className="stats">
+                  <div><strong>{posts.length}</strong><span>Posts</span></div>
+                  <div><strong>1.2k</strong><span>Followers</span></div>
+                  <div><strong>392</strong><span>Following</span></div>
+                </div>
+              </>
             )}
-            {!isOwnProfile && <div style={{ width: '80px' }}></div>}
           </div>
 
-          <div className="profile-main-content">
-            {/* Left Sidebar - Profile Info */}
-            <aside className="profile-sidebar">
-              {isEditing ? (
-                <form className="room-edit-form" onSubmit={handleSubmit}>
-                  <label>
-                    Display Name
-                    <input
-                      type="text"
-                      name="displayName"
-                      value={formData.displayName}
-                      onChange={handleChange}
-                      maxLength="50"
-                      placeholder="Your display name"
-                    />
-                  </label>
-                  <label>
-                    Bio
-                    <textarea
-                      name="bio"
-                      value={formData.bio}
-                      onChange={handleChange}
-                      maxLength="500"
-                      rows="4"
-                      placeholder="Tell us about yourself..."
-                    />
-                  </label>
-                  <div className="room-edit-actions">
-                    <button type="submit" className="room-primary-button">Save Changes</button>
-                    <button
-                      type="button"
-                      className="room-quiet-button"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <>
-                  <div className="room-avatar-wrap">
-                    <img
-                      src={user.profilePicture || fallbackAvatar(user.username)}
-                      alt={displayName}
-                      className="room-avatar"
-                    />
-                  </div>
+          <div className="room-image"></div>
+        </section>
 
-                  <div className="room-hero">
-                    <h1>{displayName}</h1>
-                    <p className="room-handle">@{user.username}</p>
-                    <p className="room-bio">
-                      {user.bio || '"Collecting little beautiful things beneath the moon."'}
-                    </p>
-                  </div>
+        <nav className="profile-tabs">
+          <button className={activeTab === 'posts' ? 'active' : ''} onClick={() => setActiveTab('posts')}>✧ Posts</button>
+          <button className={activeTab === 'collections' ? 'active' : ''} onClick={() => setActiveTab('collections')}>♧ Collections</button>
+          <button className={activeTab === 'memories' ? 'active' : ''} onClick={() => setActiveTab('memories')}>✦ Memories</button>
+        </nav>
 
-                  <div className="room-stats">
-                    <div>
-                      <strong>{posts.length}</strong>
-                      <span>Posts</span>
-                    </div>
-                    <div>
-                      <strong>1.5k</strong>
-                      <span>Followers</span>
-                    </div>
-                    <div>
-                      <strong>242</strong>
-                      <span>Following</span>
-                    </div>
-                  </div>
-
-                  <div className="room-actions">
-                    {isOwnProfile ? (
-                      <button
-                        type="button"
-                        className="room-primary-button"
-                        onClick={() => setIsEditing(true)}
-                      >
-                        ✎ Edit Profile
-                      </button>
-                    ) : (
-                      <button type="button" className="room-primary-button">
-                        ✦ Follow
-                      </button>
-                    )}
-                    <button type="button" className="room-secondary-button">
-                      ☾ Collections
-                    </button>
-                    {!isOwnProfile && (
-                      <button type="button" className="room-secondary-button">
-                        ✉ Message
-                      </button>
-                    )}
-                  </div>
-                </>
-              )}
-            </aside>
-
-            {/* Right Content Area - Tabs and Content */}
-            <section className="profile-content-area">
-              {/* Navigation Tabs */}
-              <div className="profile-tabs">
-                <button
-                  className={`profile-tab ${activeTab === 'posts' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('posts')}
-                >
-                  ✧ Posts
-                </button>
-                <button
-                  className={`profile-tab ${activeTab === 'gallery' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('gallery')}
-                >
-                  ⚘ Gallery
-                </button>
-                <button
-                  className={`profile-tab ${activeTab === 'collections' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('collections')}
-                >
-                  ◈ Collections
-                </button>
-                <button
-                  className={`profile-tab ${activeTab === 'memories' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('memories')}
-                >
-                  ☾ Memories
-                </button>
-              </div>
-
-              {/* Tab Content */}
-              {activeTab === 'posts' && (
-                <div className="room-pages-section">
-                  <div className="room-section-heading">
-                    <h2>Recent Stories</h2>
-                    <span className="room-count">{posts.length} posts</span>
-                  </div>
-
-                  {posts.length === 0 ? (
-                    <div className="room-gallery-empty">
-                      No stories have been shared yet...
-                    </div>
-                  ) : (
-                    <div className="room-posts">
-                      {posts.map((post) => (
-                        <Post key={post._id} post={post} onDelete={handlePostDeleted} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeTab === 'gallery' && (
-                <div className="room-gallery-section">
-                  <div className="room-section-heading">
-                    <h2>Captured Moments</h2>
-                    <span className="room-count">{postImages.length} images</span>
-                  </div>
-
-                  {postImages.length > 0 ? (
-                    <div className="room-gallery">
-                      {postImages.map((post) => (
-                        <div className="room-gallery-tile" key={post._id}>
-                          <div className="room-gallery-tile-inner">
-                            <img src={post.mediaUrl} alt="" />
-                          </div>
-                          <span>{post.content?.slice(0, 50) || 'A quiet memory'}</span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="room-gallery-empty">
-                      The gallery awaits its first captured moment...
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {activeTab === 'collections' && (
-                <div className="room-gallery-empty">
-                  Collections feature coming soon...
-                </div>
-              )}
-
-              {activeTab === 'memories' && (
-                <div className="room-gallery-empty">
-                  Memories feature coming soon...
-                </div>
-              )}
-            </section>
-          </div>
-        </div>
-      </main>
+        <section className="post-grid">
+          {activeTab === 'posts' && posts.filter(p => p.mediaUrl).map((post) => (
+            <article 
+              key={post._id}
+              className="post-item"
+              style={{ backgroundImage: `url(${post.mediaUrl})` }}
+            ></article>
+          ))}
+          {activeTab === 'posts' && posts.filter(p => p.mediaUrl).length === 0 && (
+            <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>No image posts found.</div>
+          )}
+          {activeTab !== 'posts' && (
+            <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>Coming soon...</div>
+          )}
+        </section>
+      </div>
     </>
   );
 };
