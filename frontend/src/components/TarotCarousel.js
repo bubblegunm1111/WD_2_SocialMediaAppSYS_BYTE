@@ -72,7 +72,17 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
         <div className="ornate-corner top-right"></div>
         <div className="ornate-corner bottom-left"></div>
         <div className="ornate-corner bottom-right"></div>
-        
+
+        {/* Decorative sparkles around the card */}
+        <motion.div style={{ opacity: useTransform(absOffset, [0, 0.3, 0.7], [1, 0.6, 0]) }}>
+          <div className="sparkle sparkle-1">✦</div>
+          <div className="sparkle sparkle-2">✧</div>
+          <div className="sparkle sparkle-3">✦</div>
+          <div className="sparkle sparkle-4">✧</div>
+          <div className="sparkle sparkle-5">✦</div>
+          <div className="sparkle sparkle-6">✧</div>
+        </motion.div>
+
         <motion.div style={{ opacity: useTransform(absOffset, [0, 0.2, 0.5], [1, 0, 0]) }}>
           <div className="active-star top-star">✧</div>
           <div className="active-star bottom-star">✧</div>
@@ -140,10 +150,6 @@ const TarotCarousel = ({ posts, onPostClick }) => {
     }
   };
 
-  if (!posts || posts.length === 0) {
-    return <div className="empty-state">No stories found.</div>;
-  }
-
   // Calculate discrete active index for dots
   const [activeDot, setActiveDot] = React.useState(Math.round(targetIndex.current));
   
@@ -153,6 +159,10 @@ const TarotCarousel = ({ posts, onPostClick }) => {
     });
     return () => unsubscribe();
   }, [currentIndex]);
+
+  if (!posts || posts.length === 0) {
+    return <div className="empty-state">No stories found.</div>;
+  }
 
   return (
     <div className="tarot-carousel-container" ref={containerRef}>
