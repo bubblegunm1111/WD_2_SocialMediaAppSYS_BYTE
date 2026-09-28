@@ -89,15 +89,16 @@
 
 /* For the active card, make the border brighter and add glow */
 .tarot-card.active .card-inner {
+  border-radius: 16px; /* Ensuring rounded corners */
   box-shadow:
-    /* Enhanced outer glow */
-    0 0 40px rgba(255, 223, 150, 0.25),
-    0 0 80px rgba(184, 134, 64, 0.15),
+    /* Rich, fiery orange/gold outer glow */
+    0 0 50px rgba(255, 170, 50, 0.4),
+    0 0 100px rgba(255, 120, 20, 0.25),
     /* Deep shadow */
     0 25px 60px rgba(0, 0, 0, 0.9),
-    /* Delicate inner border glow instead of a thick rough border */
-    inset 0 0 0 1px rgba(255, 223, 150, 0.7),
-    inset 0 0 30px rgba(255, 223, 150, 0.25);
+    /* Delicate inner border glow */
+    inset 0 0 0 1px rgba(255, 210, 100, 0.8),
+    inset 0 0 35px rgba(255, 170, 50, 0.35);
 }
 
 .tarot-card.active .card-inner::before {
@@ -466,4 +467,41 @@
 
 .dot:hover:not(.active) {
   color: rgba(220, 200, 150, 0.8);
+}
+
+.card-user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.card-user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(220, 200, 150, 0.4);
+}
+
+.card-username {
+  font-size: 12px;
+  color: rgba(220, 200, 150, 0.9);
+  font-weight: bold;
+}
+
+.card-actions {
+  display: flex;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.card-action-icon {
+  font-size: 13px;
+  color: rgba(220, 200, 150, 0.8);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.card-action-icon:hover {
+  color: #fff;
 }

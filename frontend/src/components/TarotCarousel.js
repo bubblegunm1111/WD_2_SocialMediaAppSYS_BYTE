@@ -56,14 +56,26 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
         ></div>
         
         <div className="card-content">
+          <div className="card-user-info">
+            <img 
+              src={post.user?.profilePicture || post.userId?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${post.user?.username || post.userId?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} 
+              alt="Avatar" 
+              className="card-user-avatar" 
+            />
+            <span className="card-username">{post.user?.username || post.userId?.username || 'Magician'}</span>
+          </div>
+
           <h3 className="card-title">
             {post.title || post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')}
           </h3>
           <div className="card-meta">
-            <span className="card-icon">☾</span>
             <span className="card-time">
               {new Date(post.createdAt || Date.now()).toLocaleDateString()}
             </span>
+            <div className="card-actions">
+              <span className="card-action-icon">♡ {post.likesCount || 0}</span>
+              <span className="card-action-icon">💬 {post.commentsCount || 0}</span>
+            </div>
           </div>
         </div>
 

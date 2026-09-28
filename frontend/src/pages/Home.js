@@ -8,6 +8,7 @@ import MessagesModal from '../components/MessagesModal';
 import TarotCarousel from '../components/TarotCarousel';
 import { postService } from '../services/api';
 import '../Dashboard.css';
+import '../components/PostModal.css';
 import catGif from '../cat.gif';
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const [activePost, setActivePost] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -115,7 +117,7 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <TarotCarousel posts={posts} />
+              <TarotCarousel posts={posts} onPostClick={(post) => setActivePost(post)} />
             )}
           </div>
         </div>
@@ -203,6 +205,16 @@ const Home = () => {
 
       {/* Messages Modal */}
       {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
+
+      {/* Post Modal */}
+      {activePost && (
+        <div className="post-modal-overlay" onClick={() => setActivePost(null)}>
+          <div className="post-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal-btn" onClick={() => setActivePost(null)}>✕</button>
+            <Post post={activePost} onDelete={handlePostDeleted} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
