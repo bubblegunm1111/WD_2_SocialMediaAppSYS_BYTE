@@ -2,7 +2,7 @@
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background: url('./bg-lunar.png') center/cover fixed;
+  background: url('./bg-base.jpg') center/cover fixed;
   color: var(--text-main);
   overflow: hidden;
 }
@@ -11,7 +11,7 @@
   content: '';
   position: absolute;
   top:0; left:0; right:0; bottom:0;
-  background: rgba(10, 5, 25, 0.6);
+  background: rgba(10, 5, 25, 0.75);
   z-index: 0;
   pointer-events: none;
 }
