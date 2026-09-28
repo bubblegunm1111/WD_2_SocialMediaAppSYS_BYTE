@@ -6,7 +6,7 @@ import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
 import TarotCarousel from '../components/TarotCarousel';
-import { postService } from '../services/api';
+import { postService, notificationService } from '../services/api';
 import '../Dashboard.css';
 import '../components/PostModal.css';
 import catGif from '../cat.gif';
@@ -15,6 +15,7 @@ const Home = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [posts, setPosts] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
@@ -22,7 +23,19 @@ const Home = () => {
 
   useEffect(() => {
     fetchPosts();
+    fetchNotifications();
   }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await notificationService.getNotifications();
+      if (response.success) {
+        setNotifications(response.data);
+      }
+    } catch (err) {
+      console.error('Failed to load notifications', err);
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -97,9 +110,6 @@ const Home = () => {
             <p className="greeting-sub">The night is young, and there are so many stories waiting to be found.</p>
           </div>
           <div className="top-nav-icons">
-            <span className="icon-btn">⍾</span>
-            <span className="icon-btn">✉</span>
-            <span className="icon-btn">✧</span>
             <Link to={`/profile/${user?._id || user?.id}`}>
               <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="Profile" className="nav-avatar" />
             </Link>
@@ -171,27 +181,20 @@ const Home = () => {
             <a href="#">View all</a>
           </div>
           <ul className="notification-list">
-            <li>
-              <div className="notif-icon">
-                <img src="https://api.dicebear.com/7.x/initials/svg?seed=A&backgroundColor=19142d&textColor=f7e8d5" style={{width:'100%', height:'100%', borderRadius:'10px'}} alt=""/>
-              </div>
-              <div style={{flex: 1}}>
-                <p style={{color: '#fff', fontSize: '13px', marginBottom: '4px'}}><strong>Alice</strong> started following you.</p>
-                <button style={{background: 'transparent', border: '1px solid #caa77d', color: '#caa77d', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Follow Back</button>
-              </div>
-            </li>
-            <li>
-              <div className="notif-icon">
-                <img src="https://api.dicebear.com/7.x/initials/svg?seed=M&backgroundColor=19142d&textColor=f7e8d5" style={{width:'100%', height:'100%', borderRadius:'10px'}} alt=""/>
-              </div>
-              <div style={{flex: 1}}>
-                <p style={{color: '#fff', fontSize: '13px', marginBottom: '4px'}}><strong>Marcus</strong> requested to follow.</p>
-                <div style={{display: 'flex', gap: '8px'}}>
-                  <button style={{background: '#caa77d', border: 'none', color: '#000', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Accept</button>
-                  <button style={{background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#888', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Decline</button>
+            {notifications.filter(n => n.type === 'follow').slice(0, 3).map(notif => (
+              <li key={notif._id}>
+                <div className="notif-icon">
+                  <img src={notif.sender?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${notif.sender?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} style={{width:'100%', height:'100%', borderRadius:'10px'}} alt=""/>
                 </div>
-              </div>
-            </li>
+                <div style={{flex: 1}}>
+                  <p style={{color: '#fff', fontSize: '13px', marginBottom: '4px'}}><strong>{notif.sender?.displayName || notif.sender?.username}</strong> started following you.</p>
+                  <button style={{background: 'transparent', border: '1px solid #caa77d', color: '#caa77d', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Follow Back</button>
+                </div>
+              </li>
+            ))}
+            {notifications.filter(n => n.type === 'follow').length === 0 && (
+              <li style={{color: 'rgba(255,255,255,0.4)', fontSize: '13px', border: 'none'}}>No new connections</li>
+            )}
           </ul>
         </div>
 
@@ -205,22 +208,25 @@ const Home = () => {
             <a href="#">View all</a>
           </div>
           <ul className="notification-list">
-            <li>
-              <div className="notif-icon" style={{background: 'rgba(255, 77, 77, 0.1)', color: '#ff4d4d', fontSize: '18px'}}>♥</div>
-              <p><strong>Elena</strong> liked your latest post.</p>
-            </li>
-            <li>
-              <div className="notif-icon" style={{background: 'rgba(202, 167, 125, 0.1)', color: '#caa77d', fontSize: '18px'}}>✧</div>
-              <p><strong>David</strong> viewed your story.</p>
-            </li>
-            <li>
-              <div className="notif-icon" style={{background: 'rgba(142, 108, 255, 0.1)', color: '#8e6cff', fontSize: '18px'}}>✉</div>
-              <p><strong>Sophia</strong> sent you a message.</p>
-            </li>
-            <li>
-              <div className="notif-icon" style={{background: 'rgba(202, 167, 125, 0.1)', color: '#caa77d', fontSize: '18px'}}>💬</div>
-              <p><strong>Liam</strong> commented on your collection.</p>
-            </li>
+            {notifications.filter(n => n.type !== 'follow').slice(0, 5).map(notif => (
+              <li key={notif._id}>
+                <div className="notif-icon" style={{
+                  background: notif.type === 'like' ? 'rgba(255, 77, 77, 0.1)' : notif.type === 'message' ? 'rgba(142, 108, 255, 0.1)' : 'rgba(202, 167, 125, 0.1)',
+                  color: notif.type === 'like' ? '#ff4d4d' : notif.type === 'message' ? '#8e6cff' : '#caa77d', 
+                  fontSize: '18px'
+                }}>
+                  {notif.type === 'like' ? '♥' : notif.type === 'message' ? '✉' : notif.type === 'comment' ? '💬' : '✧'}
+                </div>
+                <p><strong>{notif.sender?.displayName || notif.sender?.username}</strong> {
+                  notif.type === 'like' ? 'liked your post.' : 
+                  notif.type === 'comment' ? 'commented on your post.' : 
+                  notif.type === 'message' ? 'sent you a message.' : 'interacted with you.'
+                }</p>
+              </li>
+            ))}
+            {notifications.filter(n => n.type !== 'follow').length === 0 && (
+              <li style={{color: 'rgba(255,255,255,0.4)', fontSize: '13px', border: 'none'}}>No new notifications</li>
+            )}
           </ul>
         </div>
 

@@ -4,6 +4,7 @@ const { body, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
 const User = require('../models/User');
 const Post = require('../models/Post');
+const Notification = require('../models/Notification');
 
 // @route   GET /api/users/:id
 // @desc    Get user profile by ID
@@ -124,6 +125,13 @@ router.post('/:id/follow', auth, async (req, res) => {
 
       await userToFollow.save();
       await currentUser.save();
+      
+      // Create notification
+      await Notification.create({
+        recipient: userToFollow._id,
+        sender: currentUser._id,
+        type: 'follow'
+      });
     }
 
     res.json({ success: true, data: userToFollow });

@@ -5,6 +5,7 @@ const auth = require('../middleware/auth');
 const Post = require('../models/Post');
 const Like = require('../models/Like');
 const Comment = require('../models/Comment');
+const Notification = require('../models/Notification');
 
 // @route   GET /api/posts
 // @desc    Get all posts (feed)
@@ -217,6 +218,15 @@ router.post('/:id/like', auth, async (req, res) => {
     post.likesCount = post.likes.length;
     await post.save();
 
+    if (post.userId.toString() !== req.user._id.toString()) {
+      await Notification.create({
+        recipient: post.userId,
+        sender: req.user._id,
+        type: 'like',
+        post: post._id
+      });
+    }
+
     res.json({
       success: true,
       message: 'Post liked successfully',
@@ -375,6 +385,15 @@ router.post('/:id/comments', auth, [
     // Update comments count
     post.commentsCount += 1;
     await post.save();
+
+    if (post.userId.toString() !== req.user._id.toString()) {
+      await Notification.create({
+        recipient: post.userId,
+        sender: req.user._id,
+        type: 'comment',
+        post: post._id
+      });
+    }
 
     res.status(201).json({
       success: true,
