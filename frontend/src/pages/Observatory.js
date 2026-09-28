@@ -31,43 +31,56 @@ const getMoonInfo = () => {
   return { ...MOON_PHASES[index], illumination, age: age.toFixed(1) };
 };
 
-/* ---------- Constellation map data ---------- */
+// Arranged in a circle (cx/cy in % of a 520x520 square, center at 50%,50%)
+// radius ~38% for the outer ring
 const CONSTELLATIONS = [
   {
-    id: 'art', name: 'ART', x: 20, y: 22, pages: '14.2K', creators: '4.1K', active: '84',
+    id: 'art',         name: 'ART',         cx: 50,  cy: 12,  pages: '14.2K', creators: '4.1K', active: '84',
     communities: ['Digital painting', 'Illustration', 'Character design', 'Sketchbooks'],
     keywords: ['art', 'paint', 'draw', 'illustration', 'sketch', 'doodle', 'canvas'],
   },
   {
-    id: 'books', name: 'BOOKS', x: 10, y: 52, pages: '9.8K', creators: '2.3K', active: '112',
-    communities: ['Poetry', 'Essays', 'Book reviews', 'Marginalia'],
-    keywords: ['book', 'read', 'novel', 'poem', 'poetry', 'library', 'story', 'chapter'],
+    id: 'music',       name: 'MUSIC',       cx: 84,  cy: 28,  pages: '22.1K', creators: '7.8K', active: '230',
+    communities: ['Indie music', 'Vinyl', 'Composition', 'Late night playlists'],
+    keywords: ['music', 'song', 'playlist', 'vinyl', 'album', 'melody', 'piano', 'guitar'],
   },
   {
-    id: 'film', name: 'FILM', x: 30, y: 74, pages: '11.4K', creators: '3.5K', active: '45',
-    communities: ['Film photography', 'Cinematography', 'Short films', 'Analog'],
-    keywords: ['film', 'movie', 'cinema', 'camera', '35mm', 'reel'],
-  },
-  {
-    id: 'writing', name: 'WRITING', x: 50, y: 65, pages: '31.2K', creators: '12K', active: '400',
-    communities: ['Short stories', 'Letters', 'Journaling', 'Flash fiction'],
-    keywords: ['write', 'writing', 'story', 'letter', 'journal', 'prose', 'words'],
-  },
-  {
-    id: 'photography', name: 'PHOTOGRAPHY', x: 84, y: 62, pages: '24.8K', creators: '8.2K', active: '143',
+    id: 'photography', name: 'PHOTOGRAPHY', cx: 95,  cy: 64,  pages: '24.8K', creators: '8.2K', active: '143',
     communities: ['Midnight photographers', 'Landscapes', 'Street', 'Astro'],
     keywords: ['photo', 'photograph', 'moon', 'night', 'sky', 'lens', 'shot', 'camera'],
   },
   {
-    id: 'music', name: 'MUSIC', x: 74, y: 30, pages: '22.1K', creators: '7.8K', active: '230',
-    communities: ['Indie music', 'Vinyl', 'Composition', 'Late night playlists'],
-    keywords: ['music', 'song', 'playlist', 'vinyl', 'album', 'melody', 'piano', 'guitar'],
+    id: 'writing',     name: 'WRITING',     cx: 73,  cy: 92,  pages: '31.2K', creators: '12K',  active: '400',
+    communities: ['Short stories', 'Letters', 'Journaling', 'Flash fiction'],
+    keywords: ['write', 'writing', 'story', 'letter', 'journal', 'prose', 'words'],
+  },
+  {
+    id: 'film',        name: 'FILM',        cx: 27,  cy: 92,  pages: '11.4K', creators: '3.5K', active: '45',
+    communities: ['Film photography', 'Cinematography', 'Short films', 'Analog'],
+    keywords: ['film', 'movie', 'cinema', 'camera', '35mm', 'reel'],
+  },
+  {
+    id: 'books',       name: 'BOOKS',       cx: 5,   cy: 64,  pages: '9.8K',  creators: '2.3K', active: '112',
+    communities: ['Poetry', 'Essays', 'Book reviews', 'Marginalia'],
+    keywords: ['book', 'read', 'novel', 'poem', 'poetry', 'library', 'story', 'chapter'],
   },
 ];
 
+// Inner ring mid-points for cross connections
+const INNER_NODES = [
+  { id: 'i1', cx: 62, cy: 35 },
+  { id: 'i2', cx: 82, cy: 54 },
+  { id: 'i3', cx: 66, cy: 77 },
+  { id: 'i4', cx: 38, cy: 77 },
+  { id: 'i5', cx: 20, cy: 54 },
+  { id: 'i6', cx: 34, cy: 35 },
+];
+
 const CONSTELLATION_LINKS = [
-  ['art', 'books'], ['art', 'music'], ['books', 'film'], ['film', 'writing'],
-  ['writing', 'photography'], ['photography', 'music'], ['books', 'art'],
+  ['art', 'music'], ['music', 'photography'], ['photography', 'writing'],
+  ['writing', 'film'], ['film', 'books'], ['books', 'art'],
+  // inner cross-connections
+  ['art', 'writing'], ['music', 'film'], ['photography', 'books'],
 ];
 
 const byId = Object.fromEntries(CONSTELLATIONS.map((c) => [c.id, c]));
@@ -319,38 +332,85 @@ const Observatory = () => {
           </div>
         </header>
 
-        {/* Constellation Map */}
+        {/* Celestial Wheel Map */}
         <div className="obs-map-container">
-          <svg className="obs-lines" width="100%" height="100%">
+          <svg className="obs-lines" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="rgba(255,220,100,0.35)"/>
+                <stop offset="100%" stopColor="rgba(255,220,100,0)"/>
+              </radialGradient>
+              <filter id="starGlow">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            {/* Outer decorative ring */}
+            <circle cx="260" cy="260" r="248" className="obs-ring-outer"/>
+            {/* Main rings */}
+            <circle cx="260" cy="260" r="210" className="obs-ring"/>
+            <circle cx="260" cy="260" r="155" className="obs-ring"/>
+            <circle cx="260" cy="260" r="95"  className="obs-ring-inner"/>
+            <circle cx="260" cy="260" r="38"  className="obs-ring-inner"/>
+
+            {/* Radial divider lines (every 60°) */}
+            {[0,60,120,180,240,300].map(deg => {
+              const rad = (deg * Math.PI) / 180;
+              return <line key={deg}
+                x1={260 + Math.cos(rad)*38}  y1={260 + Math.sin(rad)*38}
+                x2={260 + Math.cos(rad)*248} y2={260 + Math.sin(rad)*248}
+                className="obs-radial-line"
+              />;
+            })}
+
+            {/* Center ambient glow disc */}
+            <circle cx="260" cy="260" r="80" fill="url(#centerGlow)" style={{pointerEvents:'none'}}/>
+
+            {/* Center star */}
+            <g filter="url(#starGlow)">
+              <circle cx="260" cy="260" r="5" fill="rgba(255,223,150,0.9)"/>
+              <line x1="260" y1="248" x2="260" y2="272" stroke="rgba(255,223,150,0.7)" strokeWidth="1"/>
+              <line x1="248" y1="260" x2="272" y2="260" stroke="rgba(255,223,150,0.7)" strokeWidth="1"/>
+            </g>
+
+            {/* Constellation connecting lines */}
             {CONSTELLATION_LINKS.map(([a, b], i) => {
               const A = byId[a], B = byId[b];
-              const hot = activeConstellation &&
-                (activeConstellation === a || activeConstellation === b);
+              if (!A || !B) return null;
+              const hot = activeConstellation && (activeConstellation === a || activeConstellation === b);
+              const ax = (A.cx / 100) * 520, ay = (A.cy / 100) * 520;
+              const bx = (B.cx / 100) * 520, by = (B.cy / 100) * 520;
               return (
-                <line
-                  key={i}
-                  x1={`${A.x}%`} y1={`${A.y}%`}
-                  x2={`${B.x}%`} y2={`${B.y}%`}
-                  stroke={hot ? 'rgba(255, 223, 150, 0.55)' : 'rgba(255,255,255,0.15)'}
-                  strokeWidth={hot ? 1.5 : 1}
-                  style={{ transition: 'all 0.4s ease' }}
+                <line key={i}
+                  x1={ax} y1={ay} x2={bx} y2={by}
+                  className={`obs-conn-line${hot ? ' active' : ''}`}
                 />
               );
             })}
+
+            {/* Tiny inner accent dots */}
+            {INNER_NODES.map(n => (
+              <circle key={n.id}
+                cx={(n.cx/100)*520} cy={(n.cy/100)*520}
+                r="2.5"
+                fill="rgba(255,223,150,0.2)"
+                stroke="rgba(255,223,150,0.1)" strokeWidth="0.5"
+              />
+            ))}
           </svg>
 
+          {/* Star nodes */}
           {CONSTELLATIONS.map((c) => (
             <div
               key={c.id}
               className={`obs-node ${hoveredConstellation === c.id ? 'hovered' : ''} ${activeConstellation === c.id ? 'selected' : ''}`}
-              style={{ left: `${c.x}%`, top: `${c.y}%` }}
+              style={{ left: `${c.cx}%`, top: `${c.cy}%` }}
               onMouseEnter={() => setHoveredConstellation(c.id)}
               onMouseLeave={() => setHoveredConstellation(null)}
               onClick={() => handleConstellationClick(c)}
             >
-              <div className="obs-node-star">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg>
-              </div>
+              <div className="obs-node-star"/>
               <div className="obs-node-label">{c.name}</div>
 
               {(hoveredConstellation === c.id || activeConstellation === c.id) && (
