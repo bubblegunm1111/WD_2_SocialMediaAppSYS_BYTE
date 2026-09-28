@@ -161,38 +161,76 @@ const Home = () => {
       {/* Right Sidebar */}
       <aside className="sidebar-right">
         
-        <div className="widget">
+        <div className="widget" style={{position: 'relative'}}>
+          <div style={{position: 'absolute', top: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', top: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', bottom: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', bottom: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
           <div className="widget-header">
-            <h3>☾ Tonight</h3>
+            <h3>✧ CONNECTIONS</h3>
             <a href="#">View all</a>
           </div>
           <ul className="notification-list">
             <li>
-              <div className="notif-icon">✉</div>
-              <p>A letter from someone in Paris</p>
+              <div className="notif-icon">
+                <img src="https://api.dicebear.com/7.x/initials/svg?seed=A&backgroundColor=19142d&textColor=f7e8d5" style={{width:'100%', height:'100%', borderRadius:'10px'}} alt=""/>
+              </div>
+              <div style={{flex: 1}}>
+                <p style={{color: '#fff', fontSize: '13px', marginBottom: '4px'}}><strong>Alice</strong> started following you.</p>
+                <button style={{background: 'transparent', border: '1px solid #caa77d', color: '#caa77d', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Follow Back</button>
+              </div>
             </li>
             <li>
-              <div className="notif-icon">⧉</div>
-              <p>Three beautiful illustrations</p>
-            </li>
-            <li>
-              <div className="notif-icon">⌕</div>
-              <p>A midnight photography collection</p>
-            </li>
-            <li>
-              <div className="notif-icon">✧</div>
-              <p>Someone just created a new constellation</p>
-            </li>
-            <li>
-              <div className="notif-icon">▤</div>
-              <p>12 people are journaling</p>
+              <div className="notif-icon">
+                <img src="https://api.dicebear.com/7.x/initials/svg?seed=M&backgroundColor=19142d&textColor=f7e8d5" style={{width:'100%', height:'100%', borderRadius:'10px'}} alt=""/>
+              </div>
+              <div style={{flex: 1}}>
+                <p style={{color: '#fff', fontSize: '13px', marginBottom: '4px'}}><strong>Marcus</strong> requested to follow.</p>
+                <div style={{display: 'flex', gap: '8px'}}>
+                  <button style={{background: '#caa77d', border: 'none', color: '#000', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Accept</button>
+                  <button style={{background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#888', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Decline</button>
+                </div>
+              </div>
             </li>
           </ul>
         </div>
 
-        <div className="widget">
+        <div className="widget" style={{position: 'relative'}}>
+          <div style={{position: 'absolute', top: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', top: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', bottom: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', bottom: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
           <div className="widget-header">
-            <h3>🏰 Your Room</h3>
+            <h3>☾ NOTIFICATIONS</h3>
+            <a href="#">View all</a>
+          </div>
+          <ul className="notification-list">
+            <li>
+              <div className="notif-icon" style={{background: 'rgba(255, 77, 77, 0.1)', color: '#ff4d4d', fontSize: '18px'}}>♥</div>
+              <p><strong>Elena</strong> liked your latest post.</p>
+            </li>
+            <li>
+              <div className="notif-icon" style={{background: 'rgba(202, 167, 125, 0.1)', color: '#caa77d', fontSize: '18px'}}>✧</div>
+              <p><strong>David</strong> viewed your story.</p>
+            </li>
+            <li>
+              <div className="notif-icon" style={{background: 'rgba(142, 108, 255, 0.1)', color: '#8e6cff', fontSize: '18px'}}>✉</div>
+              <p><strong>Sophia</strong> sent you a message.</p>
+            </li>
+            <li>
+              <div className="notif-icon" style={{background: 'rgba(202, 167, 125, 0.1)', color: '#caa77d', fontSize: '18px'}}>💬</div>
+              <p><strong>Liam</strong> commented on your collection.</p>
+            </li>
+          </ul>
+        </div>
+
+        <div className="widget" style={{position: 'relative'}}>
+          <div style={{position: 'absolute', top: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', top: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', bottom: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div style={{position: 'absolute', bottom: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+          <div className="widget-header">
+            <h3>🏰 YOUR ROOM</h3>
             <a href="#">View Room</a>
           </div>
           <div className="room-user">
@@ -200,7 +238,7 @@ const Home = () => {
               <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="User" />
             </Link>
             <div>
-              <h4>{user?.displayName || user?.username || 'You'}</h4>
+              <h4 style={{textTransform: 'uppercase', letterSpacing: '1px'}}>{user?.displayName || user?.username || 'You'}</h4>
               <p>Collecting little beautiful things.</p>
             </div>
           </div>
@@ -216,22 +254,13 @@ const Home = () => {
              </div>
              <div className="companion-details">
                 <p>Your companion</p>
-                <h4>Mooncat</h4>
+                <h4>MOONCAT</h4>
                 <span>(happy)</span>
              </div>
           </div>
         </div>
 
-        <div className="widget">
-          <h3>✧ Quick Actions</h3>
-          <br/>
-          <div className="quick-actions-grid">
-            <button>✎ Write a Page</button>
-            <button>⌖ Explore Observatory</button>
-            <button>✉ Check Letters</button>
-            <button>⌂ Visit Memory House</button>
-          </div>
-        </div>
+
 
       </aside>
 
