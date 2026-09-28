@@ -8,9 +8,13 @@ const postSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: [true, 'Post content is required'],
     trim: true,
+    default: '',
     maxlength: [5000, 'Post content cannot exceed 5000 characters']
+  },
+  isStory: {
+    type: Boolean,
+    default: false
   },
   mediaUrl: {
     type: String,

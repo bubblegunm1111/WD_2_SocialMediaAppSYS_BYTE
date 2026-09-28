@@ -10,8 +10,8 @@ const fallbackAvatar = (username) => (
 );
 
 const Profile = () => {
+  const { user: currentUser, updateUserContext } = useAuth();
   const { userId } = useParams();
-  const { user: currentUser } = useAuth();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,6 +66,7 @@ const Profile = () => {
     try {
       const response = await userService.updateUser(userId, formData);
       setUser(response.data);
+      if (isOwnProfile && updateUserContext) updateUserContext(response.data);
       setIsEditing(false);
     } catch (err) {
       console.error(err);
@@ -81,6 +82,7 @@ const Profile = () => {
         try {
           const response = await userService.updateUser(userId, { profilePicture: base64String });
           setUser(response.data);
+          if (isOwnProfile && updateUserContext) updateUserContext(response.data);
         } catch (err) {
           console.error("Failed to update avatar", err);
         }

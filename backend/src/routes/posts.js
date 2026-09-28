@@ -74,12 +74,13 @@ router.post('/', auth, [
       return res.status(400).json({ success: false, errors: errors.array() });
     }
 
-    const { content, mediaUrl } = req.body;
+    const { content, mediaUrl, isStory } = req.body;
 
     const post = new Post({
       userId: req.user._id,
-      content,
-      mediaUrl: mediaUrl || ''
+      content: content || '',
+      mediaUrl: mediaUrl || '',
+      isStory: !!isStory
     });
 
     await post.save();

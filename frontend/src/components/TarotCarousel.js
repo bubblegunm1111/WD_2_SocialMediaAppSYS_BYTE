@@ -3,7 +3,7 @@ import { motion, useSpring, useTransform } from 'framer-motion';
 import { postService } from '../services/api';
 import './TarotCarousel.css';
 
-const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
+const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryCreated }) => {
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [likePending, setLikePending] = useState(false);
@@ -56,6 +56,49 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
     }
   };
 
+  const handleStoryUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        let mediaUrl = reader.result;
+        
+        if (file.type.startsWith('image/')) {
+          const img = new Image();
+          img.src = mediaUrl;
+          await new Promise((resolve) => {
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const MAX_WIDTH = 1080;
+              let scale = 1;
+              if (img.width > MAX_WIDTH) scale = MAX_WIDTH / img.width;
+              canvas.width = img.width * scale;
+              canvas.height = img.height * scale;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              mediaUrl = canvas.toDataURL('image/jpeg', 0.85);
+              resolve();
+            };
+          });
+        }
+
+        const response = await postService.createPost({
+          content: '',
+          mediaUrl,
+          isStory: true
+        });
+        
+        if (onStoryCreated) onStoryCreated(response.data);
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to upload story');
+    }
+  };
+
   return (
     <motion.div 
       className={`tarot-card ${isClosest ? 'active' : ''}`}
@@ -76,7 +119,7 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
       <div className="card-inner">
         {post.isAddStory ? (
           <div className="add-story-card" style={{ height: '100%', background: 'rgba(10,5,20,0.8)', borderRadius: '16px' }}>
-            <input type="file" id="story-upload" accept="image/*,video/*" style={{ display: 'none' }} />
+            <input type="file" id="story-upload" accept="image/*,video/*" style={{ display: 'none' }} onChange={handleStoryUpload} />
             <label htmlFor="story-upload" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
               <div className="add-story-icon" style={{ fontSize: '48px', color: 'rgba(255, 223, 150, 0.8)', marginBottom: '16px' }}>+</div>
               <h3 style={{ color: '#f7e8d5', fontFamily: "'Palatino Linotype', serif", fontSize: '18px', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>Create Story</h3>
@@ -149,7 +192,7 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
   );
 };
 
-const TarotCarousel = ({ posts, onPostClick }) => {
+const TarotCarousel = ({ posts, onPostClick, onStoryCreated }) => {
   const containerRef = useRef(null);
   
   const carouselItems = [{ isAddStory: true, _id: 'add-story' }, ...(posts || [])];
@@ -234,6 +277,7 @@ const TarotCarousel = ({ posts, onPostClick }) => {
             currentIndex={currentIndex}
             isClosest={index === activeDot}
             onPostClick={handlePostClick}
+            onStoryCreated={onStoryCreated}
           />
         ))}
       </div>

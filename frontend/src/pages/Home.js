@@ -44,6 +44,9 @@ const Home = () => {
     setPosts(posts.filter(post => post._id !== postId));
   };
 
+  const feedPosts = posts.filter(p => !p.isStory);
+  const storyPosts = posts.filter(p => p.isStory);
+
   return (
     <div className="dashboard-layout">
       {/* Left Sidebar */}
@@ -116,7 +119,7 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <TarotCarousel posts={posts} />
+              <TarotCarousel posts={storyPosts} onStoryCreated={handlePostCreated} />
             )}
           </div>
 
@@ -130,7 +133,7 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              posts.map(post => (
+              feedPosts.map(post => (
                 <Post key={post._id} post={post} onDelete={handlePostDeleted} />
               ))
             )}
