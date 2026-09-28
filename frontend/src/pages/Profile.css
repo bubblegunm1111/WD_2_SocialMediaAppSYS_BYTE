@@ -87,7 +87,6 @@
     grid-template-columns: 38% 62%;
 
     position: relative;
-    overflow: hidden;
 }
 
 /* Left profile information */
@@ -167,10 +166,10 @@
     position: absolute;
 
     right: 0;
-    top: 0;
+    top: -80px;
 
     width: 68%;
-    height: 100%;
+    height: calc(100% + 80px);
 
     background-image:
         linear-gradient(
@@ -184,8 +183,8 @@
     background-position: center;
     background-attachment: fixed;
 
-    mask-image: radial-gradient(ellipse at center right, black 40%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse at center right, black 40%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 15%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%);
 }
 
 /* Stats */
