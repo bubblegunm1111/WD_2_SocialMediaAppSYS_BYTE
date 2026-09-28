@@ -5,7 +5,11 @@ import { useAuth } from '../context/AuthContext';
 
 const Post = ({ post, onDelete }) => {
   const { user: currentUser } = useAuth();
-  const [liked, setLiked] = useState(false);
+  
+  // check if current user liked it
+  const isUserLiked = post.likes?.includes(currentUser?.id || currentUser?._id);
+  
+  const [liked, setLiked] = useState(isUserLiked || false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
@@ -15,13 +19,14 @@ const Post = ({ post, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content || '');
 
-  const isOwnPost = currentUser.id === post.userId._id;
+  const isOwnPost = String(currentUser?.id || currentUser?._id) === String(post.userId?._id || post.userId?.id || post.userId);
 
   const handleLike = async () => {
     try {
       if (liked) {
         await postService.unlikePost(post._id);
-        setLikesCount(likesCount - 1);
+        setLikesCount(prev => prev - 1);
+        setLiked(false);
       } else {
         await postService.likePost(post._id);
         setLikesCount(likesCount + 1);
@@ -55,6 +60,22 @@ const Post = ({ post, onDelete }) => {
       const response = await postService.addComment(post._id, commentText);
       setComments([response.data, ...comments]);
       setCommentText('');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const isUserSaved = post.savedBy?.includes(currentUser?.id || currentUser?._id);
+  const [saved, setSaved] = useState(isUserSaved || false);
+
+  const handleSaveToggle = async () => {
+    try {
+      if (saved) {
+        await postService.unsavePost(post._id);
+      } else {
+        await postService.savePost(post._id);
+      }
+      setSaved(!saved);
     } catch (err) {
       console.error(err);
     }
@@ -189,8 +210,8 @@ const Post = ({ post, onDelete }) => {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           {post.commentsCount || 0}
         </button>
-        <button onClick={handleArchive} style={{ background: 'transparent', border: 'none', color: post.isArchived ? '#caa77d' : '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '14px', padding: 0, marginLeft: 'auto' }} title="Save to Memories">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill={post.isArchived ? '#caa77d' : 'none'} stroke="currentColor" strokeWidth="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+        <button onClick={handleSaveToggle} style={{ background: 'transparent', border: 'none', color: saved ? '#caa77d' : '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '14px', padding: 0, marginLeft: 'auto' }} title="Save to Memories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill={saved ? '#caa77d' : 'none'} stroke={saved ? '#caa77d' : 'currentColor'} strokeWidth="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         </button>
       </div>
 

@@ -95,6 +95,16 @@ export const postService = {
     return response.data;
   },
 
+  savePost: async (postId) => {
+    const response = await api.post(`/posts/${postId}/save`);
+    return response.data;
+  },
+
+  unsavePost: async (postId) => {
+    const response = await api.delete(`/posts/${postId}/save`);
+    return response.data;
+  },
+
   getComments: async (postId) => {
     const response = await api.get(`/posts/${postId}/comments`);
     return response.data;

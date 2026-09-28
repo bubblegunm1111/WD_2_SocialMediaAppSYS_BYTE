@@ -206,27 +206,15 @@ router.post('/:id/like', auth, async (req, res) => {
     }
 
     // Check if already liked
-    const existingLike = await Like.findOne({
-      postId: req.params.id,
-      userId: req.user._id
-    });
-
-    if (existingLike) {
+    if (post.likes.includes(req.user._id)) {
       return res.status(400).json({
         success: false,
         message: 'Post already liked'
       });
     }
 
-    const like = new Like({
-      postId: req.params.id,
-      userId: req.user._id
-    });
-
-    await like.save();
-
-    // Update likes count
-    post.likesCount += 1;
+    post.likes.push(req.user._id);
+    post.likesCount = post.likes.length;
     await post.save();
 
     res.json({
@@ -254,20 +242,15 @@ router.delete('/:id/like', auth, async (req, res) => {
       });
     }
 
-    const like = await Like.findOneAndDelete({
-      postId: req.params.id,
-      userId: req.user._id
-    });
-
-    if (!like) {
+    if (!post.likes.includes(req.user._id)) {
       return res.status(400).json({
         success: false,
         message: 'Post not liked yet'
       });
     }
 
-    // Update likes count
-    post.likesCount = Math.max(0, post.likesCount - 1);
+    post.likes = post.likes.filter(id => id.toString() !== req.user._id.toString());
+    post.likesCount = post.likes.length;
     await post.save();
 
     res.json({
@@ -275,6 +258,44 @@ router.delete('/:id/like', auth, async (req, res) => {
       message: 'Post unliked successfully',
       data: { likesCount: post.likesCount }
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   POST /api/posts/:id/save
+// @desc    Save a post to memories
+// @access  Private
+router.post('/:id/save', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ success: false, message: 'Post not found' });
+
+    if (post.savedBy.includes(req.user._id)) {
+      return res.status(400).json({ success: false, message: 'Post already saved' });
+    }
+
+    post.savedBy.push(req.user._id);
+    await post.save();
+    res.json({ success: true, message: 'Post saved to memories' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// @route   DELETE /api/posts/:id/save
+// @desc    Unsave a post
+// @access  Private
+router.delete('/:id/save', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ success: false, message: 'Post not found' });
+
+    post.savedBy = post.savedBy.filter(id => id.toString() !== req.user._id.toString());
+    await post.save();
+    res.json({ success: true, message: 'Post removed from memories' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: 'Server error' });
