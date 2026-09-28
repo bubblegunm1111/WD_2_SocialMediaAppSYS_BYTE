@@ -1,7 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import Cropper from 'react-easy-crop';
 import { useAuth } from '../context/AuthContext';
 import { postService } from '../services/api';
+
+const getCroppedImg = (imageSrc, pixelCrop) => {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = imageSrc;
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = pixelCrop.width;
+      canvas.height = pixelCrop.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(
+        image,
+        pixelCrop.x,
+        pixelCrop.y,
+        pixelCrop.width,
+        pixelCrop.height,
+        0,
+        0,
+        pixelCrop.width,
+        pixelCrop.height
+      );
+      resolve(canvas.toDataURL('image/jpeg', 0.9));
+    };
+    image.onerror = (error) => reject(error);
+  });
+};
 
 const CreatePost = ({ onPostCreated }) => {
   const { user } = useAuth();
@@ -9,6 +36,15 @@ const CreatePost = ({ onPostCreated }) => {
   const [mediaUrl, setMediaUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Cropper states
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -27,13 +63,20 @@ const CreatePost = ({ onPostCreated }) => {
 
     setLoading(true);
     try {
+      let finalMediaUrl = mediaUrl;
+      if (mediaUrl && croppedAreaPixels) {
+        finalMediaUrl = await getCroppedImg(mediaUrl, croppedAreaPixels);
+      }
+
       const response = await postService.createPost({
         content: content.trim(),
-        mediaUrl: mediaUrl
+        mediaUrl: finalMediaUrl
       });
       onPostCreated(response.data);
       setContent('');
       setMediaUrl('');
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       console.error(err);
@@ -84,15 +127,40 @@ const CreatePost = ({ onPostCreated }) => {
         </div>
 
         {mediaUrl && (
-          <div style={{ margin: '15px 0 0 55px', position: 'relative' }}>
-            <img src={mediaUrl} alt="Upload preview" style={{ maxWidth: '100%', borderRadius: '12px', border: '1px solid rgba(220,200,150,0.2)', maxHeight: '300px', objectFit: 'contain' }} />
+          <div style={{ margin: '15px 0 0 55px', position: 'relative', height: '400px', width: '100%', maxWidth: '400px', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(220,200,150,0.2)' }}>
+            <Cropper
+              image={mediaUrl}
+              crop={crop}
+              zoom={zoom}
+              aspect={4 / 5} // Instagram portrait ratio
+              onCropChange={setCrop}
+              onCropComplete={onCropComplete}
+              onZoomChange={setZoom}
+              showGrid={true}
+              style={{
+                containerStyle: { background: 'rgba(0,0,0,0.8)' },
+                cropAreaStyle: { border: '2px solid rgba(255, 223, 150, 0.8)' }
+              }}
+            />
             <button 
               type="button" 
-              onClick={() => setMediaUrl('')}
-              style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', border: 'none', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer' }}
+              onClick={() => { setMediaUrl(''); setCrop({ x: 0, y: 0 }); setZoom(1); }}
+              style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', color: 'white', border: 'none', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', zIndex: 100 }}
             >
               ✕
             </button>
+            <div style={{ position: 'absolute', bottom: '10px', left: '10px', right: '10px', display: 'flex', gap: '10px', zIndex: 100 }}>
+              <input 
+                type="range" 
+                value={zoom} 
+                min={1} 
+                max={3} 
+                step={0.1} 
+                aria-label="Zoom"
+                onChange={(e) => setZoom(e.target.value)}
+                style={{ width: '100%' }}
+              />
+            </div>
           </div>
         )}
 
