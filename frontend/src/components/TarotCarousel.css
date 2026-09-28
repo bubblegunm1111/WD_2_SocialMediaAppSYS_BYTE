@@ -6,7 +6,9 @@
   align-items: center;
   justify-content: center;
   margin: 30px 0;
-  overflow: hidden;
+  /* Use a mask to smoothly fade out the edges instead of a hard clip */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
 
 .tarot-carousel {
@@ -89,31 +91,18 @@
 .tarot-card.active .card-inner {
   box-shadow:
     /* Enhanced outer glow */
-    0 0 40px rgba(255, 223, 150, 0.4),
-    0 0 80px rgba(184, 134, 64, 0.25),
-    0 0 120px rgba(184, 134, 64, 0.15),
+    0 0 40px rgba(255, 223, 150, 0.25),
+    0 0 80px rgba(184, 134, 64, 0.15),
     /* Deep shadow */
     0 25px 60px rgba(0, 0, 0, 0.9),
-    0 15px 35px rgba(0, 0, 0, 0.7),
-    /* Inner border glow */
-    inset 0 0 0 1px rgba(255, 223, 150, 0.3),
-    inset 0 0 30px rgba(255, 223, 150, 0.1);
+    /* Delicate inner border glow instead of a thick rough border */
+    inset 0 0 0 1px rgba(255, 223, 150, 0.7),
+    inset 0 0 30px rgba(255, 223, 150, 0.25);
 }
 
 .tarot-card.active .card-inner::before {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 223, 150, 0.9) 0%,
-    rgba(255, 200, 100, 1) 15%,
-    rgba(184, 134, 64, 0.8) 30%,
-    rgba(255, 223, 150, 0.6) 45%,
-    rgba(255, 240, 200, 0.7) 50%,
-    rgba(255, 223, 150, 0.6) 55%,
-    rgba(184, 134, 64, 0.8) 70%,
-    rgba(255, 200, 100, 1) 85%,
-    rgba(255, 223, 150, 0.9) 100%
-  );
-  filter: drop-shadow(0 0 8px rgba(255, 223, 150, 0.5));
+  /* We remove the thick solid background border in favor of the delicate inset shadow above */
+  display: none;
 }
 
 .card-bg {
