@@ -135,7 +135,7 @@ const Post = ({ post, onDelete }) => {
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
       display: 'flex',
       flexDirection: 'column',
-      height: '100%',
+      height: 'fit-content',
       transition: 'transform 0.2s ease',
     }}>
       {/* Decorative Corners */}
@@ -193,8 +193,8 @@ const Post = ({ post, onDelete }) => {
       )}
 
       {post.mediaUrl && (
-        <div style={{ marginBottom: '12px', borderRadius: '16px', overflow: 'hidden', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '350px', objectFit: 'cover' }} />
+        <div style={{ marginBottom: '12px', borderRadius: '12px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '280px', objectFit: 'cover' }} />
         </div>
       )}
 
