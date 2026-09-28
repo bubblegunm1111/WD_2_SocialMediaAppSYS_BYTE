@@ -424,16 +424,16 @@ const Observatory = () => {
               )}
             </div>
           ))}
+        </div>
 
-          <div className="obs-wander-container">
-            <button className={`obs-wander-btn ${isWandering ? 'wandering' : ''}`} onClick={handleWander} disabled={isWandering}>
-              <span className="wander-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg>
-              </span>
-              {isWandering ? 'WANDERING...' : 'WANDER'}
-            </button>
-            <p>"Take me somewhere unexpected."</p>
-          </div>
+        <div className="obs-wander-container">
+          <button className={`obs-wander-btn ${isWandering ? 'wandering' : ''}`} onClick={handleWander} disabled={isWandering}>
+            <span className="wander-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg>
+            </span>
+            {isWandering ? 'WANDERING...' : 'WANDER'}
+          </button>
+          <p>"Take me somewhere unexpected."</p>
         </div>
 
         {/* Constellation detail panel */}

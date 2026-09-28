@@ -272,11 +272,10 @@
   color: rgba(255, 223, 150, 0.6) !important;
 }
 
-/* Wander button — sits below the circle */
+/* Wander button — sits below the circle, left-aligned */
 .obs-wander-container {
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  text-align: left;
+  padding: 0 40px 20px;
 }
 
 .obs-wander-btn {
