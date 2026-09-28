@@ -15,6 +15,7 @@ const Profile = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [archivedPosts, setArchivedPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -57,8 +58,12 @@ const Profile = () => {
         setPosts(postsResponse.data || []);
         
         if (String(currentUser?._id || currentUser?.id) === String(userId)) {
-          const archivedResponse = await postService.getPosts({ userId, isArchived: true, limit: 100 });
+          const [archivedResponse, savedResponse] = await Promise.all([
+            postService.getPosts({ userId, isArchived: true, limit: 100 }),
+            userService.getUserSavedPosts(userId)
+          ]);
           setArchivedPosts(archivedResponse.data || []);
+          setSavedPosts(savedResponse.data || []);
         }
         setFormData({
           displayName: userResponse.data.displayName || '',
@@ -276,8 +281,15 @@ const Profile = () => {
             <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>No collections found.</div>
           )}
 
-          {activeTab === 'memories' && (
-            <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>Coming soon...</div>
+          {activeTab === 'memories' && savedPosts.filter(p => p.mediaUrl).map((post) => (
+            <article 
+              key={post._id}
+              className="post-item"
+              style={{ backgroundImage: `url(${post.mediaUrl})` }}
+            ></article>
+          ))}
+          {activeTab === 'memories' && savedPosts.filter(p => p.mediaUrl).length === 0 && (
+            <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>No memories found.</div>
           )}
         </section>
       </div>

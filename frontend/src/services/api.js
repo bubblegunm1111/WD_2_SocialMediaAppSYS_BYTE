@@ -133,6 +133,11 @@ export const userService = {
     return response.data;
   },
   
+  getUserSavedPosts: async (userId) => {
+    const response = await api.get(`/users/${userId}/saved-posts`);
+    return response.data;
+  },
+  
   followUser: async (userId) => {
     const response = await api.post(`/users/${userId}/follow`);
     return response.data;

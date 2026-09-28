@@ -162,4 +162,24 @@ router.post('/:id/unfollow', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/users/:id/saved-posts
+// @desc    Get posts saved by user
+// @access  Public
+router.get('/:id/saved-posts', async (req, res) => {
+  try {
+    const posts = await Post.find({ savedBy: req.params.id })
+      .sort({ createdAt: -1 })
+      .populate('userId', 'username displayName profilePicture');
+
+    res.json({
+      success: true,
+      count: posts.length,
+      data: posts
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 module.exports = router;
