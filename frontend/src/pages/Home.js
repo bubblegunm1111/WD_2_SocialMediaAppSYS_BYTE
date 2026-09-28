@@ -119,7 +119,7 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <TarotCarousel posts={storyPosts} onStoryCreated={handlePostCreated} />
+              <TarotCarousel posts={storyPosts} onStoryCreated={handlePostCreated} onStoryDeleted={handlePostDeleted} />
             )}
           </div>
 

@@ -15,7 +15,16 @@ router.get('/', async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
 
-    const posts = await Post.find()
+    const query = {};
+    if (req.query.userId) query.userId = req.query.userId;
+    
+    if (req.query.isArchived !== undefined) {
+      query.isArchived = req.query.isArchived === 'true';
+    } else {
+      query.isArchived = false;
+    }
+
+    const posts = await Post.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
@@ -100,7 +109,7 @@ router.post('/', auth, [
 // @desc    Update post
 // @access  Private (owner only)
 router.put('/:id', auth, [
-  body('content').optional().trim().notEmpty().isLength({ max: 5000 })
+  body('content').optional({ checkFalsy: true }).trim().isLength({ max: 5000 })
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -125,10 +134,11 @@ router.put('/:id', auth, [
       });
     }
 
-    const { content, mediaUrl } = req.body;
+    const { content, mediaUrl, isArchived } = req.body;
 
     if (content !== undefined) post.content = content;
     if (mediaUrl !== undefined) post.mediaUrl = mediaUrl;
+    if (isArchived !== undefined) post.isArchived = isArchived;
 
     await post.save();
     await post.populate('userId', 'username displayName profilePicture');

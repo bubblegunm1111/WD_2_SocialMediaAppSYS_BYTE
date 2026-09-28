@@ -11,6 +11,9 @@ const Post = ({ post, onDelete }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editContent, setEditContent] = useState(post.content || '');
 
   const isOwnPost = currentUser.id === post.userId._id;
 
@@ -68,6 +71,25 @@ const Post = ({ post, onDelete }) => {
     }
   };
 
+  const handleArchive = async () => {
+    try {
+      await postService.updatePost(post._id, { isArchived: !post.isArchived });
+      if (onDelete) onDelete(post._id);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      await postService.updatePost(post._id, { content: editContent });
+      post.content = editContent;
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -100,22 +122,30 @@ const Post = ({ post, onDelete }) => {
           <div className="post-timestamp">{formatTimestamp(post.createdAt)}</div>
         </div>
         {isOwnPost && (
-          <button
-            onClick={handleDelete}
-            style={{
-              marginLeft: 'auto',
-              padding: '8px',
-              background: 'transparent',
-              color: '#65676b',
-              fontSize: '18px'
-            }}
-          >
-            ×
-          </button>
+          <div className="post-options-menu" style={{ marginLeft: 'auto', position: 'relative' }}>
+            <button onClick={() => setShowMenu(!showMenu)} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', fontSize: '20px', cursor: 'pointer', outline: 'none' }}>⋮</button>
+            {showMenu && (
+              <div style={{ position: 'absolute', right: 0, top: '25px', background: 'rgba(20,15,35,0.95)', border: '1px solid rgba(220, 200, 150, 0.2)', borderRadius: '8px', padding: '5px', display: 'flex', flexDirection: 'column', gap: '5px', zIndex: 10, minWidth: '120px' }}>
+                <button onClick={() => { setIsEditing(true); setShowMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', padding: '8px', textAlign: 'left', cursor: 'pointer' }}>Edit Caption</button>
+                <button onClick={handleArchive} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', padding: '8px', textAlign: 'left', cursor: 'pointer' }}>{post.isArchived ? 'Unarchive' : 'Archive'}</button>
+                <button onClick={handleDelete} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', padding: '8px', textAlign: 'left', cursor: 'pointer' }}>Delete</button>
+              </div>
+            )}
+          </div>
         )}
       </div>
 
-      <div className="post-content">{post.content}</div>
+      {isEditing ? (
+        <div className="post-edit-container" style={{ padding: '0 20px', marginBottom: '15px' }}>
+          <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} style={{ width: '100%', minHeight: '60px', background: 'rgba(0,0,0,0.5)', color: '#f7e8d5', border: '1px solid rgba(220, 200, 150, 0.3)', borderRadius: '8px', padding: '10px', resize: 'none', fontFamily: "'Palatino Linotype', serif" }} />
+          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <button onClick={handleEditSubmit} style={{ background: 'rgba(220, 200, 150, 0.2)', color: '#f7e8d5', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
+            <button onClick={() => { setIsEditing(false); setEditContent(post.content); }} style={{ background: 'transparent', color: '#f7e8d5', border: '1px solid rgba(255,255,255,0.2)', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+          </div>
+        </div>
+      ) : (
+        <div className="post-content">{post.content}</div>
+      )}
 
       {post.mediaUrl && (
         <img src={post.mediaUrl} alt="Post media" className="post-media" />

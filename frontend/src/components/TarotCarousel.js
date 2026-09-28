@@ -7,7 +7,11 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryC
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
   const [likePending, setLikePending] = useState(false);
-  // `currentIndex` is a continuous spring value (e.g., 0.0, 0.5, 1.0)
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState('');
+  
+  const isOwnStory = !post.isAddStory && currentUser && (String(currentUser.id || currentUser._id) === String(post.userId?._id || post.userId));
   
   // Calculate relative offset from this card to the current view center
   const offset = useTransform(currentIndex, (current) => index - current);
@@ -99,6 +103,33 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryC
     }
   };
 
+  const handleShowComments = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!showComments) {
+      try {
+        const response = await postService.getComments(post._id);
+        setComments(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    setShowComments(!showComments);
+  };
+
+  const handleStoryDelete = async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (window.confirm('Delete this story?')) {
+      try {
+        await postService.deletePost(post._id);
+        if (onStoryDeleted) onStoryDeleted(post._id);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   return (
     <motion.div 
       className={`tarot-card ${isClosest ? 'active' : ''}`}
@@ -134,6 +165,15 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryC
               }}
             ></div>
             
+            {isOwnStory && (
+              <button 
+                onClick={handleStoryDelete}
+                style={{ position: 'absolute', top: '10px', right: '10px', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#ff4d4d', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', zIndex: 100, fontSize: '18px' }}
+              >
+                ×
+              </button>
+            )}
+
             <div className="card-content">
               <div className="card-user-info">
                 <img 
@@ -160,9 +200,24 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryC
                     <span aria-hidden="true">{liked ? '♥' : '♡'}</span>
                     {likesCount}
                   </button>
-                  <span className="card-action-icon">💬 {post.commentsCount || 0}</span>
+                  <button type="button" className="card-comment-button" onClick={handleShowComments} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', cursor: 'pointer', fontSize: '14px', zIndex: 10, outline: 'none' }}>
+                    💬 {post.commentsCount || 0}
+                  </button>
                 </div>
               </div>
+              
+              {showComments && (
+                <div style={{ position: 'absolute', bottom: '80px', left: '10px', right: '10px', maxHeight: '200px', overflowY: 'auto', background: 'rgba(10,5,20,0.95)', padding: '10px', borderRadius: '8px', zIndex: 11, pointerEvents: 'auto', border: '1px solid rgba(220, 200, 150, 0.2)' }} onClick={e => e.stopPropagation()}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '10px' }}>
+                    {comments.map(c => <div key={c._id} style={{ fontSize: '12px' }}><strong>{c.userId?.username || 'User'}</strong>: {c.content}</div>)}
+                    {comments.length === 0 && <div style={{ fontSize: '12px', color: '#999' }}>No comments yet.</div>}
+                  </div>
+                  <form onSubmit={async (e) => { e.preventDefault(); e.stopPropagation(); if(commentText) { try { const r = await postService.addComment(post._id, commentText); setComments([r.data, ...comments]); setCommentText(''); } catch(err) { console.error(err); } } }} style={{ display: 'flex' }}>
+                    <input value={commentText} onChange={e => setCommentText(e.target.value)} placeholder="Add comment..." style={{ flex: 1, background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(220, 200, 150, 0.3)', color: '#f7e8d5', padding: '5px', borderRadius: '4px', outline: 'none', fontSize: '12px' }} onClick={e => e.stopPropagation()} />
+                    <button type="submit" style={{ background: 'transparent', border: 'none', color: '#caa77d', cursor: 'pointer', fontSize: '12px', marginLeft: '5px' }}>Post</button>
+                  </form>
+                </div>
+              )}
             </div>
           </>
         )}

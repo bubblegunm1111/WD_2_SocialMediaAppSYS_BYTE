@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { userService } from '../services/api';
+import { userService, postService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
@@ -14,6 +14,7 @@ const Profile = () => {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [archivedPosts, setArchivedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -33,12 +34,17 @@ const Profile = () => {
         setError('');
         const [userResponse, postsResponse] = await Promise.all([
           userService.getUser(userId),
-          userService.getUserPosts(userId)
+          postService.getPosts({ userId, isArchived: false, limit: 100 })
         ]);
 
         if (!isMounted) return;
         setUser(userResponse.data);
         setPosts(postsResponse.data || []);
+        
+        if (String(currentUser?._id || currentUser?.id) === String(userId)) {
+          const archivedResponse = await postService.getPosts({ userId, isArchived: true, limit: 100 });
+          setArchivedPosts(archivedResponse.data || []);
+        }
         setFormData({
           displayName: userResponse.data.displayName || '',
           bio: userResponse.data.bio || ''
@@ -212,7 +218,19 @@ const Profile = () => {
           {activeTab === 'posts' && posts.filter(p => p.mediaUrl).length === 0 && (
             <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>No image posts found.</div>
           )}
-          {activeTab !== 'posts' && (
+
+          {activeTab === 'collections' && archivedPosts.filter(p => p.mediaUrl).map((post) => (
+            <article 
+              key={post._id}
+              className="post-item"
+              style={{ backgroundImage: `url(${post.mediaUrl})` }}
+            ></article>
+          ))}
+          {activeTab === 'collections' && archivedPosts.filter(p => p.mediaUrl).length === 0 && (
+            <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>No collections found.</div>
+          )}
+
+          {activeTab === 'memories' && (
             <div style={{gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#bcb2c0'}}>Coming soon...</div>
           )}
         </section>
