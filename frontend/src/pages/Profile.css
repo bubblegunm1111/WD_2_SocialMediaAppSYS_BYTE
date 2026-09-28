@@ -182,17 +182,10 @@
 
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
 
-    mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        black 20%
-    );
-    -webkit-mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        black 20%
-    );
+    mask-image: radial-gradient(ellipse at center right, black 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse at center right, black 40%, transparent 100%);
 }
 
 /* Stats */
