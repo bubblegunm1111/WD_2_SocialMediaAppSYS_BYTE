@@ -12,7 +12,7 @@ const fallbackAvatar = (username) => (
 const Profile = () => {
   const { user: currentUser, updateUserContext } = useAuth();
   const { userId } = useParams();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => String(currentUser?._id || currentUser?.id) === String(userId) ? currentUser : null);
   const [posts, setPosts] = useState([]);
   const [archivedPosts, setArchivedPosts] = useState([]);
   const [savedPosts, setSavedPosts] = useState([]);
@@ -141,24 +141,23 @@ const Profile = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <>
-        <Navbar />
-        <main className="profile-page">
-          <div style={{textAlign: 'center', paddingTop: '100px', color: '#eee5dc'}}>Opening the mystical room...</div>
-        </main>
-      </>
-    );
-  }
-
-  if (error || !user) {
+  if (!loading && (error || !user)) {
     return (
       <>
         <Navbar />
         <main className="profile-page">
           <div style={{textAlign: 'center', paddingTop: '100px', color: '#eee5dc'}}>{error || 'Profile not found'}</div>
         </main>
+      </>
+    );
+  }
+
+  // If still loading and we don't have user data (e.g. someone else's profile), render a skeleton or just an empty page structure
+  if (!user) {
+    return (
+      <>
+        <Navbar />
+        <div className="profile-page" style={{minHeight: '100vh', background: 'transparent'}}></div>
       </>
     );
   }
