@@ -98,9 +98,21 @@
     z-index: 2;
 }
 
-.avatar {
+.avatar-container {
+    position: relative;
     width: 180px;
     height: 180px;
+    margin-bottom: 10px;
+    transition: filter 0.3s ease;
+}
+
+.avatar-container:hover {
+    filter: brightness(1.15) drop-shadow(0 0 10px rgba(202, 167, 125, 0.4));
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
 
     border-radius: 50%;
 
@@ -113,6 +125,24 @@
         0 0 0 6px rgba(202, 167, 125, .08),
         0 0 30px rgba(202, 167, 125, .15);
 }
+
+.avatar-stars {
+    position: absolute;
+    inset: -15px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.star-icon {
+    position: absolute;
+    color: #caa77d;
+    font-size: 20px;
+    text-shadow: 0 0 8px #caa77d, 0 0 12px #caa77d;
+}
+.star-icon:nth-child(1) { top: -5px; left: 20px; font-size: 16px; }
+.star-icon:nth-child(2) { top: 30px; right: -10px; font-size: 24px; }
+.star-icon:nth-child(3) { bottom: 10px; left: -5px; font-size: 22px; }
+.star-icon:nth-child(4) { bottom: -10px; right: 30px; font-size: 18px; }
 
 .profile-info h2 {
     font-family: "Cormorant Garamond", serif;

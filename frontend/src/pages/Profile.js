@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { userService } from '../services/api';
@@ -19,6 +19,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
   const [formData, setFormData] = useState({ displayName: '', bio: '' });
+  const fileInputRef = useRef(null);
 
   const isOwnProfile = String(currentUser?._id || currentUser?.id) === String(userId);
   const displayName = user?.displayName || user?.username || 'Wanderer';
@@ -68,6 +69,23 @@ const Profile = () => {
       setIsEditing(false);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64String = reader.result;
+        try {
+          const response = await userService.updateUser(userId, { profilePicture: base64String });
+          setUser(response.data);
+        } catch (err) {
+          console.error("Failed to update avatar", err);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -138,10 +156,27 @@ const Profile = () => {
               </form>
             ) : (
               <>
-                <div 
-                  className="avatar"
-                  style={{ backgroundImage: `url(${user.profilePicture || fallbackAvatar(user.username)})` }}
-                ></div>
+                <div className="avatar-container" onClick={() => isOwnProfile && fileInputRef.current?.click()} style={{ cursor: isOwnProfile ? 'pointer' : 'default' }}>
+                  <div 
+                    className="avatar"
+                    style={{ backgroundImage: `url(${user.profilePicture || fallbackAvatar(user.username)})` }}
+                  ></div>
+                  <div className="avatar-stars">
+                    <span className="star-icon">✦</span>
+                    <span className="star-icon">✧</span>
+                    <span className="star-icon">✦</span>
+                    <span className="star-icon">✧</span>
+                  </div>
+                  {isOwnProfile && (
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      ref={fileInputRef} 
+                      style={{ display: 'none' }} 
+                      onChange={handleAvatarChange} 
+                    />
+                  )}
+                </div>
 
                 <h2>{displayName}</h2>
                 <p>"{user.bio || 'Collecting little beautiful things.'}"</p>
