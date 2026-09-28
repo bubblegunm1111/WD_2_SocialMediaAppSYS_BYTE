@@ -18,6 +18,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
     fetchPosts();
@@ -123,11 +124,27 @@ const Home = () => {
             )}
           </div>
 
-          <div className="section-title" style={{marginTop: '50px', marginBottom: '20px'}}>
+          <div className="section-title" style={{marginTop: '50px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
             <span>☾ Recent Posts ✧</span>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button 
+                onClick={() => setViewMode('grid')}
+                style={{ background: 'transparent', border: 'none', color: viewMode === 'grid' ? '#caa77d' : '#888', cursor: 'pointer', fontSize: '18px' }}
+              >⊞</button>
+              <button 
+                onClick={() => setViewMode('list')}
+                style={{ background: 'transparent', border: 'none', color: viewMode === 'list' ? '#caa77d' : '#888', cursor: 'pointer', fontSize: '18px' }}
+              >☰</button>
+            </div>
           </div>
 
-          <div className="feed-posts-list" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div 
+            className="feed-posts-container" 
+            style={viewMode === 'grid' 
+              ? { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' } 
+              : { display: 'flex', flexDirection: 'column', gap: '24px' }
+            }
+          >
             {loading ? (
               <div className="loading">Gathering posts...</div>
             ) : error ? (

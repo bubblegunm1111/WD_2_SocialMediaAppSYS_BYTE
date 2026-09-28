@@ -104,31 +104,53 @@ const Post = ({ post, onDelete }) => {
   };
 
   return (
-    <div className="post-card">
-      <div className="post-header">
-        <Link to={`/profile/${post.userId._id}`}>
+    <div className="post-card" style={{
+      background: 'rgba(15, 10, 25, 0.95)',
+      border: '1px solid rgba(220, 200, 150, 0.2)',
+      borderRadius: '12px',
+      padding: '16px',
+      position: 'relative',
+      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%'
+    }}>
+      {/* Decorative Corners */}
+      <div style={{position: 'absolute', top: 5, left: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
+      <div style={{position: 'absolute', top: 5, right: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
+      <div style={{position: 'absolute', bottom: 5, left: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
+      <div style={{position: 'absolute', bottom: 5, right: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
+
+      {/* Top Tag */}
+      <div style={{ fontSize: '10px', color: '#caa77d', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '5px', textTransform: 'uppercase' }}>
+        ✧ ART & CREATORS
+      </div>
+
+      <div className="post-header" style={{ display: 'flex', alignItems: 'center', marginBottom: '12px', gap: '10px' }}>
+        <Link to={`/profile/${post.userId._id || post.userId.id || post.userId}`}>
           <img
             src={post.userId?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${post.userId?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`}
             alt={post.userId?.username || 'User'}
             className="post-avatar"
+            style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '1px solid rgba(220, 200, 150, 0.4)' }}
           />
         </Link>
-        <div className="post-user-info">
-          <Link to={`/profile/${post.userId._id}`}>
-            <div className="post-user-name">
+        <div className="post-user-info" style={{ flex: 1 }}>
+          <Link to={`/profile/${post.userId._id || post.userId.id || post.userId}`} style={{ textDecoration: 'none' }}>
+            <div className="post-user-name" style={{ color: '#eee5dc', fontSize: '14px', fontWeight: 'bold' }}>
               {post.userId.displayName || post.userId.username}
             </div>
           </Link>
-          <div className="post-timestamp">{formatTimestamp(post.createdAt)}</div>
+          <div className="post-timestamp" style={{ color: '#888', fontSize: '11px' }}>{formatTimestamp(post.createdAt)}</div>
         </div>
         {isOwnPost && (
-          <div className="post-options-menu" style={{ marginLeft: 'auto', position: 'relative' }}>
-            <button onClick={() => setShowMenu(!showMenu)} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', fontSize: '20px', cursor: 'pointer', outline: 'none' }}>⋮</button>
+          <div className="post-options-menu" style={{ position: 'relative' }}>
+            <button onClick={() => setShowMenu(!showMenu)} style={{ background: 'transparent', border: 'none', color: '#888', fontSize: '16px', cursor: 'pointer', outline: 'none' }}>•••</button>
             {showMenu && (
-              <div style={{ position: 'absolute', right: 0, top: '25px', background: 'rgba(20,15,35,0.95)', border: '1px solid rgba(220, 200, 150, 0.2)', borderRadius: '8px', padding: '5px', display: 'flex', flexDirection: 'column', gap: '5px', zIndex: 10, minWidth: '120px' }}>
-                <button onClick={() => { setIsEditing(true); setShowMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', padding: '8px', textAlign: 'left', cursor: 'pointer' }}>Edit Caption</button>
-                <button onClick={handleArchive} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', padding: '8px', textAlign: 'left', cursor: 'pointer' }}>{post.isArchived ? 'Unarchive' : 'Archive'}</button>
-                <button onClick={handleDelete} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', padding: '8px', textAlign: 'left', cursor: 'pointer' }}>Delete</button>
+              <div style={{ position: 'absolute', right: 0, top: '20px', background: 'rgba(20,15,35,0.95)', border: '1px solid rgba(220, 200, 150, 0.2)', borderRadius: '8px', padding: '5px', display: 'flex', flexDirection: 'column', gap: '5px', zIndex: 10, minWidth: '120px' }}>
+                <button onClick={() => { setIsEditing(true); setShowMenu(false); }} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', padding: '8px', textAlign: 'left', cursor: 'pointer', fontSize: '12px' }}>Edit Caption</button>
+                <button onClick={handleArchive} style={{ background: 'transparent', border: 'none', color: '#f7e8d5', padding: '8px', textAlign: 'left', cursor: 'pointer', fontSize: '12px' }}>{post.isArchived ? 'Unarchive' : 'Archive'}</button>
+                <button onClick={handleDelete} style={{ background: 'transparent', border: 'none', color: '#ff4d4d', padding: '8px', textAlign: 'left', cursor: 'pointer', fontSize: '12px' }}>Delete</button>
               </div>
             )}
           </div>
@@ -136,30 +158,35 @@ const Post = ({ post, onDelete }) => {
       </div>
 
       {isEditing ? (
-        <div className="post-edit-container" style={{ padding: '0 20px', marginBottom: '15px' }}>
-          <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} style={{ width: '100%', minHeight: '60px', background: 'rgba(0,0,0,0.5)', color: '#f7e8d5', border: '1px solid rgba(220, 200, 150, 0.3)', borderRadius: '8px', padding: '10px', resize: 'none', fontFamily: "'Palatino Linotype', serif" }} />
-          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-            <button onClick={handleEditSubmit} style={{ background: 'rgba(220, 200, 150, 0.2)', color: '#f7e8d5', border: 'none', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer' }}>Save</button>
-            <button onClick={() => { setIsEditing(false); setEditContent(post.content); }} style={{ background: 'transparent', color: '#f7e8d5', border: '1px solid rgba(255,255,255,0.2)', padding: '5px 15px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+        <div className="post-edit-container" style={{ marginBottom: '12px' }}>
+          <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} style={{ width: '100%', minHeight: '60px', background: 'rgba(0,0,0,0.5)', color: '#f7e8d5', border: '1px solid rgba(220, 200, 150, 0.3)', borderRadius: '8px', padding: '10px', resize: 'none', fontFamily: "'Palatino Linotype', serif", fontSize: '13px' }} />
+          <div style={{ display: 'flex', gap: '10px', marginTop: '5px' }}>
+            <button onClick={handleEditSubmit} style={{ background: 'rgba(220, 200, 150, 0.2)', color: '#f7e8d5', border: 'none', padding: '4px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Save</button>
+            <button onClick={() => { setIsEditing(false); setEditContent(post.content); }} style={{ background: 'transparent', color: '#f7e8d5', border: '1px solid rgba(255,255,255,0.2)', padding: '4px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px' }}>Cancel</button>
           </div>
         </div>
       ) : (
-        <div className="post-content">{post.content}</div>
+        <div className="post-content" style={{ color: '#eee5dc', fontSize: '13px', marginBottom: '12px', lineHeight: '1.5' }}>{post.content}</div>
       )}
 
       {post.mediaUrl && (
-        <img src={post.mediaUrl} alt="Post media" className="post-media" />
+        <div style={{ marginBottom: '12px', borderRadius: '8px', overflow: 'hidden', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
+          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }} />
+        </div>
       )}
 
-      <div className="post-actions">
+      <div className="post-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 'auto', borderTop: 'none', paddingTop: '0' }}>
         <button
           onClick={handleLike}
-          className={`btn-action ${liked ? 'liked' : ''}`}
+          style={{ background: 'transparent', border: 'none', color: liked ? '#ff4d4d' : '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', padding: 0 }}
         >
-          👍 {likesCount} {likesCount === 1 ? 'Like' : 'Likes'}
+          {liked ? '♥' : '♡'} {likesCount}
         </button>
-        <button onClick={handleShowComments} className="btn-action">
-          💬 {post.commentsCount || 0} {post.commentsCount === 1 ? 'Comment' : 'Comments'}
+        <button onClick={handleShowComments} style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', padding: 0 }}>
+          💬 {post.commentsCount || 0}
+        </button>
+        <button style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '14px', padding: 0, marginLeft: 'auto' }}>
+          ⚲
         </button>
       </div>
 
