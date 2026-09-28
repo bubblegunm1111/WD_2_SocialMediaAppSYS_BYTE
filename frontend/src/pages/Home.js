@@ -141,7 +141,7 @@ const Home = () => {
           <div 
             className="feed-posts-container" 
             style={viewMode === 'grid' 
-              ? { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' } 
+              ? { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' } 
               : { display: 'flex', flexDirection: 'column', gap: '24px' }
             }
           >

@@ -105,28 +105,30 @@ const Post = ({ post, onDelete }) => {
 
   return (
     <div className="post-card" style={{
-      background: 'rgba(15, 10, 25, 0.95)',
-      border: '1px solid rgba(220, 200, 150, 0.2)',
-      borderRadius: '12px',
-      padding: '16px',
+      background: 'url(https://www.transparenttextures.com/patterns/stardust.png), rgba(15, 10, 25, 0.65)',
+      backdropFilter: 'blur(10px)',
+      border: '1px solid rgba(220, 200, 150, 0.15)',
+      borderRadius: '24px',
+      padding: '12px 16px',
       position: 'relative',
-      boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
       display: 'flex',
       flexDirection: 'column',
-      height: '100%'
+      height: '100%',
+      transition: 'transform 0.2s ease',
     }}>
       {/* Decorative Corners */}
-      <div style={{position: 'absolute', top: 5, left: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
-      <div style={{position: 'absolute', top: 5, right: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
-      <div style={{position: 'absolute', bottom: 5, left: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
-      <div style={{position: 'absolute', bottom: 5, right: 5, color: 'rgba(220,200,150,0.5)', fontSize: '10px'}}>✦</div>
+      <div style={{position: 'absolute', top: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+      <div style={{position: 'absolute', top: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+      <div style={{position: 'absolute', bottom: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
+      <div style={{position: 'absolute', bottom: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
 
       {/* Top Tag */}
-      <div style={{ fontSize: '10px', color: '#caa77d', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '5px', textTransform: 'uppercase' }}>
+      <div style={{ fontSize: '9px', color: 'rgba(220, 200, 150, 0.7)', fontWeight: 'bold', letterSpacing: '1px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '5px', textTransform: 'uppercase', paddingLeft: '4px' }}>
         ✧ ART & CREATORS
       </div>
 
-      <div className="post-header" style={{ display: 'flex', alignItems: 'center', marginBottom: '12px', gap: '10px' }}>
+      <div className="post-header" style={{ display: 'flex', alignItems: 'center', marginBottom: '8px', gap: '10px' }}>
         <Link to={`/profile/${post.userId._id || post.userId.id || post.userId}`}>
           <img
             src={post.userId?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${post.userId?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`}
@@ -170,23 +172,25 @@ const Post = ({ post, onDelete }) => {
       )}
 
       {post.mediaUrl && (
-        <div style={{ marginBottom: '12px', borderRadius: '8px', overflow: 'hidden', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.2)' }}>
-          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }} />
+        <div style={{ marginBottom: '12px', borderRadius: '16px', overflow: 'hidden', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '350px', objectFit: 'cover' }} />
         </div>
       )}
 
-      <div className="post-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 'auto', borderTop: 'none', paddingTop: '0' }}>
+      <div className="post-actions" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: 'auto', borderTop: 'none', paddingTop: '4px' }}>
         <button
           onClick={handleLike}
-          style={{ background: 'transparent', border: 'none', color: liked ? '#ff4d4d' : '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', padding: 0 }}
+          style={{ background: 'transparent', border: 'none', color: liked ? '#ff4d4d' : '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0 }}
         >
-          {liked ? '♥' : '♡'} {likesCount}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill={liked ? '#ff4d4d' : 'none'} stroke={liked ? '#ff4d4d' : 'currentColor'} strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          {likesCount}
         </button>
-        <button onClick={handleShowComments} style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', padding: 0 }}>
-          💬 {post.commentsCount || 0}
+        <button onClick={handleShowComments} style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: 0 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          {post.commentsCount || 0}
         </button>
-        <button style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '14px', padding: 0, marginLeft: 'auto' }}>
-          ⚲
+        <button onClick={handleArchive} style={{ background: 'transparent', border: 'none', color: post.isArchived ? '#caa77d' : '#888', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '14px', padding: 0, marginLeft: 'auto' }} title="Save to Memories">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill={post.isArchived ? '#caa77d' : 'none'} stroke="currentColor" strokeWidth="1.5"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
         </button>
       </div>
 
