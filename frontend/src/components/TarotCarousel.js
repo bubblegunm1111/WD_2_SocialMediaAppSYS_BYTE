@@ -32,6 +32,7 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
   const opacity = useTransform(absOffset, [0, 1, 2], [1, 0.98, 0.95]);
 
   const handleLike = async (event) => {
+    event.preventDefault();
     event.stopPropagation();
     if (likePending) return;
 
