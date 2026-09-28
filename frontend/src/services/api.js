@@ -121,6 +121,16 @@ export const userService = {
   getUserPosts: async (userId) => {
     const response = await api.get(`/users/${userId}/posts`);
     return response.data;
+  },
+  
+  followUser: async (userId) => {
+    const response = await api.post(`/users/${userId}/follow`);
+    return response.data;
+  },
+
+  unfollowUser: async (userId) => {
+    const response = await api.post(`/users/${userId}/unfollow`);
+    return response.data;
   }
 };
 

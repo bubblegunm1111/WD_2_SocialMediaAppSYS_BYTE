@@ -23,7 +23,22 @@ const Profile = () => {
   const fileInputRef = useRef(null);
 
   const isOwnProfile = String(currentUser?._id || currentUser?.id) === String(userId);
+  const isFollowing = user?.followers?.includes(currentUser?.id || currentUser?._id);
   const displayName = user?.displayName || user?.username || 'Wanderer';
+
+  const handleFollowToggle = async () => {
+    try {
+      if (isFollowing) {
+        await userService.unfollowUser(userId);
+        setUser({ ...user, followers: user.followers.filter(id => String(id) !== String(currentUser?.id || currentUser?._id)) });
+      } else {
+        await userService.followUser(userId);
+        setUser({ ...user, followers: [...(user.followers || []), currentUser?.id || currentUser?._id] });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -150,12 +165,15 @@ const Profile = () => {
         <header className="profile-header">
           <Link to="/" style={{textDecoration: 'none'}}><button className="back-btn">← Back</button></Link>
           <h1>{isOwnProfile ? "Your Room ✦" : `${displayName}'s Room ✦`}</h1>
-          {isOwnProfile && (
+          {isOwnProfile ? (
             <button className="edit-btn" onClick={() => setIsEditing(!isEditing)}>
               ⚙ {isEditing ? 'Cancel Edit' : 'Edit Profile'}
             </button>
+          ) : (
+            <button className="edit-btn" onClick={handleFollowToggle} style={{ background: isFollowing ? 'transparent' : '#caa77d', color: isFollowing ? '#caa77d' : '#070a1d', border: isFollowing ? '1px solid #caa77d' : 'none' }}>
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </button>
           )}
-          {!isOwnProfile && <button className="edit-btn" style={{opacity: 0, pointerEvents: 'none'}}>⚙ Edit Profile</button>}
         </header>
 
         <section className="profile-hero">
@@ -215,8 +233,8 @@ const Profile = () => {
 
                 <div className="stats">
                   <div><strong>{posts.length}</strong><span>Posts</span></div>
-                  <div><strong>1.2k</strong><span>Followers</span></div>
-                  <div><strong>392</strong><span>Following</span></div>
+                  <div><strong>{user?.followers?.length || 0}</strong><span>Followers</span></div>
+                  <div><strong>{user?.following?.length || 0}</strong><span>Following</span></div>
                 </div>
               </>
             )}
@@ -227,8 +245,12 @@ const Profile = () => {
 
         <nav className="profile-tabs">
           <button className={activeTab === 'posts' ? 'active' : ''} onClick={() => setActiveTab('posts')}>✧ Posts</button>
-          <button className={activeTab === 'collections' ? 'active' : ''} onClick={() => setActiveTab('collections')}>♧ Collections</button>
-          <button className={activeTab === 'memories' ? 'active' : ''} onClick={() => setActiveTab('memories')}>✦ Memories</button>
+          {isOwnProfile && (
+            <>
+              <button className={activeTab === 'collections' ? 'active' : ''} onClick={() => setActiveTab('collections')}>♧ Collections</button>
+              <button className={activeTab === 'memories' ? 'active' : ''} onClick={() => setActiveTab('memories')}>✦ Memories</button>
+            </>
+          )}
         </nav>
 
         <section className="post-grid">
