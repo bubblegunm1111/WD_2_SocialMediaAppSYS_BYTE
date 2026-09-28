@@ -26,10 +26,8 @@
   position: absolute;
   width: 240px;
   height: 360px;
-  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
   cursor: pointer;
-  border-radius: 16px;
-  /* Allow sparkles and decorations to overflow */
+  border-radius: 7px;
   overflow: visible;
 }
 
@@ -41,82 +39,44 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 16px;
-  overflow: visible;
+  border-radius: 7px;
+  overflow: hidden;
   background: #0a0612;
-  /* Multi-layered ornate border effect */
   box-shadow:
-    /* Outer glow */
-    0 0 30px rgba(184, 134, 64, 0.15),
-    0 0 60px rgba(184, 134, 64, 0.1),
-    /* Deep shadow */
-    0 20px 50px rgba(0, 0, 0, 0.8),
-    0 10px 25px rgba(0, 0, 0, 0.6),
-    /* Inner border glow */
-    inset 0 0 0 1px rgba(220, 200, 150, 0.15),
-    inset 0 0 20px rgba(184, 134, 64, 0.05);
+    0 18px 42px rgba(0, 0, 0, 0.72),
+    inset 0 0 0 1px rgba(226, 183, 130, 0.75),
+    inset 0 0 0 4px rgba(18, 12, 22, 0.9),
+    inset 0 0 0 5px rgba(204, 148, 101, 0.72);
 }
 
 .card-inner::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 16px;
-  padding: 3px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 223, 150, 0.6) 0%,
-    rgba(184, 134, 64, 0.8) 15%,
-    rgba(139, 90, 43, 0.5) 30%,
-    rgba(184, 134, 64, 0.3) 45%,
-    rgba(255, 223, 150, 0.4) 50%,
-    rgba(184, 134, 64, 0.3) 55%,
-    rgba(139, 90, 43, 0.5) 70%,
-    rgba(184, 134, 64, 0.8) 85%,
-    rgba(255, 223, 150, 0.6) 100%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  inset: 10px;
+  border: 1px solid rgba(225, 180, 132, 0.48);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(16, 12, 24, 0.7);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
 }
 
-/* For the active card, make the border brighter and add glow */
 .tarot-card.active .card-inner {
-  border-radius: 16px; /* Ensuring rounded corners */
   box-shadow:
-    /* Rich, fiery orange/gold outer glow */
-    0 0 50px rgba(255, 170, 50, 0.4),
-    0 0 100px rgba(255, 120, 20, 0.25),
-    /* Deep shadow */
-    0 25px 60px rgba(0, 0, 0, 0.9),
-    /* Delicate inner border glow */
-    inset 0 0 0 1px rgba(255, 210, 100, 0.8),
-    inset 0 0 35px rgba(255, 170, 50, 0.35);
-}
-
-.tarot-card.active .card-inner::before {
-  /* We remove the thick solid background border in favor of the delicate inset shadow above */
-  display: none;
+    0 0 24px rgba(226, 164, 112, 0.3),
+    0 20px 46px rgba(0, 0, 0, 0.78),
+    inset 0 0 0 1px rgba(255, 220, 173, 0.95),
+    inset 0 0 0 4px rgba(18, 12, 22, 0.9),
+    inset 0 0 0 5px rgba(238, 180, 127, 0.95);
 }
 
 .card-bg {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  right: 3px;
-  bottom: 3px;
+  inset: 6px;
   background-size: cover;
   background-position: center;
   filter: brightness(0.75) contrast(1.15) saturate(1.1);
   transition: filter 0.4s ease;
-  border-radius: 13px;
+  border-radius: 3px;
   z-index: 0;
 }
 
@@ -126,10 +86,10 @@
 
 .card-content {
   position: absolute;
-  bottom: 3px;
-  left: 3px;
-  right: 3px;
-  padding: 50px 20px 20px;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  padding: 50px 14px 12px;
   background: linear-gradient(
     to top,
     rgba(5, 3, 12, 0.98) 0%,
@@ -142,21 +102,21 @@
   flex-direction: column;
   gap: 8px;
   z-index: 1;
-  border-radius: 0 0 13px 13px;
+  border-radius: 0 0 3px 3px;
 }
 
 .card-title {
-  display: none; /* Hidden on the card, visible in the modal */
+  display: block;
   color: #f7e8d5;
   font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1.4;
   margin: 0;
   text-shadow:
     0 2px 8px rgba(0, 0, 0, 0.9),
     0 1px 3px rgba(184, 134, 64, 0.3);
-  letter-spacing: 0.3px;
+  letter-spacing: 0;
 }
 
 .tarot-card.active .card-title {
@@ -189,10 +149,10 @@
 /* Ornate corner styling */
 .ornate-corner {
   position: absolute;
-  width: 35px;
-  height: 35px;
-  opacity: 0.7;
-  transition: all 0.4s ease;
+  width: 24px;
+  height: 24px;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
   z-index: 3;
   pointer-events: none;
 }
@@ -201,95 +161,95 @@
 .ornate-corner::after {
   content: '';
   position: absolute;
-  background: linear-gradient(135deg, rgba(255, 223, 150, 0.9), rgba(184, 134, 64, 0.8));
-  box-shadow: 0 0 8px rgba(255, 223, 150, 0.4);
+  background: rgba(232, 185, 137, 0.9);
+  box-shadow: 0 0 5px rgba(255, 223, 150, 0.24);
 }
 
 /* Top-left corner ornament */
 .top-left {
-  top: 8px;
-  left: 8px;
+  top: 6px;
+  left: 6px;
 }
 
 .top-left::before {
   top: 0;
   left: 0;
-  width: 20px;
-  height: 2px;
+  width: 12px;
+  height: 1px;
   border-radius: 1px;
 }
 
 .top-left::after {
   top: 0;
   left: 0;
-  width: 2px;
-  height: 20px;
+  width: 1px;
+  height: 12px;
   border-radius: 1px;
 }
 
 /* Top-right corner ornament */
 .top-right {
-  top: 8px;
-  right: 8px;
+  top: 6px;
+  right: 6px;
 }
 
 .top-right::before {
   top: 0;
   right: 0;
-  width: 20px;
-  height: 2px;
+  width: 12px;
+  height: 1px;
   border-radius: 1px;
 }
 
 .top-right::after {
   top: 0;
   right: 0;
-  width: 2px;
-  height: 20px;
+  width: 1px;
+  height: 12px;
   border-radius: 1px;
 }
 
 /* Bottom-left corner ornament */
 .bottom-left {
-  bottom: 8px;
-  left: 8px;
+  bottom: 6px;
+  left: 6px;
 }
 
 .bottom-left::before {
   bottom: 0;
   left: 0;
-  width: 20px;
-  height: 2px;
+  width: 12px;
+  height: 1px;
   border-radius: 1px;
 }
 
 .bottom-left::after {
   bottom: 0;
   left: 0;
-  width: 2px;
-  height: 20px;
+  width: 1px;
+  height: 12px;
   border-radius: 1px;
 }
 
 /* Bottom-right corner ornament */
 .bottom-right {
-  bottom: 8px;
-  right: 8px;
+  bottom: 6px;
+  right: 6px;
 }
 
 .bottom-right::before {
   bottom: 0;
   right: 0;
-  width: 20px;
-  height: 2px;
+  width: 12px;
+  height: 1px;
   border-radius: 1px;
 }
 
 .bottom-right::after {
   bottom: 0;
   right: 0;
-  width: 2px;
-  height: 20px;
+  width: 1px;
+  height: 12px;
   border-radius: 1px;
 }
 
@@ -299,10 +259,8 @@
 
 .tarot-card.active .ornate-corner::before,
 .tarot-card.active .ornate-corner::after {
-  background: linear-gradient(135deg, rgba(255, 240, 200, 1), rgba(255, 223, 150, 1));
-  box-shadow:
-    0 0 12px rgba(255, 223, 150, 0.8),
-    0 0 20px rgba(255, 223, 150, 0.4);
+  background: rgba(255, 224, 179, 1);
+  box-shadow: 0 0 9px rgba(255, 223, 150, 0.64);
 }
 
 .active-star {
@@ -496,13 +454,33 @@
   margin-left: auto;
 }
 
+.card-like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 5px;
+  border: 1px solid rgba(232, 185, 137, 0.38);
+  border-radius: 3px;
+  background: rgba(10, 7, 18, 0.55);
+  color: rgba(255, 231, 202, 0.9);
+  font: inherit;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.card-like-button:hover:not(:disabled),
+.card-like-button.liked {
+  color: #ffd3bd;
+  border-color: rgba(255, 174, 153, 0.85);
+  background: rgba(106, 38, 48, 0.5);
+}
+
+.card-like-button:disabled {
+  cursor: wait;
+}
+
 .card-action-icon {
   font-size: 13px;
   color: rgba(220, 200, 150, 0.8);
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.card-action-icon:hover {
-  color: #fff;
 }

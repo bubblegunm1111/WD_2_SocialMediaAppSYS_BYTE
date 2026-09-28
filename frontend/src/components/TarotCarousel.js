@@ -1,8 +1,12 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
+import { postService } from '../services/api';
 import './TarotCarousel.css';
 
 const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(post.likesCount || 0);
+  const [likePending, setLikePending] = useState(false);
   // `currentIndex` is a continuous spring value (e.g., 0.0, 0.5, 1.0)
   
   // Calculate relative offset from this card to the current view center
@@ -27,8 +31,29 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
   // Opacity: center 1, edge 0.95 to keep them visible
   const opacity = useTransform(absOffset, [0, 1, 2], [1, 0.98, 0.95]);
 
-  // Active state boolean (discrete) based on closest index
-  const isActive = useTransform(absOffset, (val) => val < 0.5);
+  const handleLike = async (event) => {
+    event.stopPropagation();
+    if (likePending) return;
+
+    const nextLiked = !liked;
+    setLiked(nextLiked);
+    setLikesCount((count) => Math.max(0, count + (nextLiked ? 1 : -1)));
+    setLikePending(true);
+
+    try {
+      const response = nextLiked
+        ? await postService.likePost(post._id)
+        : await postService.unlikePost(post._id);
+      const serverCount = response?.data?.data?.likesCount;
+      if (typeof serverCount === 'number') setLikesCount(serverCount);
+    } catch (error) {
+      setLiked(!nextLiked);
+      setLikesCount((count) => Math.max(0, count + (nextLiked ? -1 : 1)));
+      console.error(error);
+    } finally {
+      setLikePending(false);
+    }
+  };
 
   return (
     <motion.div 
@@ -48,36 +73,55 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
       }}
     >
       <div className="card-inner">
-        <div 
-          className="card-bg" 
-          style={{ 
-            backgroundImage: `url(${post.mediaUrl || post.image || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop'})`
-          }}
-        ></div>
-        
-        <div className="card-content">
-          <div className="card-user-info">
-            <img 
-              src={post.user?.profilePicture || post.userId?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${post.user?.username || post.userId?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} 
-              alt="Avatar" 
-              className="card-user-avatar" 
-            />
-            <span className="card-username">{post.user?.username || post.userId?.username || 'Magician'}</span>
+        {post.isAddStory ? (
+          <div className="add-story-card" style={{ height: '100%', background: 'rgba(10,5,20,0.8)', borderRadius: '16px' }}>
+            <input type="file" id="story-upload" accept="image/*,video/*" style={{ display: 'none' }} />
+            <label htmlFor="story-upload" style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="add-story-icon" style={{ fontSize: '48px', color: 'rgba(255, 223, 150, 0.8)', marginBottom: '16px' }}>+</div>
+              <h3 style={{ color: '#f7e8d5', fontFamily: "'Palatino Linotype', serif", fontSize: '18px', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>Create Story</h3>
+            </label>
           </div>
+        ) : (
+          <>
+            <div 
+              className="card-bg" 
+              style={{ 
+                backgroundImage: `url(${post.mediaUrl || post.image || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=600&auto=format&fit=crop'})`
+              }}
+            ></div>
+            
+            <div className="card-content">
+              <div className="card-user-info">
+                <img 
+                  src={post.user?.profilePicture || post.userId?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${post.user?.username || post.userId?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} 
+                  alt="Avatar" 
+                  className="card-user-avatar" 
+                />
+                <span className="card-username">{post.user?.username || post.userId?.username || 'Magician'}</span>
+              </div>
 
-          <h3 className="card-title">
-            {post.title || post.content.substring(0, 40) + (post.content.length > 40 ? '...' : '')}
-          </h3>
-          <div className="card-meta">
-            <span className="card-time">
-              {new Date(post.createdAt || Date.now()).toLocaleDateString()}
-            </span>
-            <div className="card-actions">
-              <span className="card-action-icon">♡ {post.likesCount || 0}</span>
-              <span className="card-action-icon">💬 {post.commentsCount || 0}</span>
+              <div className="card-meta">
+                <span className="card-time">
+                  {new Date(post.createdAt || Date.now()).toLocaleDateString()}
+                </span>
+                <div className="card-actions">
+                  <button
+                    type="button"
+                    className={`card-like-button ${liked ? 'liked' : ''}`}
+                    onClick={handleLike}
+                    aria-label={liked ? 'Unlike post' : 'Like post'}
+                    aria-pressed={liked}
+                    disabled={likePending}
+                  >
+                    <span aria-hidden="true">{liked ? '♥' : '♡'}</span>
+                    {likesCount}
+                  </button>
+                  <span className="card-action-icon">💬 {post.commentsCount || 0}</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* Ornate border decorations */}
         <div className="ornate-corner top-left"></div>
@@ -107,9 +151,11 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick }) => {
 const TarotCarousel = ({ posts, onPostClick }) => {
   const containerRef = useRef(null);
   
+  const carouselItems = [{ isAddStory: true, _id: 'add-story' }, ...(posts || [])];
+
   // We use a spring to hold the current continuous index.
   // It starts at the middle item.
-  const targetIndex = useRef(Math.floor((posts?.length || 0) / 2));
+  const targetIndex = useRef(Math.floor((carouselItems?.length || 0) / 2));
   
   const currentIndex = useSpring(targetIndex.current, {
     stiffness: 150,
@@ -172,14 +218,14 @@ const TarotCarousel = ({ posts, onPostClick }) => {
     return () => unsubscribe();
   }, [currentIndex]);
 
-  if (!posts || posts.length === 0) {
+  if (!carouselItems || carouselItems.length === 0) {
     return <div className="empty-state">No stories found.</div>;
   }
 
   return (
     <div className="tarot-carousel-container" ref={containerRef}>
       <div className="tarot-carousel" style={{ position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d' }}>
-        {posts.map((post, index) => (
+        {carouselItems.map((post, index) => (
           <TarotCard 
             key={post._id || index}
             post={post}
@@ -194,7 +240,7 @@ const TarotCarousel = ({ posts, onPostClick }) => {
       <div className="carousel-dots-wrapper">
         <div className="carousel-dots-line"></div>
         <div className="carousel-dots">
-          {posts.map((_, i) => (
+          {carouselItems.map((_, i) => (
             <span 
               key={i} 
               className={`dot ${i === activeDot ? 'active' : ''}`}

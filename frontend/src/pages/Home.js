@@ -18,7 +18,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
-  const [activePost, setActivePost] = useState(null);
 
   useEffect(() => {
     fetchPosts();
@@ -107,7 +106,7 @@ const Home = () => {
           <CreatePost onPostCreated={handlePostCreated} />
 
           <div className="section-title" style={{marginTop: '30px', marginBottom: '10px'}}>
-            <span>☾ Recent from Your Constellations ✧</span>
+            <span>☾ Stories ✧</span>
             <a href="#" className="view-all">View all</a>
           </div>
           
@@ -117,7 +116,23 @@ const Home = () => {
             ) : error ? (
               <div className="error-message">{error}</div>
             ) : (
-              <TarotCarousel posts={posts} onPostClick={(post) => setActivePost(post)} />
+              <TarotCarousel posts={posts} />
+            )}
+          </div>
+
+          <div className="section-title" style={{marginTop: '50px', marginBottom: '20px'}}>
+            <span>☾ Recent Posts ✧</span>
+          </div>
+
+          <div className="feed-posts-list" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {loading ? (
+              <div className="loading">Gathering posts...</div>
+            ) : error ? (
+              <div className="error-message">{error}</div>
+            ) : (
+              posts.map(post => (
+                <Post key={post._id} post={post} onDelete={handlePostDeleted} />
+              ))
             )}
           </div>
         </div>
@@ -205,16 +220,6 @@ const Home = () => {
 
       {/* Messages Modal */}
       {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
-
-      {/* Post Modal */}
-      {activePost && (
-        <div className="post-modal-overlay" onClick={() => setActivePost(null)}>
-          <div className="post-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="close-modal-btn" onClick={() => setActivePost(null)}>✕</button>
-            <Post post={activePost} onDelete={handlePostDeleted} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
