@@ -209,7 +209,7 @@ const Post = ({ post, onDelete }) => {
           background: 'rgba(0,0,0,0.5)',
           border: '1px solid rgba(220, 200, 150, 0.15)',
         }}>
-          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', display: 'block', objectFit: 'cover' }} />
+          <img src={post.mediaUrl} alt="Post media" style={{ width: '100%', maxHeight: '350px', display: 'block', objectFit: 'cover' }} />
 
           {/* Decorative scattered flowers on image */}
           <div style={{position: 'absolute', top: '12px', right: '14px', fontSize: '16px', opacity: 0.6, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))'}}>🌸</div>
