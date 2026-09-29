@@ -19,6 +19,22 @@
   box-sizing: border-box;
 }
 
+/* ── Slim elegant scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(202, 167, 125, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(202, 167, 125, 0.6);
+}
+
 body {
   font-family: var(--font-body);
   color: var(--text-main);

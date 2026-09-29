@@ -6,7 +6,6 @@ import JellyRadio from './JellyRadio';
 const NAV_ITEMS = [
   { value: '/', label: 'Home', icon: '✦' },
   { value: '/observatory', label: 'Observatory', icon: '⊘' },
-  { value: '/pages', label: 'Pages', icon: '✒' },
   { value: '/letters', label: 'Letters', icon: '✉' },
   { value: '/reflections', label: 'Reflections', icon: '✺' },
   { value: 'PROFILE', label: 'My Room', icon: '☾' }
@@ -32,9 +31,6 @@ export default function SidebarNav({ onLettersClick }) {
   const handleChange = (val) => {
     if (val === '/letters' && onLettersClick) {
       onLettersClick();
-      return;
-    }
-    if (val === '/pages') {
       return;
     }
     navigate(val);
