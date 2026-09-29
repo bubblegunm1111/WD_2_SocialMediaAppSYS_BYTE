@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 const User = require('../models/User');
+const Notification = require('../models/Notification');
 
 // Assuming auth middleware exists (checking other routes)
 const auth = require('../middleware/auth'); 
@@ -87,6 +88,17 @@ router.post('/:userId', auth, async (req, res) => {
     });
 
     await newMessage.save();
+
+    // Create notification for receiver (avoid duplicate within 1 min)
+    const recentNotif = await Notification.findOne({
+      recipient: receiver,
+      sender,
+      type: 'message',
+      createdAt: { $gte: new Date(Date.now() - 60000) }
+    });
+    if (!recentNotif) {
+      await Notification.create({ recipient: receiver, sender, type: 'message' });
+    }
 
     res.status(201).json({ success: true, data: newMessage });
   } catch (err) {

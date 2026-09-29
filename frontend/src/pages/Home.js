@@ -7,7 +7,7 @@ import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
 import TarotCarousel from '../components/TarotCarousel';
 import SidebarNav from '../components/SidebarNav';
-import { postService, notificationService } from '../services/api';
+import { postService, notificationService, userService } from '../services/api';
 import '../Dashboard.css';
 import '../components/PostModal.css';
 import catGif from '../cat.gif';
@@ -21,6 +21,7 @@ const Home = () => {
   const [error, setError] = useState('');
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
+  const [followedBack, setFollowedBack] = useState({});
 
   useEffect(() => {
     fetchPosts();
@@ -48,6 +49,16 @@ const Home = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFollowBack = async (senderId, notifId) => {
+    try {
+      await userService.followUser(senderId);
+      await notificationService.markAsRead(notifId);
+      setFollowedBack(prev => ({ ...prev, [senderId]: true }));
+    } catch (err) {
+      console.error('Failed to follow back:', err);
     }
   };
 
@@ -170,7 +181,14 @@ const Home = () => {
                 </div>
                 <div style={{flex: 1}}>
                   <p style={{color: '#fff', fontSize: '13px', marginBottom: '4px'}}><strong>{notif.sender?.displayName || notif.sender?.username}</strong> started following you.</p>
-                  <button style={{background: 'transparent', border: '1px solid #caa77d', color: '#caa77d', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}>Follow Back</button>
+                  {followedBack[notif.sender?._id] ? (
+                    <span style={{color: '#caa77d', fontSize: '11px'}}>✦ Following back</span>
+                  ) : (
+                    <button
+                      onClick={() => handleFollowBack(notif.sender?._id, notif._id)}
+                      style={{background: 'transparent', border: '1px solid #caa77d', color: '#caa77d', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', cursor: 'pointer'}}
+                    >Follow Back</button>
+                  )}
                 </div>
               </li>
             ))}
@@ -191,18 +209,21 @@ const Home = () => {
           </div>
           <ul className="notification-list">
             {notifications.filter(n => n.type !== 'follow').slice(0, 5).map(notif => (
-              <li key={notif._id}>
+              <li key={notif._id} style={{ cursor: notif.type === 'message' ? 'pointer' : 'default' }}
+                onClick={() => notif.type === 'message' && setIsMessagesOpen(true)}
+              >
                 <div className="notif-icon" style={{
                   background: notif.type === 'like' ? 'rgba(255, 77, 77, 0.1)' : notif.type === 'message' ? 'rgba(142, 108, 255, 0.1)' : 'rgba(202, 167, 125, 0.1)',
-                  color: notif.type === 'like' ? '#ff4d4d' : notif.type === 'message' ? '#8e6cff' : '#caa77d', 
+                  color: notif.type === 'like' ? '#ff4d4d' : notif.type === 'message' ? '#8e6cff' : '#caa77d',
                   fontSize: '18px'
                 }}>
                   {notif.type === 'like' ? '♥' : notif.type === 'message' ? '✉' : notif.type === 'comment' ? '💬' : '✧'}
                 </div>
                 <p><strong>{notif.sender?.displayName || notif.sender?.username}</strong> {
-                  notif.type === 'like' ? 'liked your post.' : 
-                  notif.type === 'comment' ? 'commented on your post.' : 
-                  notif.type === 'message' ? 'sent you a message.' : 'interacted with you.'
+                  notif.type === 'like' ? 'liked your post.' :
+                  notif.type === 'comment' ? 'commented on your post.' :
+                  notif.type === 'message' ? <span style={{color: '#8e6cff'}}>sent you a letter. <span style={{fontSize:'10px', opacity: 0.7}}>Click to open →</span></span> :
+                  'interacted with you.'
                 }</p>
               </li>
             ))}
