@@ -57,10 +57,11 @@ export const authService = {
 // Post services
 export const postService = {
   getPosts: async (params = {}) => {
-    const { page = 1, limit = 20, userId, isArchived } = params;
+    const { page = 1, limit = 20, userId, isArchived, isNote } = params;
     let url = `/posts?page=${page}&limit=${limit}`;
     if (userId) url += `&userId=${userId}`;
     if (isArchived !== undefined) url += `&isArchived=${isArchived}`;
+    if (isNote !== undefined) url += `&isNote=${isNote}`;
     const response = await api.get(url);
     return response.data;
   },

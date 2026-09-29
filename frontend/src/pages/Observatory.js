@@ -123,7 +123,7 @@ const Observatory = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await postService.getPosts({ limit: 40 });
+        const res = await postService.getPosts({ limit: 40, isNote: true });
         setPosts(res.data || []);
       } catch (err) {
         console.error(err);
