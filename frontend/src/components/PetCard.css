@@ -64,21 +64,37 @@
   padding: 4px 0 0;
 }
 
-.pet-card-gif {
+.pet-gif-wrapper {
+  position: relative;
   width: 90px;
   height: 90px;
+}
+
+.pet-card-gif {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  /* The gif has transparent-ish bg, mix-blend-mode to blend with dark card */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.pet-card-gif.active {
+  opacity: 1;
+}
+
+.cat-idle-gif {
   mix-blend-mode: lighten;
   filter: drop-shadow(0 0 12px rgba(255, 220, 150, 0.25));
 }
 
-.pet-card-gif.is-eating {
-  /* The catfood gif is already transparent, so we don't need lighten blend mode */
+.cat-eat-gif {
   mix-blend-mode: normal;
-  /* Scale up to compensate for extra padding in the gif file */
   transform: scale(1.35);
-  margin-top: -5px; /* Adjust slight vertical offset if necessary when scaled */
+  margin-top: -5px;
 }
 
 .pet-card-name {
@@ -92,10 +108,10 @@
 
 .pet-card-action-toast {
   position: absolute;
-  bottom: 45px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(10, 5, 22, 0.85);
+  background: rgba(10, 5, 22, 0.9);
   border: 1px solid rgba(202, 167, 125, 0.3);
   color: #caa77d;
   font-size: 11px;
@@ -104,10 +120,11 @@
   white-space: nowrap;
   animation: toast-in 0.3s ease forwards;
   z-index: 10;
+  pointer-events: none;
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translate(-50%, 6px); }
+  from { opacity: 0; transform: translate(-50%, -6px); }
   to   { opacity: 1; transform: translate(-50%, 0); }
 }
 

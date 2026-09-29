@@ -45,11 +45,21 @@ const PetCard = ({ catGif }) => {
       </div>
 
       <div className="pet-card-stage">
-        <img 
-          src={isEating ? catFoodGif : catGif} 
-          alt="Mooncat" 
-          className={`pet-card-gif ${isEating ? 'is-eating' : ''}`} 
-        />
+        {lastAction && (
+          <div className="pet-card-action-toast">{lastAction}</div>
+        )}
+        <div className="pet-gif-wrapper">
+          <img 
+            src={catGif} 
+            alt="Mooncat Idle" 
+            className={`pet-card-gif cat-idle-gif ${!isEating ? 'active' : ''}`} 
+          />
+          <img 
+            src={catFoodGif} 
+            alt="Mooncat Eating" 
+            className={`pet-card-gif cat-eat-gif ${isEating ? 'active' : ''}`} 
+          />
+        </div>
         <div className="pet-card-name">MOONCAT</div>
       </div>
 
@@ -69,10 +79,6 @@ const PetCard = ({ catGif }) => {
           <span className="pet-bar-val">{energy}%</span>
         </div>
       </div>
-
-      {lastAction && (
-        <div className="pet-card-action-toast">{lastAction}</div>
-      )}
 
       <div className="pet-card-actions">
         <button className="pet-btn" onClick={feed} title="Feed">🐟 Feed</button>
