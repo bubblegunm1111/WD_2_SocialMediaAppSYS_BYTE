@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './PetCard.css';
+import catFoodGif from '../catfood.gif';
 
 const MOODS = ['happy', 'sleepy', 'hungry', 'playful', 'cozy'];
 
@@ -8,12 +9,17 @@ const PetCard = ({ catGif }) => {
   const [hunger, setHunger] = useState(80);
   const [energy, setEnergy] = useState(90);
   const [lastAction, setLastAction] = useState('');
+  const [isEating, setIsEating] = useState(false);
 
   const feed = () => {
     setHunger(prev => Math.min(100, prev + 20));
     setMood('happy');
     setLastAction('🐟 Yum! Mooncat is munching...');
-    setTimeout(() => setLastAction(''), 2500);
+    setIsEating(true);
+    setTimeout(() => {
+      setLastAction('');
+      setIsEating(false);
+    }, 2500);
   };
 
   const play = () => {
@@ -39,7 +45,7 @@ const PetCard = ({ catGif }) => {
       </div>
 
       <div className="pet-card-stage">
-        <img src={catGif} alt="Mooncat" className="pet-card-gif" />
+        <img src={isEating ? catFoodGif : catGif} alt="Mooncat" className="pet-card-gif" />
         <div className="pet-card-name">MOONCAT</div>
         {lastAction && (
           <div className="pet-card-action-toast">{lastAction}</div>
