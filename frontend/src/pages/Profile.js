@@ -11,7 +11,8 @@ const fallbackAvatar = (username) => (
 
 const Profile = () => {
   const { user: currentUser, updateUserContext } = useAuth();
-  const { userId } = useParams();
+  let { userId } = useParams();
+  if (userId === 'me') userId = currentUser?._id || currentUser?.id;
   const [user, setUser] = useState(() => String(currentUser?._id || currentUser?.id) === String(userId) ? currentUser : null);
   const [posts, setPosts] = useState([]);
   const [archivedPosts, setArchivedPosts] = useState([]);

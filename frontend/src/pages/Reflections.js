@@ -49,8 +49,7 @@ const Reflections = () => {
       setContent('');
       setSelectedMood(null);
     } catch (err) {
-      console.error(err);
-      alert('Failed to save reflection.');
+      console.error('Failed to save reflection:', err);
     } finally {
       setIsSaving(false);
     }

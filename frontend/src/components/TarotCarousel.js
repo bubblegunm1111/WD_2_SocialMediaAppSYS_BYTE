@@ -99,8 +99,7 @@ const TarotCard = ({ post, index, currentIndex, isClosest, onPostClick, onStoryC
       };
       reader.readAsDataURL(file);
     } catch (err) {
-      console.error(err);
-      alert('Failed to upload story');
+      console.error('Failed to upload story:', err);
     }
   };
 

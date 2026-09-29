@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import LuniarePet from '../components/LuniarePet';
 import SidebarNav from '../components/SidebarNav';
-import MessagesModal from '../components/MessagesModal';
 import { postService, userService } from '../services/api';
 import catGif from '../cat.gif';
 import '../Dashboard.css';
@@ -253,8 +252,7 @@ const Observatory = () => {
       setPosts([res.data, ...posts]);
       setPromptModal(false);
     } catch (err) {
-      console.error(err);
-      alert('Failed to create post. Please try again.');
+      console.error('Failed to create post:', err);
     } finally {
       setPosting(false);
     }
@@ -286,8 +284,7 @@ const Observatory = () => {
           </svg>
           LUNARIA
         </div>
-
-        <SidebarNav onLettersClick={() => setIsMessagesOpen(true)} />
+        <SidebarNav />
 
         <div className="companion-ornate-card">
           <img src={catGif} className="companion-cat-top" alt="Companion Cat" />

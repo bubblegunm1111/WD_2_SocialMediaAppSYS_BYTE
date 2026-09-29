@@ -46,6 +46,7 @@ const CreatePost = ({ onPostCreated }) => {
   // Cropper states
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [errorMsg, setErrorMsg] = useState('');
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
@@ -86,7 +87,8 @@ const CreatePost = ({ onPostCreated }) => {
       if (fileInputRef.current) fileInputRef.current.value = '';
     } catch (err) {
       console.error(err);
-      alert('Failed to create post. Please try again.');
+      setErrorMsg('Failed to create post. Please try again.');
+      setTimeout(() => setErrorMsg(''), 5000);
     } finally {
       setLoading(false);
     }
