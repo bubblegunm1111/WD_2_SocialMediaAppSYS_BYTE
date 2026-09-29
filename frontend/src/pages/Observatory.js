@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import LuniarePet from '../components/LuniarePet';
+import SidebarNav from '../components/SidebarNav';
 import MessagesModal from '../components/MessagesModal';
 import { postService, userService } from '../services/api';
 import catGif from '../cat.gif';
@@ -286,26 +287,7 @@ const Observatory = () => {
           LUNARIA
         </div>
 
-        <nav className="side-nav">
-          <Link to="/" className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2L14 10L22 12L14 14L12 22L10 14L2 12L10 10Z"/></svg></span> Home
-          </Link>
-          <Link to="/observatory" className={`nav-item ${location.pathname === '/observatory' ? 'active' : ''}`}>
-            <span className="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><path d="M4 20L20 4"/></svg></span> Observatory
-          </Link>
-          <a href="#" className="nav-item">
-            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M20 4C20 4 18 2 14 4C10 6 6 12 4 18L2 22L6 20C12 18 18 14 20 10C22 6 20 4 20 4Z M14 4C14 4 16 10 10 16"/></svg></span> Pages
-          </a>
-          <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); setIsMessagesOpen(true); }}>
-            <span className="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 6L12 13L21 6"/></svg></span> Letters
-          </a>
-          <Link to="/reflections" className="nav-item">
-            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.9 4.9L7.7 7.7M16.3 16.3L19.1 19.1M4.9 19.1L7.7 16.3M16.3 4.9L19.1 7.7"/><circle cx="12" cy="12" r="3"/></svg></span> Reflections
-          </Link>
-          <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); navigate(`/profile/${user?._id || user?.id}`); }}>
-            <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none"/></svg></span> My Room
-          </a>
-        </nav>
+        <SidebarNav onLettersClick={() => setIsMessagesOpen(true)} />
 
         <div className="companion-ornate-card">
           <img src={catGif} className="companion-cat-top" alt="Companion Cat" />
