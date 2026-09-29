@@ -87,9 +87,9 @@ const Home = () => {
           <a href="#" className="nav-item" onClick={(e) => { e.preventDefault(); setIsMessagesOpen(true); }}>
             <span className="nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 6L12 13L21 6"/></svg></span> Letters
           </a>
-          <a href="#" className="nav-item">
+          <Link to="/reflections" className="nav-item">
             <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 2V6M12 18V22M2 12H6M18 12H22M4.9 4.9L7.7 7.7M16.3 16.3L19.1 19.1M4.9 19.1L7.7 16.3M16.3 4.9L19.1 7.7"/><circle cx="12" cy="12" r="3"/></svg></span> Reflections
-          </a>
+          </Link>
           <a href="#" className="nav-item">
             <span className="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none"/></svg></span> My Room
           </a>

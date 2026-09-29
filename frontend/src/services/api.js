@@ -181,4 +181,15 @@ export const notificationService = {
   }
 };
 
+export const reflectionService = {
+  getReflections: async () => {
+    const response = await api.get('/reflections');
+    return response.data;
+  },
+  createReflection: async (data) => {
+    const response = await api.post('/reflections', data);
+    return response.data;
+  }
+};
+
 export default api;
