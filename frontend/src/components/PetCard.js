@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './PetCard.css';
 import catFoodGif from '../catfood2.gif';
 import catPlayGif from '../catplay.gif';
@@ -9,33 +9,33 @@ const PetCard = ({ catGif }) => {
   const [mood, setMood] = useState('happy');
   const [hunger, setHunger] = useState(80);
   const [energy, setEnergy] = useState(90);
-  const [isEating, setIsEating] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [activeAction, setActiveAction] = useState(null); // 'eat' | 'play' | null
+  const timerRef = useRef(null);
+
+  const triggerAction = (action, duration, moodChange) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setActiveAction(action);
+    setMood(moodChange.active);
+    timerRef.current = setTimeout(() => {
+      setActiveAction(null);
+      setMood(moodChange.after);
+    }, duration);
+  };
 
   const feed = () => {
     setHunger(prev => Math.min(100, prev + 20));
-    setMood('happy');
-    setIsEating(true);
-    setTimeout(() => {
-      setIsEating(false);
-    }, 2500);
+    triggerAction('eat', 2500, { active: 'happy', after: 'happy' });
   };
 
   const play = () => {
     setEnergy(prev => Math.max(0, prev - 15));
     setHunger(prev => Math.max(0, prev - 10));
-    setMood('playful');
-    setIsPlaying(true);
-    setTimeout(() => { 
-      setMood('happy'); 
-      setIsPlaying(false);
-    }, 2500);
+    triggerAction('play', 2500, { active: 'playful', after: 'happy' });
   };
 
   const rest = () => {
     setEnergy(prev => Math.min(100, prev + 20));
-    setMood('sleepy');
-    setTimeout(() => { setMood('cozy'); }, 2500);
+    triggerAction('rest', 2500, { active: 'sleepy', after: 'cozy' });
   };
 
   return (
@@ -50,17 +50,17 @@ const PetCard = ({ catGif }) => {
           <img 
             src={catGif} 
             alt="Mooncat Idle" 
-            className={`pet-card-gif cat-idle-gif ${!isEating && !isPlaying ? 'active' : ''}`} 
+            className={`pet-card-gif cat-idle-gif ${!activeAction || activeAction === 'rest' ? 'active' : ''}`} 
           />
           <img 
             src={catFoodGif} 
             alt="Mooncat Eating" 
-            className={`pet-card-gif cat-eat-gif ${isEating ? 'active' : ''}`} 
+            className={`pet-card-gif cat-eat-gif ${activeAction === 'eat' ? 'active' : ''}`} 
           />
           <img 
             src={catPlayGif} 
             alt="Mooncat Playing" 
-            className={`pet-card-gif cat-play-gif ${isPlaying ? 'active' : ''}`} 
+            className={`pet-card-gif cat-play-gif ${activeAction === 'play' ? 'active' : ''}`} 
           />
         </div>
         <div className="pet-card-name">MOONCAT</div>
