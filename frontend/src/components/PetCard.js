@@ -8,33 +8,28 @@ const PetCard = ({ catGif }) => {
   const [mood, setMood] = useState('happy');
   const [hunger, setHunger] = useState(80);
   const [energy, setEnergy] = useState(90);
-  const [lastAction, setLastAction] = useState('');
   const [isEating, setIsEating] = useState(false);
 
   const feed = () => {
     setHunger(prev => Math.min(100, prev + 20));
     setMood('happy');
-    setLastAction('🐟 Yum! Mooncat is munching...');
     setIsEating(true);
     setTimeout(() => {
-      setLastAction('');
       setIsEating(false);
-    }, 5000);
+    }, 2500);
   };
 
   const play = () => {
     setEnergy(prev => Math.max(0, prev - 15));
     setHunger(prev => Math.max(0, prev - 10));
     setMood('playful');
-    setLastAction('🎵 Mooncat is chasing stars!');
-    setTimeout(() => { setMood('happy'); setLastAction(''); }, 2500);
+    setTimeout(() => { setMood('happy'); }, 2500);
   };
 
   const rest = () => {
     setEnergy(prev => Math.min(100, prev + 20));
     setMood('sleepy');
-    setLastAction('💤 Mooncat is curled up...');
-    setTimeout(() => { setMood('cozy'); setLastAction(''); }, 2500);
+    setTimeout(() => { setMood('cozy'); }, 2500);
   };
 
   return (
@@ -45,9 +40,6 @@ const PetCard = ({ catGif }) => {
       </div>
 
       <div className="pet-card-stage">
-        {lastAction && (
-          <div className="pet-card-action-toast">{lastAction}</div>
-        )}
         <div className="pet-gif-wrapper">
           <img 
             src={catGif} 

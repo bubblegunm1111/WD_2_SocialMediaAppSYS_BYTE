@@ -106,28 +106,6 @@
   text-shadow: 0 0 10px rgba(255, 220, 150, 0.4);
 }
 
-.pet-card-action-toast {
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(10, 5, 22, 0.9);
-  border: 1px solid rgba(202, 167, 125, 0.3);
-  color: #caa77d;
-  font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 20px;
-  white-space: nowrap;
-  animation: toast-in 0.3s ease forwards;
-  z-index: 10;
-  pointer-events: none;
-}
-
-@keyframes toast-in {
-  from { opacity: 0; transform: translate(-50%, 6px); }
-  to   { opacity: 1; transform: translate(-50%, 0); }
-}
-
 /* Stat bars */
 .pet-card-bars {
   display: flex;
