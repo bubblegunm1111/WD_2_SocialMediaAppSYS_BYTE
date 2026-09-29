@@ -73,6 +73,11 @@
   filter: drop-shadow(0 0 12px rgba(255, 220, 150, 0.25));
 }
 
+.pet-card-gif.is-eating {
+  /* The catfood gif is already transparent, so we don't need lighten blend mode */
+  mix-blend-mode: normal;
+}
+
 .pet-card-name {
   font-family: 'Cinzel', serif;
   font-size: 12px;

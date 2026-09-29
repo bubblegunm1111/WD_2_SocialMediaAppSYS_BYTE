@@ -19,7 +19,7 @@ const PetCard = ({ catGif }) => {
     setTimeout(() => {
       setLastAction('');
       setIsEating(false);
-    }, 2500);
+    }, 5000);
   };
 
   const play = () => {
@@ -45,7 +45,11 @@ const PetCard = ({ catGif }) => {
       </div>
 
       <div className="pet-card-stage">
-        <img src={isEating ? catFoodGif : catGif} alt="Mooncat" className="pet-card-gif" />
+        <img 
+          src={isEating ? catFoodGif : catGif} 
+          alt="Mooncat" 
+          className={`pet-card-gif ${isEating ? 'is-eating' : ''}`} 
+        />
         <div className="pet-card-name">MOONCAT</div>
         {lastAction && (
           <div className="pet-card-action-toast">{lastAction}</div>
