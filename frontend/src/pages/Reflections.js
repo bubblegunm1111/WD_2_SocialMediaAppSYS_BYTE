@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { reflectionService } from '../services/api';
+import catGif from '../cat.gif';
+import '../Dashboard.css';
 import './Reflections.css';
 
 const MOODS = [
@@ -99,8 +101,10 @@ const Reflections = () => {
           </a>
         </nav>
         
-        <div className="sidebar-footer">
-          <p>A quiet mind creates a beautiful world. ✦</p>
+        <div className="companion-ornate-card">
+          <img src={catGif} className="companion-cat-top" alt="Companion Cat" />
+          <div className="companion-text">A quiet mind creates a<br/>beautiful world. ✦</div>
+          <div className="companion-symbol">✧</div>
         </div>
       </aside>
 
