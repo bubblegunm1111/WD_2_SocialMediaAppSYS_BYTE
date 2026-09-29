@@ -24,18 +24,39 @@
 }
 
 .reflections-title h1 {
-  font-family: 'Cinzel', serif;
-  font-size: 36px;
-  color: #fff;
-  letter-spacing: 4px;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+  color: #ffdf96;
+  letter-spacing: 6px;
   margin: 0;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.8),
+    0 0 40px rgba(255, 223, 150, 0.6),
+    0 0 80px rgba(255, 223, 150, 0.3);
+  animation: reflections-glow 3s ease-in-out infinite;
+}
+
+@keyframes reflections-glow {
+  0%, 100% {
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.8),
+      0 0 40px rgba(255, 223, 150, 0.6),
+      0 0 80px rgba(255, 223, 150, 0.3);
+  }
+  50% {
+    text-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.8),
+      0 0 55px rgba(255, 223, 150, 0.85),
+      0 0 110px rgba(255, 223, 150, 0.45);
+  }
 }
 
 .reflections-subtitle {
-  color: rgba(220, 200, 150, 0.7);
+  color: rgba(220, 200, 150, 0.65);
   font-size: 14px;
-  letter-spacing: 1px;
+  font-style: italic;
+  letter-spacing: 0.04em;
   margin-top: 5px;
 }
 

@@ -98,18 +98,6 @@ const Reflections = () => {
               <div className="reflections-subtitle">Take a moment to look inward.</div>
             </div>
           </div>
-          <div className="reflections-actions">
-            <div className="search-bar">
-              <span>⌕</span>
-              <input 
-                type="text" 
-                placeholder="A moment, a thought, a you..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <button className="btn-new-reflection">☾ New Reflection</button>
-          </div>
         </div>
 
         <div className="reflections-main">
