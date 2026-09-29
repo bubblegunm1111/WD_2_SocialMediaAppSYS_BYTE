@@ -73,7 +73,7 @@ const Home = () => {
           LUNARIA
         </div>
         
-        <SidebarNav onLettersClick={() => setIsMessagesOpen(true)} />
+        <SidebarNav />
 
         <div className="companion-ornate-card">
           <img src={catGif} className="companion-cat-top" alt="Companion Cat" />

@@ -688,9 +688,6 @@ const Observatory = () => {
 
       {/* Luniare Pet Companion */}
       <LuniarePet />
-
-      {/* Messages Modal */}
-      {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
     </div>
   );
 };
