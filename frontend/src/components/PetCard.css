@@ -1,0 +1,182 @@
+.pet-card {
+  background: rgba(10, 5, 22, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(220, 200, 150, 0.18);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pet-card::before {
+  content: '✦';
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  color: rgba(220, 200, 150, 0.2);
+  font-size: 7px;
+}
+.pet-card::after {
+  content: '✦';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: rgba(220, 200, 150, 0.2);
+  font-size: 7px;
+}
+
+/* Header */
+.pet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pet-card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(220, 200, 150, 0.7);
+  text-transform: uppercase;
+}
+
+.pet-card-mood-badge {
+  background: rgba(202, 167, 125, 0.15);
+  border: 1px solid rgba(202, 167, 125, 0.3);
+  color: #caa77d;
+  font-size: 10px;
+  padding: 2px 9px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+}
+
+/* Stage with cat */
+.pet-card-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 4px 0 0;
+}
+
+.pet-card-gif {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  /* The gif has transparent-ish bg, mix-blend-mode to blend with dark card */
+  mix-blend-mode: lighten;
+  filter: drop-shadow(0 0 12px rgba(255, 220, 150, 0.25));
+}
+
+.pet-card-name {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #e8dcc8;
+  margin-top: 2px;
+  text-shadow: 0 0 10px rgba(255, 220, 150, 0.4);
+}
+
+.pet-card-action-toast {
+  position: absolute;
+  top: 0;
+  background: rgba(10, 5, 22, 0.8);
+  border: 1px solid rgba(202, 167, 125, 0.3);
+  color: #caa77d;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+  animation: toast-in 0.3s ease;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stat bars */
+.pet-card-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.pet-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(220, 200, 150, 0.65);
+}
+
+.pet-bar-row > span:first-child {
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.pet-bar-track {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pet-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.pet-bar-fill.hunger {
+  background: linear-gradient(90deg, #e8a87c, #f5c96e);
+  box-shadow: 0 0 6px rgba(245, 201, 110, 0.5);
+}
+
+.pet-bar-fill.energy {
+  background: linear-gradient(90deg, #7cb8e8, #a48fff);
+  box-shadow: 0 0 6px rgba(164, 143, 255, 0.5);
+}
+
+.pet-bar-val {
+  width: 30px;
+  text-align: right;
+  font-size: 10px;
+  color: rgba(220, 200, 150, 0.5);
+}
+
+/* Action buttons */
+.pet-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pet-btn {
+  flex: 1;
+  padding: 7px 4px;
+  background: rgba(202, 167, 125, 0.08);
+  border: 1px solid rgba(202, 167, 125, 0.2);
+  border-radius: 12px;
+  color: #d8c9a8;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  font-family: inherit;
+}
+
+.pet-btn:hover {
+  background: rgba(202, 167, 125, 0.18);
+  border-color: rgba(202, 167, 125, 0.5);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+.pet-btn:active {
+  transform: scale(0.96);
+}

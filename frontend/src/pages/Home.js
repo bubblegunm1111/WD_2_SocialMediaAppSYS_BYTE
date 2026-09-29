@@ -7,6 +7,7 @@ import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
 import TarotCarousel from '../components/TarotCarousel';
 import SidebarNav from '../components/SidebarNav';
+import PetCard from '../components/PetCard';
 import { postService, notificationService, userService } from '../services/api';
 import '../Dashboard.css';
 import '../components/PostModal.css';
@@ -233,41 +234,7 @@ const Home = () => {
           </ul>
         </div>
 
-        <div className="widget" style={{position: 'relative'}}>
-          <div style={{position: 'absolute', top: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
-          <div style={{position: 'absolute', top: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
-          <div style={{position: 'absolute', bottom: 8, left: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
-          <div style={{position: 'absolute', bottom: 8, right: 8, color: 'rgba(220,200,150,0.3)', fontSize: '8px'}}>✦</div>
-          <div className="widget-header">
-            <h3>🏰 YOUR ROOM</h3>
-            <a href="#">View Room</a>
-          </div>
-          <div className="room-user">
-            <Link to={`/profile/${user?._id || user?.id}`}>
-              <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="User" />
-            </Link>
-            <div>
-              <h4 style={{textTransform: 'uppercase', letterSpacing: '1px'}}>{user?.displayName || user?.username || 'You'}</h4>
-              <p>Collecting little beautiful things.</p>
-            </div>
-          </div>
-          <div className="room-stats">
-            <div><strong>12</strong><span>Pages</span></div>
-            <div><strong>8</strong><span>Constellations</span></div>
-            <div><strong>426</strong><span>Followers</span></div>
-          </div>
-          
-          <div className="companion-box">
-             <div className="companion-avatar">
-               <img src={catGif} className="companion-video-avatar" alt="Mooncat" />
-             </div>
-             <div className="companion-details">
-                <p>Your companion</p>
-                <h4>MOONCAT</h4>
-                <span>(happy)</span>
-             </div>
-          </div>
-        </div>
+        <PetCard catGif={catGif} />
 
 
 
