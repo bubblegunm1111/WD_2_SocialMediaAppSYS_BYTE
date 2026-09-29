@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import './PetCard.css';
 import catFoodGif from '../catfood2.gif';
 import catPlayGif from '../catplay.gif';
+import catRestGif from '../catrest.gif';
 
 const MOODS = ['happy', 'sleepy', 'hungry', 'playful', 'cozy'];
 
@@ -50,7 +51,7 @@ const PetCard = ({ catGif }) => {
           <img 
             src={catGif} 
             alt="Mooncat Idle" 
-            className={`pet-card-gif cat-idle-gif ${!activeAction || activeAction === 'rest' ? 'active' : ''}`} 
+            className={`pet-card-gif cat-idle-gif ${!activeAction ? 'active' : ''}`} 
           />
           <img 
             src={catFoodGif} 
@@ -61,6 +62,11 @@ const PetCard = ({ catGif }) => {
             src={catPlayGif} 
             alt="Mooncat Playing" 
             className={`pet-card-gif cat-play-gif ${activeAction === 'play' ? 'active' : ''}`} 
+          />
+          <img 
+            src={catRestGif} 
+            alt="Mooncat Resting" 
+            className={`pet-card-gif cat-rest-gif ${activeAction === 'rest' ? 'active' : ''}`} 
           />
         </div>
         <div className="pet-card-name">MOONCAT</div>

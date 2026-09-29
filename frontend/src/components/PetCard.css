@@ -103,6 +103,12 @@
   margin-top: -2px; /* slight adjustment for bigger scale */
 }
 
+.cat-rest-gif {
+  mix-blend-mode: normal;
+  transform: scale(1.6);
+  margin-top: -2px;
+}
+
 .pet-card-name {
   font-family: 'Cinzel', serif;
   font-size: 12px;
