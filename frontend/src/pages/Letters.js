@@ -125,18 +125,19 @@ const Letters = () => {
           </div>
         </header>
 
-        <div className="messages-modal-card" style={{ position: 'relative', width: '100%', height: '100%', flex: 1, minHeight: 0 }}>
-          <div className="messages-sidebar">
-            <div className="messages-header ornate-border-bottom">
-              <h3>✧ Conversations ✧</h3>
+        <div className="letters-container" style={{ display: 'flex', position: 'relative', width: '100%', height: '100%', flex: 1, minHeight: 0, background: 'rgba(20, 15, 30, 0.7)', backdropFilter: 'blur(10px)', borderRadius: '24px', border: '1px solid rgba(220, 200, 150, 0.2)', overflow: 'hidden' }}>
+          <div className="messages-sidebar" style={{ width: '300px', borderRight: '1px solid rgba(220, 200, 150, 0.2)', display: 'flex', flexDirection: 'column' }}>
+            <div className="messages-header ornate-border-bottom" style={{ padding: '20px', borderBottom: '1px solid rgba(220, 200, 150, 0.2)' }}>
+              <h3 style={{ color: '#caa77d', margin: 0 }}>✧ Conversations ✧</h3>
             </div>
             
-            <div className="user-search">
+            <div className="user-search" style={{ padding: '15px' }}>
               <input 
                 type="text" 
                 placeholder="Find a companion..." 
                 value={searchQuery}
                 onChange={handleSearch}
+                style={{ width: '100%', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(220, 200, 150, 0.2)', padding: '10px 15px', borderRadius: '12px', color: '#eee5dc', outline: 'none' }}
               />
               {searchResults.length > 0 && (
                 <div className="search-results-dropdown">
@@ -170,41 +171,42 @@ const Letters = () => {
             </div>
           </div>
 
-          <div className="messages-chat-area">
+          <div className="messages-chat-area" style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'rgba(10, 5, 20, 0.5)' }}>
             {activeChat ? (
               <>
-                <div className="chat-header ornate-border-bottom">
-                  <div className="chat-avatar" style={{ backgroundImage: `url(${activeChat.profilePicture})` }}></div>
-                  <h3>{activeChat.displayName || activeChat.username}</h3>
+                <div className="chat-header ornate-border-bottom" style={{ padding: '20px', display: 'flex', alignItems: 'center', gap: '15px', borderBottom: '1px solid rgba(220, 200, 150, 0.2)' }}>
+                  <div className="chat-avatar" style={{ backgroundImage: `url(${activeChat.profilePicture})`, width: '40px', height: '40px', borderRadius: '50%', backgroundSize: 'cover' }}></div>
+                  <h3 style={{ color: '#eee5dc', margin: 0 }}>{activeChat.displayName || activeChat.username}</h3>
                 </div>
                 
-                <div className="chat-messages">
+                <div className="chat-messages" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                   {messages.map((msg, i) => {
                     const isMine = msg.sender === user.id || msg.sender === user._id || msg.sender?._id === user.id || msg.sender?._id === user._id;
                     return (
-                      <div key={msg._id || i} className={`message-bubble ${isMine ? 'mine' : 'theirs'}`}>
+                      <div key={msg._id || i} className={`message-bubble ${isMine ? 'mine' : 'theirs'}`} style={{ maxWidth: '70%', padding: '12px 18px', borderRadius: '18px', background: isMine ? '#caa77d' : 'rgba(255,255,255,0.05)', color: isMine ? '#070a1d' : '#eee5dc', alignSelf: isMine ? 'flex-end' : 'flex-start', borderBottomRightRadius: isMine ? '4px' : '18px', borderBottomLeftRadius: isMine ? '18px' : '4px' }}>
                         {msg.content}
-                        <div className="msg-time">{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                        <div className="msg-time" style={{ fontSize: '10px', opacity: 0.7, marginTop: '5px', textAlign: 'right' }}>{new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                       </div>
                     );
                   })}
                   <div ref={messagesEndRef} />
                 </div>
 
-                <form className="chat-input-area" onSubmit={handleSendMessage}>
+                <form className="chat-input-area" onSubmit={handleSendMessage} style={{ padding: '20px', borderTop: '1px solid rgba(220, 200, 150, 0.2)', display: 'flex', gap: '10px' }}>
                   <input 
                     type="text" 
                     placeholder="Write a letter..." 
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    style={{ flex: 1, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(220, 200, 150, 0.2)', padding: '12px 20px', borderRadius: '24px', color: '#eee5dc', outline: 'none' }}
                   />
-                  <button type="submit">Send ✧</button>
+                  <button type="submit" style={{ background: '#caa77d', color: '#070a1d', border: 'none', padding: '0 24px', borderRadius: '24px', fontWeight: 'bold', cursor: 'pointer' }}>Send ✧</button>
                 </form>
               </>
             ) : (
-              <div className="empty-chat-state">
-                <div className="empty-chat-icon">✉</div>
-                <h3>Select a conversation</h3>
+              <div className="empty-chat-state" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#888' }}>
+                <div className="empty-chat-icon" style={{ fontSize: '48px', marginBottom: '15px', color: 'rgba(220, 200, 150, 0.5)' }}>✉</div>
+                <h3 style={{ color: '#caa77d' }}>Select a conversation</h3>
                 <p>or search for someone to send a letter to.</p>
               </div>
             )}

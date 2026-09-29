@@ -16,7 +16,7 @@ const spring = (k, m, bounce) => ({
 const Chip = forwardRef(function Chip({ mv, children, ...rest }, ref) {
   // If rendering vertically, we could transform Y instead of X, but the default component uses X.
   // We'll stick to the original code.
-  const transform = useTransform(() => `translateX(${mv.x.get()}px) scale(${mv.sx.get()}, ${mv.sy.get()})`);
+  const transform = useTransform(() => `translateY(${mv.x.get()}px) scale(${mv.sx.get()}, ${mv.sy.get()})`);
   return (
     <motion.button ref={ref} style={{ transform }} {...rest}>
       {children}

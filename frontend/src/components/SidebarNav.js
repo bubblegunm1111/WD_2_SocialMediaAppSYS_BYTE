@@ -51,10 +51,10 @@ export default function SidebarNav() {
         size="lg"
         gap={8}
         radius={12}
-        swell={0}
-        barge={0}
+        swell={0.1}
+        barge={15}
         shrink={0}
-        jelly={0}
+        jelly={0.8}
         bounce={0.4}
         stagger={30}
         stiffness={400}
