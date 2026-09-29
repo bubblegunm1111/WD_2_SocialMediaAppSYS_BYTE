@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
-import LuniarePet from '../components/LuniarePet';
 import MessagesModal from '../components/MessagesModal';
 import TarotCarousel from '../components/TarotCarousel';
 import SidebarNav from '../components/SidebarNav';
@@ -239,9 +238,6 @@ const Home = () => {
 
 
       </aside>
-
-      {/* Luniare Pet Companion */}
-      <LuniarePet />
 
       {/* Messages Modal */}
       {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}

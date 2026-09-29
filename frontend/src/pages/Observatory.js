@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
-import LuniarePet from '../components/LuniarePet';
 import SidebarNav from '../components/SidebarNav';
 import MessagesModal from '../components/MessagesModal';
 import { postService, userService } from '../services/api';
@@ -594,9 +593,6 @@ const Observatory = () => {
           </div>
         </div>
       )}
-
-      {/* Luniare Pet Companion */}
-      <LuniarePet />
 
       {/* Messages Modal */}
       {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
