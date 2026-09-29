@@ -108,7 +108,6 @@ const Observatory = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [wanderResult, setWanderResult] = useState(null);
   const [isWandering, setIsWandering] = useState(false);
