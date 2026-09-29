@@ -76,6 +76,9 @@
 .pet-card-gif.is-eating {
   /* The catfood gif is already transparent, so we don't need lighten blend mode */
   mix-blend-mode: normal;
+  /* Scale up to compensate for extra padding in the gif file */
+  transform: scale(1.35);
+  margin-top: -5px; /* Adjust slight vertical offset if necessary when scaled */
 }
 
 .pet-card-name {

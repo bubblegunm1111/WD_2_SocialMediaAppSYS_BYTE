@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PetCard.css';
-import catFoodGif from '../catfood.gif';
+import catFoodGif from '../catfood2.gif';
 
 const MOODS = ['happy', 'sleepy', 'hungry', 'playful', 'cozy'];
 
