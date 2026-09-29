@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './PetCard.css';
 import catFoodGif from '../catfood2.gif';
+import catPlayGif from '../catplay.gif';
 
 const MOODS = ['happy', 'sleepy', 'hungry', 'playful', 'cozy'];
 
@@ -9,6 +10,7 @@ const PetCard = ({ catGif }) => {
   const [hunger, setHunger] = useState(80);
   const [energy, setEnergy] = useState(90);
   const [isEating, setIsEating] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const feed = () => {
     setHunger(prev => Math.min(100, prev + 20));
@@ -23,7 +25,11 @@ const PetCard = ({ catGif }) => {
     setEnergy(prev => Math.max(0, prev - 15));
     setHunger(prev => Math.max(0, prev - 10));
     setMood('playful');
-    setTimeout(() => { setMood('happy'); }, 2500);
+    setIsPlaying(true);
+    setTimeout(() => { 
+      setMood('happy'); 
+      setIsPlaying(false);
+    }, 2500);
   };
 
   const rest = () => {
@@ -44,12 +50,17 @@ const PetCard = ({ catGif }) => {
           <img 
             src={catGif} 
             alt="Mooncat Idle" 
-            className={`pet-card-gif cat-idle-gif ${!isEating ? 'active' : ''}`} 
+            className={`pet-card-gif cat-idle-gif ${!isEating && !isPlaying ? 'active' : ''}`} 
           />
           <img 
             src={catFoodGif} 
             alt="Mooncat Eating" 
             className={`pet-card-gif cat-eat-gif ${isEating ? 'active' : ''}`} 
+          />
+          <img 
+            src={catPlayGif} 
+            alt="Mooncat Playing" 
+            className={`pet-card-gif cat-play-gif ${isPlaying ? 'active' : ''}`} 
           />
         </div>
         <div className="pet-card-name">MOONCAT</div>

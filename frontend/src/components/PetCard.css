@@ -91,7 +91,7 @@
   filter: drop-shadow(0 0 12px rgba(255, 220, 150, 0.25));
 }
 
-.cat-eat-gif {
+.cat-eat-gif, .cat-play-gif {
   mix-blend-mode: normal;
   transform: scale(1.5);
   margin-top: 0;
