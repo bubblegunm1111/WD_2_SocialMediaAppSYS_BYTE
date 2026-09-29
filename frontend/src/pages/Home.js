@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import CreatePost from '../components/CreatePost';
 import LuniarePet from '../components/LuniarePet';
+import MessagesModal from '../components/MessagesModal';
 import TarotCarousel from '../components/TarotCarousel';
 import SidebarNav from '../components/SidebarNav';
 import { postService, notificationService } from '../services/api';
@@ -18,6 +19,7 @@ const Home = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
 
   useEffect(() => {
@@ -73,7 +75,7 @@ const Home = () => {
           LUNARIA
         </div>
         
-        <SidebarNav />
+        <SidebarNav onLettersClick={() => setIsMessagesOpen(true)} />
 
         <div className="companion-ornate-card">
           <img src={catGif} className="companion-cat-top" alt="Companion Cat" />
@@ -252,6 +254,9 @@ const Home = () => {
 
       {/* Luniare Pet Companion */}
       <LuniarePet />
+
+      {/* Messages Modal */}
+      {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
     </div>
   );
 };

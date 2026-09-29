@@ -7,7 +7,6 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Observatory from './pages/Observatory';
 import Reflections from './pages/Reflections';
-import Letters from './pages/Letters';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -48,14 +47,6 @@ function App() {
               element={
                 <PrivateRoute>
                   <Reflections />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/letters"
-              element={
-                <PrivateRoute>
-                  <Letters />
                 </PrivateRoute>
               }
             />

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Post from '../components/Post';
 import LuniarePet from '../components/LuniarePet';
 import SidebarNav from '../components/SidebarNav';
+import MessagesModal from '../components/MessagesModal';
 import { postService, userService } from '../services/api';
 import catGif from '../cat.gif';
 import '../Dashboard.css';
@@ -107,6 +108,7 @@ const Observatory = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [wanderResult, setWanderResult] = useState(null);
   const [isWandering, setIsWandering] = useState(false);
@@ -284,7 +286,7 @@ const Observatory = () => {
           </svg>
           LUNARIA
         </div>
-        <SidebarNav />
+        <SidebarNav onLettersClick={() => setIsMessagesOpen(true)} />
 
         <div className="companion-ornate-card">
           <img src={catGif} className="companion-cat-top" alt="Companion Cat" />
@@ -688,6 +690,9 @@ const Observatory = () => {
 
       {/* Luniare Pet Companion */}
       <LuniarePet />
+
+      {/* Messages Modal */}
+      {isMessagesOpen && <MessagesModal onClose={() => setIsMessagesOpen(false)} />}
     </div>
   );
 };

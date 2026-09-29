@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { value: 'PROFILE', label: 'My Room', icon: <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" fill="none"/></svg> }
 ];
 
-export default function SidebarNav() {
+export default function SidebarNav({ onLettersClick }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -30,6 +30,10 @@ export default function SidebarNav() {
   }
 
   const handleChange = (val) => {
+    if (val === '/letters' && onLettersClick) {
+      onLettersClick();
+      return;
+    }
     if (val === '/pages') {
       // Future placeholder
       return;
