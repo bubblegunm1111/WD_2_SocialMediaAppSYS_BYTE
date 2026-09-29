@@ -92,20 +92,23 @@
 
 .pet-card-action-toast {
   position: absolute;
-  top: 0;
-  background: rgba(10, 5, 22, 0.8);
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 5, 22, 0.85);
   border: 1px solid rgba(202, 167, 125, 0.3);
   color: #caa77d;
   font-size: 11px;
   padding: 4px 12px;
   border-radius: 20px;
   white-space: nowrap;
-  animation: toast-in 0.3s ease;
+  animation: toast-in 0.3s ease forwards;
+  z-index: 10;
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
 }
 
 /* Stat bars */

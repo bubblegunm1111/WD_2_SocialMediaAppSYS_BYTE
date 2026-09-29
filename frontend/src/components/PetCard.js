@@ -51,9 +51,6 @@ const PetCard = ({ catGif }) => {
           className={`pet-card-gif ${isEating ? 'is-eating' : ''}`} 
         />
         <div className="pet-card-name">MOONCAT</div>
-        {lastAction && (
-          <div className="pet-card-action-toast">{lastAction}</div>
-        )}
       </div>
 
       <div className="pet-card-bars">
@@ -72,6 +69,10 @@ const PetCard = ({ catGif }) => {
           <span className="pet-bar-val">{energy}%</span>
         </div>
       </div>
+
+      {lastAction && (
+        <div className="pet-card-action-toast">{lastAction}</div>
+      )}
 
       <div className="pet-card-actions">
         <button className="pet-btn" onClick={feed} title="Feed">🐟 Feed</button>
