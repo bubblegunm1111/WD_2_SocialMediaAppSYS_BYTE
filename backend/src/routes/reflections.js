@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const { protect } = require('../middleware/auth');
+const auth = require('../middleware/auth');
 const Reflection = require('../models/Reflection');
 
 // @route   POST /api/reflections
 // @desc    Create a new reflection
 // @access  Private
-router.post('/', protect, [
+router.post('/', auth, [
   check('content', 'Content is required').not().isEmpty()
 ], async (req, res) => {
   try {
@@ -40,7 +40,7 @@ router.post('/', protect, [
 // @route   GET /api/reflections
 // @desc    Get user's reflections
 // @access  Private
-router.get('/', protect, async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const reflections = await Reflection.find({ userId: req.user._id })
       .sort({ createdAt: -1 });

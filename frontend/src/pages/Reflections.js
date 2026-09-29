@@ -229,11 +229,28 @@ const Reflections = () => {
             <div className="widget-subtitle">A glimpse into your inner world.</div>
             <div className="constellation-map">
               <div style={{ fontSize: '30px', color: 'rgba(220, 200, 150, 0.8)', textShadow: '0 0 10px rgba(220, 200, 150, 0.5)' }}>☾</div>
-              {/* Decorative stars */}
-              <div style={{ position: 'absolute', top: '20%', left: '30%', fontSize: '10px', color: '#fff', opacity: 0.5 }}>✦</div>
-              <div style={{ position: 'absolute', top: '70%', left: '20%', fontSize: '10px', color: '#fff', opacity: 0.5 }}>✦</div>
-              <div style={{ position: 'absolute', top: '40%', right: '25%', fontSize: '10px', color: '#fff', opacity: 0.5 }}>✦</div>
-              <div style={{ position: 'absolute', bottom: '30%', right: '35%', fontSize: '10px', color: '#fff', opacity: 0.5 }}>✦</div>
+              {filteredReflections.slice(0, 5).map((r, i) => {
+                const pos = [
+                  { top: '20%', left: '30%' },
+                  { top: '40%', right: '25%' },
+                  { bottom: '30%', right: '35%' },
+                  { top: '70%', left: '20%' },
+                  { bottom: '15%', left: '50%' }
+                ];
+                const p = pos[i] || pos[0];
+                const moodObj = MOODS.find(m => m.id === r.mood);
+                const icon = moodObj ? moodObj.icon : '✦';
+                
+                return (
+                  <div key={r._id} className="constellation-star" style={p}>
+                    {icon}
+                    <div className="constellation-tooltip">
+                      <div className="tt-date">{formatDate(r.createdAt)}</div>
+                      <div className="tt-content">{r.content}</div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
