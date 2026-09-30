@@ -22,7 +22,24 @@ const Reflections = () => {
   const [selectedMood, setSelectedMood] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mediaUrl, setMediaUrl] = useState('');
+  const [musicUrl, setMusicUrl] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
+  const [isStarred, setIsStarred] = useState(false);
+  const [showMusicInput, setShowMusicInput] = useState(false);
+  const [showLinkInput, setShowLinkInput] = useState(false);
+  const fileInputRef = React.useRef(null);
+  
   const location = useLocation();
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setMediaUrl(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     fetchReflections();
@@ -38,16 +55,26 @@ const Reflections = () => {
   };
 
   const handleSave = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() && !mediaUrl) return;
     setIsSaving(true);
     try {
       const newRef = await reflectionService.createReflection({
         content,
         mood: selectedMood,
+        mediaUrl,
+        musicUrl,
+        linkUrl,
+        isStarred
       });
       setReflections([newRef.data, ...reflections]);
       setContent('');
       setSelectedMood(null);
+      setMediaUrl('');
+      setMusicUrl('');
+      setLinkUrl('');
+      setIsStarred(false);
+      setShowMusicInput(false);
+      setShowLinkInput(false);
     } catch (err) {
       console.error('Failed to save reflection:', err);
     } finally {
@@ -131,12 +158,27 @@ const Reflections = () => {
                 onChange={(e) => setContent(e.target.value)}
                 maxLength={1000}
               />
+
+              {mediaUrl && (
+                <div style={{ position: 'relative', width: 'fit-content', marginBottom: '15px' }}>
+                  <img src={mediaUrl} alt="Reflection media" style={{ maxWidth: '100%', maxHeight: '200px', borderRadius: '8px', border: '1px solid rgba(220, 200, 150, 0.2)' }} />
+                  <button onClick={() => setMediaUrl('')} style={{ position: 'absolute', top: 5, right: 5, background: 'rgba(0,0,0,0.6)', border: 'none', color: 'white', borderRadius: '50%', cursor: 'pointer', width: '25px', height: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+                </div>
+              )}
+              {showMusicInput && (
+                <input type="text" placeholder="Paste music link (Spotify, YouTube...)" value={musicUrl} onChange={e => setMusicUrl(e.target.value)} style={{ width: '100%', padding: '8px 12px', marginBottom: '10px', background: 'rgba(10,5,20,0.5)', border: '1px solid rgba(220,200,150,0.2)', color: '#f7e8d5', borderRadius: '6px', outline: 'none' }} />
+              )}
+              {showLinkInput && (
+                <input type="text" placeholder="Paste any link..." value={linkUrl} onChange={e => setLinkUrl(e.target.value)} style={{ width: '100%', padding: '8px 12px', marginBottom: '10px', background: 'rgba(10,5,20,0.5)', border: '1px solid rgba(220,200,150,0.2)', color: '#f7e8d5', borderRadius: '6px', outline: 'none' }} />
+              )}
+
               <div className="ref-editor-toolbar">
                 <div className="ref-tools">
-                  <button className="ref-tool-btn">📷</button>
-                  <button className="ref-tool-btn">♫</button>
-                  <button className="ref-tool-btn">🔗</button>
-                  <button className="ref-tool-btn">⭐</button>
+                  <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*,video/*" style={{ display: 'none' }} id="ref-file" />
+                  <label htmlFor="ref-file" className="ref-tool-btn" style={{ cursor: 'pointer', margin: 0, padding: '4px' }}>📷</label>
+                  <button className="ref-tool-btn" style={{ color: showMusicInput ? '#ffd700' : 'inherit' }} onClick={() => setShowMusicInput(!showMusicInput)}>♫</button>
+                  <button className="ref-tool-btn" style={{ color: showLinkInput ? '#ffd700' : 'inherit' }} onClick={() => setShowLinkInput(!showLinkInput)}>🔗</button>
+                  <button className="ref-tool-btn" style={{ color: isStarred ? '#ffd700' : 'inherit' }} onClick={() => setIsStarred(!isStarred)}>⭐</button>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                   <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.3)' }}>{content.length}/1000</span>
@@ -161,7 +203,14 @@ const Reflections = () => {
                   <div className="journal-date">{formatDate(r.createdAt)}</div>
                   <div className="journal-snippet">{r.content}</div>
                   {r.mood && <div className="journal-mood">✦ {r.mood}</div>}
-                  <div style={{ position: 'absolute', top: 10, right: 10, opacity: 0.3 }}>🔖</div>
+                  {r.mediaUrl && <div style={{ marginTop: '10px' }}><img src={r.mediaUrl} alt="media" style={{ width: '100%', borderRadius: '6px', maxHeight: '100px', objectFit: 'cover' }} /></div>}
+                  {(r.musicUrl || r.linkUrl) && (
+                    <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+                      {r.musicUrl && <a href={r.musicUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#ffd700', textDecoration: 'none', fontSize: '12px' }}>♫ Listen</a>}
+                      {r.linkUrl && <a href={r.linkUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#88d7ff', textDecoration: 'none', fontSize: '12px' }}>🔗 Link</a>}
+                    </div>
+                  )}
+                  <div style={{ position: 'absolute', top: 10, right: 10, opacity: r.isStarred ? 1 : 0.3, color: r.isStarred ? '#ffd700' : 'inherit' }}>{r.isStarred ? '⭐' : '🔖'}</div>
                 </div>
               ))}
               {recentReflections.length === 0 && (

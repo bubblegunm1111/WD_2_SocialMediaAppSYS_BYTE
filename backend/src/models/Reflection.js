@@ -20,6 +20,18 @@ const reflectionSchema = new mongoose.Schema({
   mediaUrl: {
     type: String,
     default: ''
+  },
+  musicUrl: {
+    type: String,
+    default: ''
+  },
+  linkUrl: {
+    type: String,
+    default: ''
+  },
+  isStarred: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true
