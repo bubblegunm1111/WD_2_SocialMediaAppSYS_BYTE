@@ -5,7 +5,7 @@ import JellyRadio from './JellyRadio';
 
 const NAV_ITEMS = [
   { value: '/', label: 'Home', icon: '✦' },
-  { value: '/observatory', label: 'Observatory', icon: '⊘' },
+  { value: '/observatory', label: 'Observatory', icon: '🔭' },
   { value: '/letters', label: 'Letters', icon: '✉' },
   { value: '/reflections', label: 'Reflections', icon: '✺' },
   { value: 'PROFILE', label: 'My Room', icon: '☾' }
