@@ -102,7 +102,8 @@ const Home = () => {
             <h1 className="greeting">Good evening, {user?.displayName || user?.username?.split('_')[0] || 'Magician'} ✧</h1>
             <p className="greeting-sub">The night is young, and there are so many stories waiting to be found.</p>
           </div>
-          <div className="top-nav-icons">
+          <div className="top-nav-icons" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <span style={{ fontSize: '10px', color: 'rgba(255, 223, 150, 0.5)', textTransform: 'uppercase', letterSpacing: '1px', fontFamily: "'Cinzel', serif" }}>Powered by SYS ✧</span>
             <Link to={`/profile/${user?._id || user?.id}`}>
               <img src={user?.profilePicture || `https://api.dicebear.com/7.x/initials/svg?seed=${user?.username || 'user'}&backgroundColor=19142d&textColor=f7e8d5`} alt="Profile" className="nav-avatar" />
             </Link>
