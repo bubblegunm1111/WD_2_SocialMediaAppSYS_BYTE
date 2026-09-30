@@ -59,14 +59,16 @@ export default function SidebarNav({ onLettersClick }) {
         stiffness={400}
       />
       <div style={{
-        marginTop: 'auto',
-        textAlign: 'center',
-        padding: '20px 0 10px 0',
-        color: 'rgba(255, 223, 150, 0.4)',
+        position: 'fixed',
+        bottom: '15px',
+        left: '25px',
+        color: 'rgba(255, 223, 150, 0.6)',
         fontSize: '11px',
         fontFamily: "'Cinzel', serif",
-        letterSpacing: '1px',
-        textTransform: 'uppercase'
+        letterSpacing: '1.5px',
+        textTransform: 'uppercase',
+        zIndex: 1000,
+        textShadow: '0 2px 4px rgba(0,0,0,0.8)'
       }}>
         Powered by SYS ✧
       </div>
