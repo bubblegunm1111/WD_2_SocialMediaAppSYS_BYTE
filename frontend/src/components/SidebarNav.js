@@ -58,6 +58,18 @@ export default function SidebarNav({ onLettersClick }) {
         stagger={30}
         stiffness={400}
       />
+      <div style={{
+        marginTop: 'auto',
+        textAlign: 'center',
+        padding: '20px 0 10px 0',
+        color: 'rgba(255, 223, 150, 0.4)',
+        fontSize: '11px',
+        fontFamily: "'Cinzel', serif",
+        letterSpacing: '1px',
+        textTransform: 'uppercase'
+      }}>
+        Powered by SYS ✧
+      </div>
     </div>
   );
 }
